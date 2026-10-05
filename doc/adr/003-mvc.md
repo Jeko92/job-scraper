@@ -1,4 +1,6 @@
-# ADR-XXX: <title>
+> Everything in <> are placholders, serving as explanations.
+
+# Title
 
 * Status: proposed | accepted |superseded
 
