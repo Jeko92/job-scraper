@@ -8,11 +8,13 @@
     },
     "dev": {
       "dependsOn": ["^build"],
+      "passThroughEnv": ["PORT", "BACKEND_URL"],
       "cache": false,
       "persistent": true
     },
     "start": {
       "dependsOn": ["build"],
+      "passThroughEnv": ["PORT", "BACKEND_URL"],
       "cache": false,
       "persistent": true
     },
