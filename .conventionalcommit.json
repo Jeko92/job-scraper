@@ -1,0 +1,34 @@
+{
+  "types": {
+    "feat": { "description": "A new feature" },
+    "fix": { "description": "A bug fix" },
+    "refactor": {
+      "description": "Code change that neither fixes a bug nor adds a feature"
+    },
+    "docs": { "description": "Documentation only (README, ADRs, specs)" },
+    "style": { "description": "Formatting only, no logic change" },
+    "test": { "description": "Adding or correcting tests" },
+    "perf": { "description": "Performance improvement" },
+    "build": {
+      "description": "Turborepo, pnpm workspace, compilers or dependencies"
+    },
+    "ci": { "description": "GitHub Actions workflows" },
+    "chore": { "description": "Maintenance: merges, releases, housekeeping" },
+    "revert": { "description": "Reverts a previous commit" }
+  },
+  "scopes": {
+    "repo": "Root configuration and workspace setup",
+    "ci": "GitHub Actions and repository settings",
+    "doc": "Files in doc/",
+    "tooling": "Shared tsconfig, eslint and prettier packages",
+    "backend": "apps/backend",
+    "frontend": "apps/frontend",
+    "shared": "packages/shared",
+    "release": "Promotion of develop to main"
+  },
+  "footerTypes": {
+    "BREAKING CHANGE": { "description": "Introduces a breaking change" },
+    "Closes": { "description": "Closes an issue" },
+    "Co-authored-by": { "description": "Credits a pairing partner" }
+  }
+}
