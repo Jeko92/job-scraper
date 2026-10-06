@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { fetchBackendGreeting } from './backend';
+import { BACKEND_TIMEOUT_MS, fetchBackendGreeting } from './backend';
 
 function stubFetch(response: () => Promise<Response>) {
   const fetchMock = vi.fn(response);
@@ -11,6 +11,7 @@ function stubFetch(response: () => Promise<Response>) {
 
 describe('fetchBackendGreeting', () => {
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
   });
@@ -28,9 +29,10 @@ describe('fetchBackendGreeting', () => {
       Promise.resolve(Response.json({ message: 'x' })),
     );
     await fetchBackendGreeting();
-    expect(fetchMock).toHaveBeenCalledWith('http://localhost:3030/', {
-      cache: 'no-store',
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://localhost:3030/',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
   });
 
   it.each(['http://backend.test:9999', 'http://backend.test:9999/'])(
@@ -41,9 +43,10 @@ describe('fetchBackendGreeting', () => {
         Promise.resolve(Response.json({ message: 'x' })),
       );
       await fetchBackendGreeting();
-      expect(fetchMock).toHaveBeenCalledWith('http://backend.test:9999/', {
-        cache: 'no-store',
-      });
+      expect(fetchMock).toHaveBeenCalledWith(
+        'http://backend.test:9999/',
+        expect.objectContaining({ cache: 'no-store' }),
+      );
     },
   );
 
@@ -65,5 +68,23 @@ describe('fetchBackendGreeting', () => {
   it('returns null when the backend is unreachable', async () => {
     stubFetch(() => Promise.reject(new TypeError('fetch failed')));
     await expect(fetchBackendGreeting()).resolves.toBeNull();
+  });
+
+  it('returns null when the backend does not answer within the timeout', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        (_url: string, init?: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener('abort', () => {
+              reject(new DOMException('aborted', 'AbortError'));
+            });
+          }),
+      ),
+    );
+    const result = fetchBackendGreeting();
+    await vi.advanceTimersByTimeAsync(BACKEND_TIMEOUT_MS);
+    await expect(result).resolves.toBeNull();
   });
 });
