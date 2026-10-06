@@ -1,0 +1,32 @@
+{
+  "name": "job-scraper",
+  "version": "0.0.0",
+  "private": true,
+  "description": "JobScraper - AI-assisted job sourcing for Job Seekers",
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "check": "turbo run lint typecheck test && prettier --check .",
+    "prepare": "git config core.hooksPath .githooks || true"
+  },
+  "devDependencies": {
+    "@job-scraper/prettier-config": "workspace:*",
+    "@job-scraper/tsconfig": "workspace:*",
+    "prettier": "^3.9.9",
+    "turbo": "^2.11.7",
+    "typescript": "~6.0.3"
+  }
+}

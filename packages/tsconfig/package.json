@@ -1,0 +1,10 @@
+{
+  "name": "@job-scraper/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Strict TypeScript base config shared by every package",
+  "license": "MIT",
+  "files": [
+    "base.json"
+  ]
+}

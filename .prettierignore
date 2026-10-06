@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+.next
+.turbo
+next-env.d.ts
+pnpm-lock.yaml
+*.md
