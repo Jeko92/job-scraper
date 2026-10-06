@@ -9,9 +9,12 @@
 
 ## Pull requests
 
-- Into `develop`: default PR template, **squash merge**, 3 approvals.
+- Reviews: [`.github/CODEOWNERS`](.github/CODEOWNERS) requests a review from
+  the other three team members on every PR. **1 approval** is required; the
+  other reviews are optional.
+- Into `develop`: default PR template, **squash merge**.
 - Into `main` (release): `gh pr create --base main --head develop --template release.md`,
-  title `chore(release): promote develop to main`, **merge commit**, 3 approvals.
+  title `chore(release): promote develop to main`, **merge commit**.
 - Before a release, merge `main` into `develop` via a PR
   (`chore(repo): merge main into develop`, merge commit) so the release PR has
   no conflicts.
