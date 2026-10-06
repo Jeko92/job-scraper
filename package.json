@@ -12,6 +12,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:apps": "pnpm --filter @job-scraper/shared build && concurrently --names shared,backend,frontend --prefix-colors magenta,blue,green --kill-others-on-fail \"pnpm --filter @job-scraper/shared dev\" \"pnpm --filter @job-scraper/backend dev\" \"pnpm --filter @job-scraper/frontend dev\"",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
@@ -26,6 +27,7 @@
     "@job-scraper/eslint-config": "workspace:*",
     "@job-scraper/prettier-config": "workspace:*",
     "@job-scraper/tsconfig": "workspace:*",
+    "concurrently": "^10.0.5",
     "eslint": "^9.39.5",
     "globals": "^17.13.0",
     "prettier": "^3.9.9",
