@@ -5,7 +5,8 @@ JobScraper: pnpm + Turborepo monorepo. Read `README.md` first.
 ## Commands
 
 - `pnpm install`, `pnpm dev`, `pnpm check`, `pnpm format:write`
-- One package: `pnpm --filter @job-scraper/<backend|frontend|shared> <script>`
+- One package: `pnpm turbo run <task> --filter=@job-scraper/<backend|frontend|shared>`
+  (builds `packages/shared` first)
 
 ## Rules
 

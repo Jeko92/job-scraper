@@ -1,2 +1,3 @@
 #!/bin/sh
+pnpm --silent --filter @job-scraper/shared build > /dev/null || exit 1
 pnpm exec lint-staged
