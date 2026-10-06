@@ -58,7 +58,8 @@ Root: `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `eslint.config.mjs`,
 * `feature/*`, `fix/*` → `develop` (squash, branches kept);
   `develop` → `main` (merge commit) after merging `main` into `develop`.
 * Rulesets: `main` — PR, 3 approvals, merge only, required checks `check` +
-  `lint-pr-title`; `develop` — PR, 3 approvals, squash + merge.
+  `lint-pr-title`; `develop` — PR, 3 approvals, squash + merge, required check
+  `lint-pr-title`.
 * CI: PR-title lint on PRs to `develop` and `main`; full check
   (lint, typecheck, format, test, build, source must be `develop`) on PRs to `main`.
 * Templates: default PR (→ `develop`), `release.md` PR (→ `main`), one issue template.
