@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch",
+    "dev": "node scripts/dev.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
@@ -27,6 +27,7 @@
     "@job-scraper/eslint-config": "workspace:*",
     "@job-scraper/tsconfig": "workspace:*",
     "eslint": "^9.39.5",
+    "globals": "^17.13.0",
     "tsdown": "^0.23.0",
     "typescript": "~6.0.3",
     "vitest": "^5.0.3"
