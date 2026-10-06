@@ -1,0 +1,10 @@
+{
+  "extends": "@job-scraper/tsconfig/base.json",
+  "compilerOptions": {
+    "types": [],
+    "declaration": true,
+    "isolatedDeclarations": true,
+    "noEmit": true
+  },
+  "include": ["src", "tsdown.config.ts"]
+}
