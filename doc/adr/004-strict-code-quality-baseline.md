@@ -1,4 +1,4 @@
-# ADR-005: Strict TypeScript, ESM and shared tooling baseline
+# ADR-004: Strict TypeScript, ESM and shared tooling baseline
 
 * Status: accepted
 
