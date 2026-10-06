@@ -1,0 +1,15 @@
+{
+  "extends": "@job-scraper/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "sourceMap": true,
+    "removeComments": true
+  },
+  "include": ["src", "test", "vitest.config.ts"]
+}
