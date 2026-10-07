@@ -2,6 +2,17 @@
 
 A collection of links that were discovered during the project. 
 
+## Schema
+
+* https://jsonld.com/organization/
+* https://schema.org/Organization
+* https://schema.org/Corporation
+
+## Validator
+
+* https://valibot.dev/
+* https://zod.dev/
+
 ## Data collection
 
 * https://openregister.de/en/api
