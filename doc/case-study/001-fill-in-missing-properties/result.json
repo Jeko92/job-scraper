@@ -1,0 +1,109 @@
+{
+  "id": "",
+  "name": "Nagarro",
+  "domain": "nagarro.com",
+  "website": "https://www.nagarro.com/en/",
+  "type": "public",
+  "legalName": "Nagarro SE",
+  "industry": "IT Services and IT Consulting",
+  "industries": [
+    "IT Services and IT Consulting",
+    "Software Development",
+    "Digital Engineering",
+    "Technology Consulting"
+  ],
+  "categories": [
+    "Digital Product Engineering",
+    "Custom Software Development",
+    "AI, Data & Analytics",
+    "Cloud & DevOps",
+    "ERP / SAP Services",
+    "Experience & Design"
+  ],
+  "employees": "10001+",
+  "reported_employees": "18003",
+  "revenue": "€999.3M (FY2025)",
+  "description": "Nagarro SE is a global digital engineering and technology services company founded in 1996 and headquartered in Munich, Germany. It provides digital product engineering, custom software development, AI, data & analytics, cloud, DevOps, cybersecurity, ERP/SAP and CX services to clients in industries such as automotive, banking, insurance, life sciences, manufacturing, retail and telecom. Listed in Frankfurt (NA9, SDAX/TecDAX). In June 2026 Nagarro signed a business combination agreement with Persistent Systems, which launched a takeover offer at €81 per share; closing is expected Q4 2026 / Q1 2027.",
+  "keywords": [
+    "digital engineering",
+    "software development",
+    "artificial intelligence",
+    "data analytics",
+    "cloud",
+    "devops",
+    "quality engineering",
+    "SAP",
+    "ERP",
+    "customer experience",
+    "cybersecurity",
+    "Fluidic Enterprise"
+  ],
+  "technologies": [
+    "Java",
+    ".NET",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Angular",
+    "Python",
+    "AWS",
+    "Microsoft Azure",
+    "Google Cloud",
+    "SAP",
+    "Salesforce",
+    "Kubernetes"
+  ],
+  "subsidiaries": [
+    "Nagarro ES GmbH",
+    "Nagarro Software Pvt. Ltd.",
+    "Nagarro Inc.",
+    "Nagarro GmbH"
+  ],
+  "founded_year": 1996,
+  "naics_codes": ["541511", "541512"],
+  "location": {
+    "country": {
+      "code": "DE",
+      "name": "Germany",
+      "latitude": 51,
+      "longitude": 9
+    },
+    "state": {
+      "id": 1378,
+      "name": "Berlin",
+      "code": "BE",
+      "latitude": 52.520008,
+      "longitude": 13.404954
+    },
+    "city": {
+      "id": 37140,
+      "name": "Berlin",
+      "latitude": 52.52437,
+      "longitude": 13.41053
+    },
+    "address": "Mühlenstraße 8a",
+    "postal_code": "62200",
+    "phone": "+49 621 17877 0"
+  },
+  "financial": {
+    "stock_symbol": "NA9",
+    "stock_exchange": "Frankfurt Stock Exchange (XETRA)",
+    "total_funding": null,
+    "funding_stage": "Public",
+    "funding_date": "2020-12-16",
+    "funding": null
+  },
+  "socials": {
+    "linkedin_url": "https://www.linkedin.com/company/nagarro",
+    "linkedin_id": "",
+    "twitter_url": "https://x.com/nagarro",
+    "facebook_url": "https://www.facebook.com/Nagarro",
+    "instagram_url": "https://www.instagram.com/nagarro",
+    "angellist_url": null,
+    "crunchbase_url": "https://www.crunchbase.com/organization/nagarro",
+    "youtube_url": "https://www.youtube.com/@Nagarro",
+    "github_url": "https://github.com/nagarro",
+    "g2_url": null
+  },
+  "updated_at": "2026-10-07T00:00:00Z"
+}

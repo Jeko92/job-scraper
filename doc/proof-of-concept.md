@@ -117,3 +117,7 @@ Use all available free APIs and API searches to find as many company names and w
 Build a schema of all the parameters that we need to allocate Job Seekers to positions. Add all parameters we need to build useful filters for the Job Seekers. Examples: `numbers_of_employees`, `hq_location`, `jurisdiction`, `industry`, ...
 
 Then use iterative crawling to fill-in as many of the parameters as possible in the background through free APIs, API searches, and AI crawling.
+
+
+## Case Studies
+- [fill-in-missing JSON fields](./case-study/001-fill-in-missing-properties)
