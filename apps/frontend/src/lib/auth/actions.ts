@@ -50,3 +50,8 @@ export async function login(
   });
   redirect('/');
 }
+
+export async function logout(): Promise<void> {
+  (await cookies()).delete(AUTH_COOKIE);
+  redirect('/');
+}

@@ -1,6 +1,13 @@
-import { LoginForm } from '@/components/auth/login-form';
+import { redirect } from 'next/navigation';
 
-export default function LoginPage() {
+import { LoginForm } from '@/components/auth/login-form';
+import { getSession } from '@/lib/auth/session';
+
+export default async function LoginPage() {
+  if (await getSession()) {
+    redirect('/');
+  }
+
   return (
     <main className="flex flex-1 items-center justify-center p-6">
       <div className="w-full max-w-md">

@@ -28,6 +28,14 @@ export async function fetchBackendGreeting(): Promise<string | null> {
   }
 }
 
+export function getFromBackend(path: string, token: string): Promise<Response> {
+  return fetch(new URL(path, getBackendUrl()), {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
+    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
+  });
+}
+
 export function postToBackend(path: string, body: unknown): Promise<Response> {
   return fetch(new URL(path, getBackendUrl()), {
     method: 'POST',
