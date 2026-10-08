@@ -13,6 +13,10 @@ export function getAuthCookieMaxAge(): number | undefined {
   return getPositiveInteger('AUTH_COOKIE_MAX_AGE');
 }
 
+export function getPasswordMinLength(): number | undefined {
+  return getPositiveInteger('PASSWORD_MIN_LENGTH');
+}
+
 function getPositiveInteger(name: string): number | undefined {
   const value = Number(process.env[name]);
   return Number.isInteger(value) && value > 0 ? value : undefined;

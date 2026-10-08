@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 
+import { FormErrors } from '@/components/auth/form-errors';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,14 +13,7 @@ export function LoginForm() {
 
   return (
     <form action={formAction} className="space-y-6">
-      {state && (
-        <p
-          role="alert"
-          className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive"
-        >
-          {state.error}
-        </p>
-      )}
+      {state && <FormErrors errors={state.errors} />}
 
       <div className="space-y-2">
         <Label htmlFor="username">Username</Label>

@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { LoginForm } from '@/components/auth/login-form';
+import { RegisterForm } from '@/components/auth/register-form';
 import { getSession } from '@/lib/auth/session';
+import { getPasswordMinLength } from '@/lib/env';
 
-export default async function LoginPage() {
+export default async function RegisterPage() {
   if (await getSession()) {
     redirect('/');
   }
@@ -13,16 +14,18 @@ export default async function LoginPage() {
     <main className="flex flex-1 items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-foreground">Log in</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            Create an account
+          </h1>
           <p className="mt-2 text-muted-foreground">
-            Use your JobScraper username and password.
+            Register to start using JobScraper.
           </p>
         </div>
-        <LoginForm />
+        <RegisterForm passwordMinLength={getPasswordMinLength()} />
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          No account yet?{' '}
-          <Link href="/register" className="text-foreground hover:underline">
-            Register
+          Already have an account?{' '}
+          <Link href="/login" className="text-foreground hover:underline">
+            Log in
           </Link>
         </p>
       </div>
