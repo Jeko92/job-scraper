@@ -5,6 +5,7 @@ import { envSchema } from './env.js';
 const required = {
   DATABASE_URL: 'postgres://user:password@localhost/database',
   BCRYPT_SALT_ROUNDS: '10',
+  PASSWORD_MIN_LENGTH: '8',
 };
 
 describe('envSchema', () => {
@@ -14,6 +15,7 @@ describe('envSchema', () => {
       PORT: 3030,
       DATABASE_URL: required.DATABASE_URL,
       BCRYPT_SALT_ROUNDS: 10,
+      PASSWORD_MIN_LENGTH: 8,
     });
   });
 
