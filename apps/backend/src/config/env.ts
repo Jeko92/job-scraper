@@ -5,6 +5,11 @@ export const envSchema = z.object({
     .enum(['development', 'test', 'production'])
     .default('development'),
   PORT: z.coerce.number().int().min(1).max(65_535).default(3030),
+  DATABASE_URL: z.url(),
+  BCRYPT_SALT_ROUNDS: z.coerce.number().int().positive(),
+  PASSWORD_MIN_LENGTH: z.coerce.number().int().positive(),
+  JWT_SECRET: z.string().nonempty(),
+  JWT_EXPIRES_IN: z.coerce.number().int().positive(),
 });
 
 export type Env = z.infer<typeof envSchema>;
