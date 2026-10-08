@@ -2,6 +2,10 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
+import { cookies } from 'next/headers';
+
+import { isTheme, THEME_COOKIE } from '@/lib/theme';
+import { cn } from '@/lib/utils';
 
 const geistSans = Geist({
   variable: '--font-sans',
@@ -13,9 +17,28 @@ export const metadata: Metadata = {
   description: 'AI-assisted job sourcing for Job Seekers',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const theme = (await cookies()).get(THEME_COOKIE)?.value;
+
   return (
-    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={cn(
+        geistSans.variable,
+        'h-full antialiased',
+        theme === 'dark' && 'dark',
+      )}
+      suppressHydrationWarning
+    >
+      <head>
+        {!isTheme(theme) && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `if(matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')`,
+            }}
+          />
+        )}
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
