@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
 import { cookies } from 'next/headers';
 
+import { Header } from '@/components/layout/header';
 import { isTheme, THEME_COOKIE } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 
@@ -39,7 +40,10 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
           />
         )}
       </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

@@ -7,7 +7,7 @@ export default async function HomePage() {
   const backendMessage = await fetchBackendGreeting();
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
+    <main className="flex flex-1 items-center justify-center p-6">
       <Greeting backendMessage={backendMessage} />
     </main>
   );
