@@ -12,7 +12,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typeorm": "node --env-file-if-exists=.env node_modules/typeorm/cli.js",
+    "migration:generate": "turbo run build && pnpm typeorm migration:generate -d dist/db/data-source.js",
+    "migration:run": "turbo run build && pnpm typeorm migration:run -d dist/db/data-source.js",
+    "migration:revert": "turbo run build && pnpm typeorm migration:revert -d dist/db/data-source.js"
   },
   "dependencies": {
     "@job-scraper/shared": "workspace:*",
