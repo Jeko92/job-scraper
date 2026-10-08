@@ -2,28 +2,32 @@ import { describe, expect, it } from 'vitest';
 
 import { envSchema } from './env.js';
 
-const DATABASE_URL = 'postgres://user:password@localhost/database';
+const required = {
+  DATABASE_URL: 'postgres://user:password@localhost/database',
+  BCRYPT_SALT_ROUNDS: '10',
+};
 
 describe('envSchema', () => {
   it('applies defaults when variables are missing', () => {
-    expect(envSchema.parse({ DATABASE_URL })).toEqual({
+    expect(envSchema.parse(required)).toEqual({
       NODE_ENV: 'development',
       PORT: 3030,
-      DATABASE_URL,
+      DATABASE_URL: required.DATABASE_URL,
+      BCRYPT_SALT_ROUNDS: 10,
     });
   });
 
   it('coerces PORT from a string', () => {
-    expect(envSchema.parse({ DATABASE_URL, PORT: '4000' }).PORT).toBe(4000);
+    expect(envSchema.parse({ ...required, PORT: '4000' }).PORT).toBe(4000);
   });
 
   it.each(['abc', '', '0', '70000', '3.5'])('rejects PORT=%j', (port) => {
-    expect(() => envSchema.parse({ DATABASE_URL, PORT: port })).toThrow();
+    expect(() => envSchema.parse({ ...required, PORT: port })).toThrow();
   });
 
   it('rejects an unknown NODE_ENV', () => {
     expect(() =>
-      envSchema.parse({ DATABASE_URL, NODE_ENV: 'staging' }),
+      envSchema.parse({ ...required, NODE_ENV: 'staging' }),
     ).toThrow();
   });
 });

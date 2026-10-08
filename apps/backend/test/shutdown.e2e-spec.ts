@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 import { AppModule } from '../src/app.module.js';
 import { appOptions } from '../src/app.options.js';
+import { mockDataSource } from './mock-data-source.js';
 
 describe('shutdown', () => {
   it('closes promptly while a client holds an idle connection', async () => {
@@ -14,7 +15,7 @@ describe('shutdown', () => {
       imports: [AppModule],
     })
       .overrideProvider(DataSource)
-      .useValue({})
+      .useValue(mockDataSource)
       .compile();
     const app = moduleRef.createNestApplication({
       ...appOptions,

@@ -6,6 +6,7 @@ import { DataSource } from 'typeorm';
 import { afterEach, beforeEach, describe, it } from 'vitest';
 
 import { AppModule } from '../src/app.module.js';
+import { mockDataSource } from './mock-data-source.js';
 
 describe('GET /', () => {
   let app: INestApplication<App>;
@@ -15,7 +16,7 @@ describe('GET /', () => {
       imports: [AppModule],
     })
       .overrideProvider(DataSource)
-      .useValue({})
+      .useValue(mockDataSource)
       .compile();
 
     app = moduleRef.createNestApplication();

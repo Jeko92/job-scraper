@@ -6,6 +6,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { type Env, envSchema } from './config/env.js';
 import { createDataSourceOptions } from './db/data-source.options.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { createDataSourceOptions } from './db/data-source.options.js';
       useFactory: (config: ConfigService<Env, true>) =>
         createDataSourceOptions(config.get('DATABASE_URL', { infer: true })),
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
