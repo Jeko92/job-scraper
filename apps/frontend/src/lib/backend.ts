@@ -27,3 +27,13 @@ export async function fetchBackendGreeting(): Promise<string | null> {
     clearTimeout(timeout);
   }
 }
+
+export function postToBackend(path: string, body: unknown): Promise<Response> {
+  return fetch(new URL(path, getBackendUrl()), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
+  });
+}

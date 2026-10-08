@@ -6,6 +6,14 @@ export function getBackendUrl(): string {
 }
 
 export function getThemeCookieMaxAge(): number | undefined {
-  const value = Number(process.env['THEME_COOKIE_MAX_AGE']);
+  return getPositiveInteger('THEME_COOKIE_MAX_AGE');
+}
+
+export function getAuthCookieMaxAge(): number | undefined {
+  return getPositiveInteger('AUTH_COOKIE_MAX_AGE');
+}
+
+function getPositiveInteger(name: string): number | undefined {
+  const value = Number(process.env[name]);
   return Number.isInteger(value) && value > 0 ? value : undefined;
 }
