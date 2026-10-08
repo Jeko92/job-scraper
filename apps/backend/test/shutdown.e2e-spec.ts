@@ -1,15 +1,23 @@
 import type { Server } from 'node:http';
 import { createConnection } from 'node:net';
 
-import { NestFactory } from '@nestjs/core';
+import { Test } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 import { describe, expect, it } from 'vitest';
 
 import { AppModule } from '../src/app.module.js';
 import { appOptions } from '../src/app.options.js';
+import { mockDataSource } from './mock-data-source.js';
 
 describe('shutdown', () => {
   it('closes promptly while a client holds an idle connection', async () => {
-    const app = await NestFactory.create(AppModule, {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      .overrideProvider(DataSource)
+      .useValue(mockDataSource)
+      .compile();
+    const app = moduleRef.createNestApplication({
       ...appOptions,
       logger: false,
     });

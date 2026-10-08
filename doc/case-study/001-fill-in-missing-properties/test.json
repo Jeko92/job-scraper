@@ -1,0 +1,65 @@
+{
+  "id": "",
+  "name": "Nagarro",
+  "domain": "",
+  "website": "https://www.nagarro.com/en/",
+  "type": "",
+  "legalName": "",
+  "industry": "",
+  "industries": ["", ""],
+  "categories": ["", ""],
+  "employees": "",
+  "reported_employees": "",
+  "revenue": "",
+  "description": "",
+  "keywords": ["", ""],
+  "technologies": ["", ""],
+  "subsidiaries": null,
+  "founded_year": null,
+  "naics_codes": ["", ""],
+  "location": {
+    "country": {
+      "code": "DE",
+      "name": "Germany",
+      "latitude": 51,
+      "longitude": 9
+    },
+    "state": {
+      "id": 1378,
+      "name": "Berlin",
+      "code": "BE",
+      "latitude": 52.520008,
+      "longitude": 13.404954
+    },
+    "city": {
+      "id": 37140,
+      "name": "Berlin",
+      "latitude": 52.52437,
+      "longitude": 13.41053
+    },
+    "address": "Mühlenstraße 8a",
+    "postal_code": "62200",
+    "phone": "+49 621 17877 0"
+  },
+  "financial": {
+    "stock_symbol": null,
+    "stock_exchange": null,
+    "total_funding": null,
+    "funding_stage": null,
+    "funding_date": null,
+    "funding": null
+  },
+  "socials": {
+    "linkedin_url": "",
+    "linkedin_id": "",
+    "twitter_url": "",
+    "facebook_url": null,
+    "instagram_url": null,
+    "angellist_url": null,
+    "crunchbase_url": null,
+    "youtube_url": null,
+    "github_url": "",
+    "g2_url": null
+  },
+  "updated_at": "2026-09-25T21:19:49.828254Z"
+}

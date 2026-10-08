@@ -15,7 +15,8 @@ JobScraper: pnpm + Turborepo monorepo. Read `README.md` first.
   `apps/frontend` server code only calls the backend (ADR-002).
 - Code used by both apps goes into `packages/shared`.
 - Backend relative imports end in `.js` (ESM, NodeNext).
-- Conventional Commits; branch from `develop` as `feature/*` or `fix/*`.
+- Conventional Commits; branch from `develop` as `feature/*`, `fix/*` or
+  `doc/*`, or commit to `develop` directly (ADR-006).
 - Architecture decisions go to `doc/adr/` using `doc/adr/template.md`.
 
 <!-- BEGIN:turborepo-agent-rules -->

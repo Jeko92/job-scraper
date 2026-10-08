@@ -1,15 +1,16 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist } from 'next/font/google';
+import { cookies } from 'next/headers';
+
+import { Footer } from '@/components/layout/footer';
+import { Header } from '@/components/layout/header';
+import { isTheme, THEME_COOKIE } from '@/lib/theme';
+import { cn } from '@/lib/utils';
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+  variable: '--font-sans',
   subsets: ['latin'],
 });
 
@@ -18,13 +19,33 @@ export const metadata: Metadata = {
   description: 'AI-assisted job sourcing for Job Seekers',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const theme = (await cookies()).get(THEME_COOKIE)?.value;
+
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={cn(
+        geistSans.variable,
+        'h-full antialiased',
+        theme === 'dark' && 'dark',
+      )}
+      suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <head>
+        {!isTheme(theme) && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `if(matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')`,
+            }}
+          />
+        )}
+      </head>
+      <body className="flex min-h-full flex-col">
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

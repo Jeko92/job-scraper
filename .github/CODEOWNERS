@@ -1,0 +1,4 @@
+# Every team member owns all code, so GitHub requests a review from the other
+# three on every PR (the author is skipped). One approval is enough to merge;
+# the rulesets do not require code owner approval (ADR-006).
+* @Jeko92 @manuasdf @zeinamagdy @savithacs
