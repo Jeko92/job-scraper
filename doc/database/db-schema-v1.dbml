@@ -1,0 +1,107 @@
+// JobScraper database schema (v1)
+//
+// How to view: this file is written in DBML (Database Markup Language).
+// To see it as an ER diagram, copy the whole file and paste it into the
+// editor at https://dbdiagram.io/d. The diagram renders automatically.
+//
+// How the tables are defined:
+// - Every main table (users, user_profiles, skills, industries, locations,
+//   companies) uses a uuid `id` primary key.
+// - users holds login data. user_profiles holds personal and career data,
+//   1:1 with users (user_profiles.user_id is unique).
+// - skills, industries and locations are shared lookup tables. Skills and
+//   industries have a unique name and a URL-friendly slug.
+// - user_skills, user_industries and company_locations are many-to-many
+//   join tables. They use composite primary keys and can carry extra data
+//   (e.g. skill level, industry priority).
+// - `ref: >` marks a many-to-one foreign key to the referenced table.
+
+Table users {
+  id uuid [pk]
+  email varchar [unique]
+  username varchar [unique]
+  password_hash varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table user_profiles {
+  id uuid [pk]
+  user_id uuid [unique, ref: > users.id]
+  first_name varchar
+  last_name varchar
+  headline varchar
+  years_experience decimal
+  location_id uuid [ref: > locations.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table skills {
+  id uuid [pk]
+  name varchar [unique]
+  slug varchar [unique]
+}
+
+Table industries {
+  id uuid [pk]
+  name varchar [unique]
+  slug varchar [unique]
+}
+
+Table locations {
+  id uuid [pk]
+  country_code varchar
+  country_name varchar
+  state_name varchar
+  city varchar
+  postal_code varchar
+}
+
+Table user_skills {
+  user_profile_id uuid [ref: > user_profiles.id]
+  skill_id uuid [ref: > skills.id]
+
+  level varchar
+  years_experience decimal
+
+  indexes {
+    (user_profile_id, skill_id) [pk]
+  }
+}
+
+Table user_industries {
+  user_profile_id uuid [ref: > user_profiles.id]
+  industry_id uuid [ref: > industries.id]
+
+  priority int
+
+  indexes {
+    (user_profile_id, industry_id) [pk]
+  }
+}
+
+Table companies {
+  id uuid [pk]
+  name varchar
+  legal_name varchar
+  domain varchar [unique]
+  website_url varchar
+  company_type varchar
+  description text
+  number_of_employees int
+  employee_range varchar
+  founding_year int
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table company_locations {
+  company_id uuid [ref: > companies.id]
+  location_id uuid [ref: > locations.id]
+
+  indexes {
+    (company_id, location_id) [pk]
+  }
+}
+
