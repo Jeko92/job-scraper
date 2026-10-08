@@ -8,6 +8,8 @@ export const envSchema = z.object({
   DATABASE_URL: z.url(),
   BCRYPT_SALT_ROUNDS: z.coerce.number().int().positive(),
   PASSWORD_MIN_LENGTH: z.coerce.number().int().positive(),
+  JWT_SECRET: z.string().nonempty(),
+  JWT_EXPIRES_IN: z.coerce.number().int().positive(),
 });
 
 export type Env = z.infer<typeof envSchema>;

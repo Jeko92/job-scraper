@@ -6,6 +6,8 @@ const required = {
   DATABASE_URL: 'postgres://user:password@localhost/database',
   BCRYPT_SALT_ROUNDS: '10',
   PASSWORD_MIN_LENGTH: '8',
+  JWT_SECRET: 'test-secret',
+  JWT_EXPIRES_IN: '3600',
 };
 
 describe('envSchema', () => {
@@ -16,6 +18,8 @@ describe('envSchema', () => {
       DATABASE_URL: required.DATABASE_URL,
       BCRYPT_SALT_ROUNDS: 10,
       PASSWORD_MIN_LENGTH: 8,
+      JWT_SECRET: required.JWT_SECRET,
+      JWT_EXPIRES_IN: 3600,
     });
   });
 
