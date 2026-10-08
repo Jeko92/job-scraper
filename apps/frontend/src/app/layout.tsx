@@ -15,8 +15,16 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: 'JobScraper',
-  description: 'AI-assisted job sourcing for Job Seekers',
+  title: {
+    default: 'JobScraper: AI-assisted job sourcing',
+    template: '%s · JobScraper',
+  },
+  description,
+  openGraph: {
+    title: 'JobScraper',
+    description,
+    type: 'website',
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
