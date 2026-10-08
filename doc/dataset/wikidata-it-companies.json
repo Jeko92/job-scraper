@@ -1,0 +1,758 @@
+[
+  {
+    "company": "http://www.wikidata.org/entity/Q18128427",
+    "companyLabel": "Q18128427",
+    "hqLabel": "München",
+    "officialWebsite": "https://www.nagarro.com/",
+    "foundedDate": "1996-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q2648743",
+    "companyLabel": "Allgeier SE",
+    "hqLabel": "München",
+    "officialWebsite": "http://www.allgeier-holding.de/",
+    "foundedDate": "1977-01-01T00:00:00Z",
+    "employeeCount": "6338.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138794014",
+    "companyLabel": "AppSCREEN GmbH",
+    "hqLabel": "Grasbrunn",
+    "officialWebsite": "https://www.appscreen.de",
+    "foundedDate": "2014-04-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140754319",
+    "companyLabel": "Argos Security GmbH",
+    "hqLabel": "München",
+    "officialWebsite": "https://www.argos.security",
+    "foundedDate": "1999-01-01T00:00:00Z",
+    "employeeCount": "100.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140336634",
+    "companyLabel": "Audius SE",
+    "hqLabel": "Weinstadt",
+    "officialWebsite": "https://audius.de/en"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q468381",
+    "companyLabel": "Avira",
+    "hqLabel": "Tettnang",
+    "officialWebsite": "https://www.avira.com/",
+    "foundedDate": "1986-01-01T00:00:00Z",
+    "employeeCount": "459.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q34561213",
+    "companyLabel": "BWI GmbH",
+    "hqLabel": "Meckenheim",
+    "officialWebsite": "https://www.bwi.de/",
+    "foundedDate": "2006-10-23T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q724419",
+    "companyLabel": "Bechtle AG",
+    "hqLabel": "Neckarsulm",
+    "officialWebsite": "https://www.bechtle.com/",
+    "foundedDate": "1983-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q123020143",
+    "companyLabel": "BerlinOnline GmbH",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://berlinonline.net"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140288985",
+    "companyLabel": "Borderless Technologies GmbH",
+    "hqLabel": "Dortmund",
+    "officialWebsite": "https://www.borderless-technologies.com"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q84542709",
+    "companyLabel": "CID",
+    "hqLabel": "Freigericht",
+    "officialWebsite": "https://cid.com/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q1022796",
+    "companyLabel": "Cancom SE",
+    "hqLabel": "München",
+    "officialWebsite": "https://www.cancom.de/",
+    "foundedDate": "1992-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q477848",
+    "companyLabel": "Cirquent",
+    "hqLabel": "München",
+    "officialWebsite": "http://www.cirquent.com/",
+    "foundedDate": "1971-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q134881838",
+    "companyLabel": "Columbus Aerofoto GmbH",
+    "hqLabel": "Flensburg",
+    "foundedDate": "2000-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q134881838",
+    "companyLabel": "Columbus Aerofoto GmbH",
+    "hqLabel": "Bremen",
+    "foundedDate": "2000-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q5157406",
+    "companyLabel": "Computer 2000",
+    "hqLabel": "München",
+    "foundedDate": "1983-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q58988551",
+    "companyLabel": "Cosmo Consult",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://de.cosmoconsult.com/",
+    "foundedDate": "1996-01-01T00:00:00Z",
+    "employeeCount": "1200.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140412461",
+    "companyLabel": "DATUREX GmbH",
+    "hqLabel": "Dresden",
+    "officialWebsite": "https://daturex.de/",
+    "foundedDate": "2012-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140478942",
+    "companyLabel": "DaPhi GmbH",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://www.daphi.de/",
+    "foundedDate": "2000-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q260085",
+    "companyLabel": "Data Becker",
+    "hqLabel": "Düsseldorf",
+    "foundedDate": "1981-01-07T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q181653",
+    "companyLabel": "Deutsche Bundespost",
+    "hqLabel": "Bonn",
+    "officialWebsite": "https://www.deutschepost.de/de.html",
+    "foundedDate": "1950-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q120242194",
+    "companyLabel": "Diconium GmbH",
+    "hqLabel": "Stuttgart",
+    "officialWebsite": "https://diconium.com/de",
+    "foundedDate": "1995-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q702394",
+    "companyLabel": "Diebold Nixdorf AG",
+    "hqLabel": "Paderborn",
+    "officialWebsite": "https://www.wincor-nixdorf.com",
+    "foundedDate": "1999-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q117442701",
+    "companyLabel": "Eviden",
+    "officialWebsite": "https://eviden.com/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140290468",
+    "companyLabel": "Exxeta",
+    "hqLabel": "Karlsruhe",
+    "officialWebsite": "http://www.exxeta.com",
+    "foundedDate": "2005-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140171657",
+    "companyLabel": "Find-Your-Software",
+    "officialWebsite": "https://www.find-your-software.de"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140129274",
+    "companyLabel": "Fsas Technologies GmbH",
+    "hqLabel": "München",
+    "officialWebsite": "https://eu.fsastech.com/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q312590",
+    "companyLabel": "Fujitsu Siemens Computers",
+    "hqLabel": "München",
+    "officialWebsite": "http://www.fujitsu-siemens.com/",
+    "foundedDate": "1999-01-01T00:00:00Z",
+    "employeeCount": "10700.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q681157",
+    "companyLabel": "G Data CyberDefense",
+    "hqLabel": "Bochum",
+    "officialWebsite": "https://www.gdata.de/en",
+    "foundedDate": "1985-01-01T00:00:00Z",
+    "employeeCount": "500.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q1550912",
+    "companyLabel": "GMV",
+    "hqLabel": "Tres Cantos",
+    "officialWebsite": "http://www.gmv.com",
+    "foundedDate": "1984-01-01T00:00:00Z",
+    "employeeCount": "3880.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138637460",
+    "companyLabel": "GREEN IT Das Systemhaus GmbH",
+    "hqLabel": "Dortmund",
+    "officialWebsite": "https://www.greenit.systems",
+    "foundedDate": "2013-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q122912986",
+    "companyLabel": "Gamma Communications GmbH",
+    "hqLabel": "Ziegeleistraße",
+    "officialWebsite": "https://www.gammacommunications.de/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q15812500",
+    "companyLabel": "Goetzfried",
+    "hqLabel": "Wiesbaden",
+    "officialWebsite": "http://www.goetzfried-ag.com/",
+    "foundedDate": "1987-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q70898415",
+    "companyLabel": "Hemmersbach",
+    "hqLabel": "Nürnberg",
+    "officialWebsite": "https://www.hemmersbach.com/",
+    "foundedDate": "1994-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q139551019",
+    "companyLabel": "Hermann Consult & Co. GmbH",
+    "hqLabel": "Hagen",
+    "officialWebsite": "https://www.hermann-consult.de/",
+    "foundedDate": "2014-10-15T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q542511",
+    "companyLabel": "Hoechst",
+    "hqLabel": "Frankfurt am Main",
+    "officialWebsite": "http://www.hoechst.de/",
+    "foundedDate": "1863-01-02T00:00:00Z",
+    "employeeCount": "179332.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q122699709",
+    "companyLabel": "Holoride",
+    "hqLabel": "Maxvorstadt",
+    "officialWebsite": "https://www.holoride.com"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q118206882",
+    "companyLabel": "Holzland IT",
+    "hqLabel": "Hermsdorf",
+    "officialWebsite": "https://holzland-it.de/",
+    "foundedDate": "2021-05-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141624596",
+    "companyLabel": "Hornetsecurity GmbH",
+    "hqLabel": "Hannover",
+    "officialWebsite": "https://www.hornetsecurity.com/",
+    "foundedDate": "2007-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q518584",
+    "companyLabel": "IDS Scheer",
+    "hqLabel": "Saarbrücken",
+    "officialWebsite": "http://www.ids-scheer.com/",
+    "foundedDate": "1984-07-27T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140247278",
+    "companyLabel": "IMENDIT GmbH",
+    "hqLabel": "Wuppertal",
+    "officialWebsite": "https://www.imendit.de/",
+    "foundedDate": "2011-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q66649364",
+    "companyLabel": "IT-Haus",
+    "hqLabel": "Föhren",
+    "officialWebsite": "https://www.it-haus.com/",
+    "foundedDate": "1998-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q23786362",
+    "companyLabel": "Informationstechnikzentrum Bund",
+    "hqLabel": "Bonn",
+    "officialWebsite": "https://www.itzbund.de/",
+    "foundedDate": "2016-01-01T00:00:00Z",
+    "employeeCount": "4100.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q1471874",
+    "companyLabel": "It-sa",
+    "officialWebsite": "https://www.it-sa.de/",
+    "foundedDate": "2009-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q134126564",
+    "companyLabel": "JB-Computer",
+    "officialWebsite": "https://www.jb-computer.de/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q15820927",
+    "companyLabel": "Jedox",
+    "hqLabel": "Freiburg im Breisgau",
+    "officialWebsite": "https://www.jedox.com/",
+    "foundedDate": "2002-01-01T00:00:00Z",
+    "employeeCount": "300.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141162626",
+    "companyLabel": "KAEMI GmbH",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://www.kaemi.website/",
+    "foundedDate": "2016-06-22T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140533381",
+    "companyLabel": "Kiosa",
+    "officialWebsite": "https://kiosa.ai/",
+    "foundedDate": "2026-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q135206129",
+    "companyLabel": "Kittl",
+    "officialWebsite": "https://www.kittl.com"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q128219529",
+    "companyLabel": "Kontinu e.K.",
+    "officialWebsite": "https://kontinu.de"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138965363",
+    "companyLabel": "Krusche & Company GmbH",
+    "hqLabel": "München",
+    "officialWebsite": "https://kruschecompany.com",
+    "foundedDate": "1999-01-01T00:00:00Z",
+    "employeeCount": "180.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141623642",
+    "companyLabel": "LegacyMind GmbH",
+    "hqLabel": "Ingolstadt",
+    "officialWebsite": "https://www.legacymind.de",
+    "foundedDate": "2025-09-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138319586",
+    "companyLabel": "Leopold Netzwerke GmbH",
+    "hqLabel": "Zimmern ob Rottweil",
+    "officialWebsite": "https://www.leopold-netzwerke.de",
+    "foundedDate": "2010-01-01T00:00:00Z",
+    "employeeCount": "15.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q884611",
+    "companyLabel": "Lufthansa Systems",
+    "hqLabel": "Kelsterbach",
+    "officialWebsite": "http://www.lhsystems.de",
+    "foundedDate": "1995-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q139679427",
+    "companyLabel": "MODUS Consult",
+    "hqLabel": "Gütersloh",
+    "officialWebsite": "https://www.modusconsult.de/",
+    "foundedDate": "1995-01-01T00:00:00Z",
+    "employeeCount": "300.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q108101137",
+    "companyLabel": "Maltego Technologies GmbH",
+    "hqLabel": "München",
+    "officialWebsite": "https://www.maltego.com/",
+    "foundedDate": "2017-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q139882547",
+    "companyLabel": "Moselwal Digitalagentur GmbH",
+    "hqLabel": "Monheim am Rhein",
+    "officialWebsite": "https://moselwal.de",
+    "foundedDate": "2020-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q1618207",
+    "companyLabel": "Netviewer",
+    "hqLabel": "Karlsruhe",
+    "foundedDate": "2001-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q1749763",
+    "companyLabel": "Nexus",
+    "hqLabel": "Villingen-Schwenningen",
+    "officialWebsite": "http://de.nexus-ag.de/web/0/inter/?art_id=dc_2012_07_16_8c488d37a1b5229c11",
+    "foundedDate": "1989-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140931012",
+    "companyLabel": "OIT GmbH",
+    "hqLabel": "Osnabrück",
+    "officialWebsite": "https://oit.digital/",
+    "foundedDate": "2016-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q56098126",
+    "companyLabel": "Prisma Data, Inc",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://www.prisma.io",
+    "foundedDate": "2016-07-11T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q66480889",
+    "companyLabel": "Professional Wiki",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://professional.wiki/",
+    "foundedDate": "2019-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q139678017",
+    "companyLabel": "Reineke Technik GmbH",
+    "hqLabel": "Salzkotten",
+    "foundedDate": "2022-04-27T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q137291408",
+    "companyLabel": "SECANDA Systems AG",
+    "hqLabel": "Villingen-Schwenningen",
+    "officialWebsite": "https://www.secanda.com"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q2207658",
+    "companyLabel": "SQS Software Quality Systems",
+    "hqLabel": "Paris",
+    "officialWebsite": "http://www.sqs.com/",
+    "foundedDate": "1981-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q135479320",
+    "companyLabel": "Schwarz Digits",
+    "hqLabel": "Bad Friedrichshall",
+    "officialWebsite": "https://schwarz-digits.de/",
+    "foundedDate": "2023-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141249341",
+    "companyLabel": "SecuraTrust",
+    "hqLabel": "Schmitten im Taunus",
+    "officialWebsite": "https://securatrust.de"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138840085",
+    "companyLabel": "Shoobridge Business IT Solutions",
+    "hqLabel": "Kaarst",
+    "officialWebsite": "https://shoobridge.de",
+    "foundedDate": "2007-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140185983",
+    "companyLabel": "Siecom IT-Systemhaus GmbH",
+    "hqLabel": "Dresden",
+    "officialWebsite": "https://www.siecom.de",
+    "foundedDate": "2006-08-31T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q65554041",
+    "companyLabel": "Skymatic GmbH",
+    "hqLabel": "Sankt Augustin",
+    "officialWebsite": "https://skymatic.de/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q2375651",
+    "companyLabel": "Synaxon",
+    "hqLabel": "Bielefeld",
+    "officialWebsite": "https://synaxon.com",
+    "foundedDate": "1990-07-17T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q2375651",
+    "companyLabel": "Synaxon",
+    "hqLabel": "Schloß Holte-Stukenbrock",
+    "officialWebsite": "https://synaxon.com",
+    "foundedDate": "1990-07-17T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q31838474",
+    "companyLabel": "Team Neusta",
+    "officialWebsite": "http://www.team-neusta.de",
+    "foundedDate": "1993-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q5611321",
+    "companyLabel": "Teamwire",
+    "hqLabel": "München",
+    "officialWebsite": "https://teamwire.eu/en/",
+    "foundedDate": "2010-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138745719",
+    "companyLabel": "Think Ahead Technologies GmbH",
+    "hqLabel": "Stuttgart",
+    "officialWebsite": "https://think-ahead.tech",
+    "foundedDate": "2024-04-02T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q107147021",
+    "companyLabel": "Tibush GmbH",
+    "hqLabel": "Pfullingen",
+    "officialWebsite": "https://tibush.com/",
+    "foundedDate": "2018-07-25T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q20181121",
+    "companyLabel": "UMT AG",
+    "hqLabel": "München",
+    "officialWebsite": "http://www.umt.ag/de/",
+    "foundedDate": "1989-10-16T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q124038341",
+    "companyLabel": "UP42 GmbH",
+    "hqLabel": "Berlin",
+    "officialWebsite": "https://up42.com/",
+    "foundedDate": "2019-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q2563664",
+    "companyLabel": "Werum IT Solutions",
+    "hqLabel": "Lüneburg",
+    "officialWebsite": "http://www.werum.com/",
+    "foundedDate": "1969-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141133780",
+    "companyLabel": "WindinX GmbH",
+    "hqLabel": "Köngen",
+    "officialWebsite": "https://windinx.de/",
+    "foundedDate": "2020-07-07T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q104172913",
+    "companyLabel": "Wonder.me",
+    "officialWebsite": "https://www.wonder.me/",
+    "foundedDate": "2020-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q128228566",
+    "companyLabel": "ZAUBAR",
+    "hqLabel": "Nollendorfstraße",
+    "officialWebsite": "https://zaubar.com",
+    "foundedDate": "2019-08-07T00:00:00Z",
+    "employeeCount": "20.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q191209",
+    "companyLabel": "Zentrum für Informationsverarbeitung und Informationstechnik",
+    "officialWebsite": "http://www.zivit.de/",
+    "foundedDate": "2006-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141476641",
+    "companyLabel": "adtribute",
+    "hqLabel": "Germering",
+    "officialWebsite": "https://www.adtribute.io"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q139586720",
+    "companyLabel": "bitformer GmbH",
+    "officialWebsite": "https://www.bitformer.net"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q139564199",
+    "companyLabel": "cycura GmbH",
+    "hqLabel": "Einbeck",
+    "officialWebsite": "https://www.cycura.de"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q110782903",
+    "companyLabel": "genua GmbH",
+    "hqLabel": "Kirchheim bei München",
+    "officialWebsite": "https://www.genua.de/",
+    "foundedDate": "1992-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q126341076",
+    "companyLabel": "heger.IT GmbH",
+    "hqLabel": "Hann. Münden",
+    "officialWebsite": "https://heger.it/",
+    "foundedDate": "2020-10-09T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q135052533",
+    "companyLabel": "iTeam",
+    "hqLabel": "Schloß Holte-Stukenbrock",
+    "officialWebsite": "https://iteam.de/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141202738",
+    "companyLabel": "mainsec UG (haftungsbeschränkt)",
+    "hqLabel": "Rimpar",
+    "officialWebsite": "https://mainsec.de",
+    "foundedDate": "2025-07-15T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140881526",
+    "companyLabel": "mgm security partners GmbH",
+    "hqLabel": "München",
+    "officialWebsite": "https://www.mgm-sp.com/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q126339348",
+    "companyLabel": "o.k.computer GmbH",
+    "hqLabel": "Kassel",
+    "officialWebsite": "https://ok-computer.de/",
+    "foundedDate": "2002-08-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138682471",
+    "companyLabel": "xavvy fuel",
+    "officialWebsite": "https://xavvy.solutions/fuel/",
+    "foundedDate": "2014-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q5503255",
+    "companyLabel": "Freudenberg IT",
+    "hqLabel": "Weinheim",
+    "officialWebsite": "http://www.freudenberg-it.com/",
+    "foundedDate": "1995-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q5510907",
+    "companyLabel": "Futurice",
+    "hqLabel": "Helsinki",
+    "officialWebsite": "http://www.futurice.com",
+    "foundedDate": "2000-01-01T00:00:00Z",
+    "employeeCount": "720.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140387236",
+    "companyLabel": "GuardingPearSoftware",
+    "hqLabel": "Münster",
+    "officialWebsite": "https://www.guardingpearsoftware.com/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138598171",
+    "companyLabel": "Hidden Brains Infotech Pvt. Ltd.",
+    "hqLabel": "Ahmedabad",
+    "officialWebsite": "https://www.hiddenbrains.com",
+    "foundedDate": "2003-01-01T00:00:00Z",
+    "employeeCount": "700.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q138598171",
+    "companyLabel": "Hidden Brains Infotech Pvt. Ltd.",
+    "hqLabel": "München",
+    "officialWebsite": "https://www.hiddenbrains.com",
+    "foundedDate": "2003-01-01T00:00:00Z",
+    "employeeCount": "700.0"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q87806465",
+    "companyLabel": "Informationsfabrik GmbH",
+    "hqLabel": "Münster",
+    "officialWebsite": "https://informationsfabrik.com/",
+    "foundedDate": "2000-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140638754",
+    "companyLabel": "InfraMS UG (haftungsbeschränkt)",
+    "hqLabel": "Hanau",
+    "officialWebsite": "https://inframs.de",
+    "foundedDate": "2024-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q27627866",
+    "companyLabel": "NCP engineering",
+    "hqLabel": "Nürnberg",
+    "foundedDate": "1986-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140932407",
+    "companyLabel": "Octolens",
+    "officialWebsite": "https://octolens.com",
+    "foundedDate": "2023-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141533477",
+    "companyLabel": "Process.Science",
+    "hqLabel": "Hamburg",
+    "officialWebsite": "https://www.process-science.com/?r=0",
+    "foundedDate": "2019-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q122751549",
+    "companyLabel": "Storm Reply",
+    "hqLabel": "Turin",
+    "officialWebsite": "https://www.reply.com/storm-reply/en/"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q136417019",
+    "companyLabel": "Terra Computer UK",
+    "officialWebsite": "https://www.terracomputer.co.uk/",
+    "foundedDate": "2013-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141118908",
+    "companyLabel": "Yalantis",
+    "hqLabel": "Warschau",
+    "officialWebsite": "https://yalantis.com/",
+    "foundedDate": "2008-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141118908",
+    "companyLabel": "Yalantis",
+    "hqLabel": "München",
+    "officialWebsite": "https://yalantis.com/",
+    "foundedDate": "2008-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141118908",
+    "companyLabel": "Yalantis",
+    "hqLabel": "Tallinn",
+    "officialWebsite": "https://yalantis.com/",
+    "foundedDate": "2008-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141118908",
+    "companyLabel": "Yalantis",
+    "hqLabel": "Long Beach",
+    "officialWebsite": "https://yalantis.com/",
+    "foundedDate": "2008-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q141118908",
+    "companyLabel": "Yalantis",
+    "hqLabel": "Larnaka",
+    "officialWebsite": "https://yalantis.com/",
+    "foundedDate": "2008-01-01T00:00:00Z"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q140276134",
+    "companyLabel": "b4dynamics",
+    "hqLabel": "Hüfingen",
+    "officialWebsite": "https://b4dynamics.com"
+  },
+  {
+    "company": "http://www.wikidata.org/entity/Q134319483",
+    "companyLabel": "migratech",
+    "officialWebsite": "https://www.migratech.org",
+    "foundedDate": "2024-12-01T00:00:00Z"
+  }
+]
