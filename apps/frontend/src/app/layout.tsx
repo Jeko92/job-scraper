@@ -19,10 +19,10 @@ export const metadata: Metadata = {
     default: 'JobScraper: AI-assisted job sourcing',
     template: '%s · JobScraper',
   },
-  description,
+  description: 'JobScraper: AI-assisted job sourcing',
   openGraph: {
     title: 'JobScraper',
-    description,
+    description: 'JobScraper: AI-assisted job sourcing',
     type: 'website',
   },
 };

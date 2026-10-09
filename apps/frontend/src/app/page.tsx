@@ -8,10 +8,9 @@ import { SiteFooter } from '@/components/landing/site-footer';
 import { SiteHeader } from '@/components/landing/site-header';
 import { getSession } from '@/lib/auth/session';
 
-
-export default function HomePage() {
-    const user = await getSession();
-    console.log("user", user);
+export default async function HomePage() {
+  const user = await getSession();
+  console.log('user', user);
 
   return (
     <div className="flex min-h-screen flex-col bg-surface-warm">
