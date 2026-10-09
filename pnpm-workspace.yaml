@@ -4,6 +4,7 @@ packages:
 
 allowBuilds:
   '@nestjs/core': false
+  '@scarf/scarf': false
   bcrypt: false
   sharp: false
   unrs-resolver: false
