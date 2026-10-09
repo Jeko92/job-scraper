@@ -5,16 +5,22 @@
 // editor at https://dbdiagram.io/d. The diagram renders automatically.
 //
 // How the tables are defined:
-// - Every main table (users, user_profiles, skills, industries, locations,
-//   companies) uses a uuid `id` primary key.
+// - Every main table (users, user_profiles, user_preferences, skills,
+//   industries, locations, companies) uses a uuid `id` primary key.
 // - users holds login data. user_profiles holds personal and career data,
-//   1:1 with users (user_profiles.user_id is unique).
+//   1:1 with users (user_profiles.user_id is unique and not null).
+// - user_preferences holds job-search preferences (remote, employment type,
+//   minimum salary and currency, willingness to relocate), 1:1 with
+//   user_profiles (user_preferences.user_profile_id is unique and not null).
 // - skills, industries and locations are shared lookup tables. Skills and
-//   industries have a unique name and a URL-friendly slug.
-// - user_skills, user_industries and company_locations are many-to-many
-//   join tables. They use composite primary keys and can carry extra data
-//   (e.g. skill level, industry priority).
-// - `ref: >` marks a many-to-one foreign key to the referenced table.
+//   industries have a unique name and a URL-friendly slug. A profile's
+//   location is optional.
+// - user_skills, user_industries, company_locations, company_skills and
+//   company_industries are many-to-many join tables. They use composite
+//   primary keys and can carry extra data (e.g. skill level, industry
+//   priority).
+// - Relation markers: `ref: -` is one-to-one, `ref: >` is many-to-one,
+//   `ref: >?` is an optional (nullable) many-to-one.
 
 Table users {
   id uuid [pk]
@@ -27,14 +33,27 @@ Table users {
 
 Table user_profiles {
   id uuid [pk]
-  user_id uuid [unique, ref: > users.id]
+  user_id uuid [unique, ref: - users.id, not null]
   first_name varchar
   last_name varchar
   headline varchar
   years_experience decimal
-  location_id uuid [ref: > locations.id]
+  location_id uuid [ref: >? locations.id]
   created_at timestamp
   updated_at timestamp
+}
+
+Table user_preferences {
+  id uuid [pk]
+
+  user_profile_id uuid [unique, ref: - user_profiles.id, not null]
+  remote_preference varchar(50)
+  employment_type varchar(50)
+  min_salary decimal(12,2)
+  salary_currency char(3)
+  willing_to_relocate boolean [default: false]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
 }
 
 Table skills {
@@ -104,4 +123,23 @@ Table company_locations {
     (company_id, location_id) [pk]
   }
 }
+
+Table company_skills {
+  company_id uuid [ref: > companies.id]
+  skill_id uuid [ref: > skills.id]
+
+  indexes {
+    (company_id, skill_id) [pk]
+  }
+}
+
+Table company_industries {
+  company_id uuid [ref: > companies.id]
+  industry_id uuid [ref: > industries.id]
+
+  indexes {
+    (company_id, industry_id) [pk]
+  }
+}
+
 
