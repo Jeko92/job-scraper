@@ -10,6 +10,8 @@ export const envSchema = z.object({
   PASSWORD_MIN_LENGTH: z.coerce.number().int().positive(),
   JWT_SECRET: z.string().nonempty(),
   JWT_EXPIRES_IN: z.coerce.number().int().positive(),
+  OPENAI_API_KEY: z.string().nonempty(),
+  OPENAI_MODEL: z.string().nonempty().default('gpt-5-mini'),
 });
 
 export type Env = z.infer<typeof envSchema>;

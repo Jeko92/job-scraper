@@ -8,6 +8,7 @@ const required = {
   PASSWORD_MIN_LENGTH: '8',
   JWT_SECRET: 'test-secret',
   JWT_EXPIRES_IN: '3600',
+  OPENAI_API_KEY: 'test-openai-key',
 };
 
 describe('envSchema', () => {
@@ -20,6 +21,8 @@ describe('envSchema', () => {
       PASSWORD_MIN_LENGTH: 8,
       JWT_SECRET: required.JWT_SECRET,
       JWT_EXPIRES_IN: 3600,
+      OPENAI_API_KEY: required.OPENAI_API_KEY,
+      OPENAI_MODEL: 'gpt-5-mini',
     });
   });
 
