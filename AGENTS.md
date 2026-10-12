@@ -18,6 +18,8 @@ JobScraper: pnpm + Turborepo monorepo. Read `README.md` first.
 - Conventional Commits; branch from `develop` as `feature/*`, `fix/*` or
   `doc/*`, or commit to `develop` directly (ADR-006).
 - Architecture decisions go to `doc/adr/` using `doc/adr/template.md`.
+- For this project, no additional tests are needed. Existing tests stay.
+- In the folder `apps/backend`, when you create or update controllers, please create and update Bruno files respectively, in `apps/backend/bruno` for each controller method, for local testing. 
 
 <!-- BEGIN:turborepo-agent-rules -->
 

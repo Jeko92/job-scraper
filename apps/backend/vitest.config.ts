@@ -9,6 +9,7 @@ export default defineConfig({
       PASSWORD_MIN_LENGTH: '8',
       JWT_SECRET: 'test-secret',
       JWT_EXPIRES_IN: '3600',
+      OPENAI_API_KEY: 'test-openai-key',
     },
   },
 });
