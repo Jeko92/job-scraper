@@ -3,15 +3,26 @@ import { describe, expect, it, vi } from 'vitest';
 
 import HomePage from '@/app/page';
 
+import { NAV_ITEMS, SiteHeader } from '../layout/site-header';
 import { LOGIN_HREF, SIGNUP_HREF } from './cta-links';
-import { NAV_ITEMS } from './site-header';
 
 vi.mock('@/lib/auth/session', () => ({
   getSession: vi.fn().mockResolvedValue(null),
 }));
+vi.mock('@/lib/auth/actions', () => ({
+  logout: vi.fn(),
+}));
+
+// The header lives in the root layout, so render it next to the page.
 async function readHome() {
-  return render(await HomePage());
+  return render(
+    <>
+      {await SiteHeader()}
+      {await HomePage()}
+    </>,
+  );
 }
+
 describe('HomePage', () => {
   it('renders a single main heading', async () => {
     await readHome();
