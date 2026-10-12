@@ -52,7 +52,7 @@ export class LocationsService {
   }
 }
 
-function toLocationDto({
+export function toLocationDto({
   id,
   countryCode,
   countryName,
