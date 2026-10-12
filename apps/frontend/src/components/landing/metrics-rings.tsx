@@ -94,7 +94,7 @@ export function MetricsRings() {
       id="why"
       className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6"
     >
-      <div className="rounded-card border border-black/5 bg-white/60 bg-warm-glow px-6 py-12 sm:px-10">
+      <div className="rounded-card border border-line bg-surface/60 bg-warm-glow px-6 py-12 sm:px-10">
         <SectionChip>Why JobScraper</SectionChip>
         <div className="mt-12 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:flex lg:justify-center lg:gap-0">
           {REASONS.map((reason, index) => (

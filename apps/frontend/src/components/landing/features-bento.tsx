@@ -35,8 +35,8 @@ function FeatureCard({
       className={cn(
         'flex flex-col gap-6 overflow-hidden rounded-card border p-7 sm:p-8',
         dark
-          ? 'border-transparent bg-ink text-white'
-          : 'border-black/5 bg-white/70 text-ink',
+          ? 'border-transparent bg-ink-panel text-white'
+          : 'border-line bg-surface/70 text-ink',
         className,
       )}
     >
@@ -92,7 +92,7 @@ function CompaniesVisual() {
 
 function NotificationVisual() {
   return (
-    <div className="mt-auto flex items-center gap-3 rounded-2xl bg-white p-3 text-ink">
+    <div className="mt-auto flex items-center gap-3 rounded-2xl bg-surface p-3 text-ink">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white">
         <Bell className="size-5" aria-hidden="true" />
       </span>

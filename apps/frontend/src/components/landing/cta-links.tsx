@@ -26,7 +26,7 @@ export function CtaLinks({ tone = 'default', className }: CtaLinksProps) {
           buttonVariants(),
           pill,
           'shadow-lg shadow-brand/25',
-          inverted && 'bg-white text-ink shadow-black/10 hover:bg-white/90',
+          inverted && 'bg-surface text-ink shadow-black/10 hover:bg-surface/90',
         )}
       >
         Get started free
@@ -37,7 +37,7 @@ export function CtaLinks({ tone = 'default', className }: CtaLinksProps) {
         className={cn(
           buttonVariants({ variant: 'outline' }),
           pill,
-          'bg-white/70',
+          'bg-surface/70',
           inverted &&
             'border-white/60 bg-transparent text-white hover:bg-white/15 hover:text-white',
         )}

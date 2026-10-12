@@ -68,7 +68,7 @@ function ProductMockup() {
   return (
     <div className="relative mx-auto w-full max-w-md lg:ml-auto">
       {/* Floating notification card. */}
-      <div className="absolute -top-6 -left-4 z-10 flex w-64 items-center gap-3 rounded-2xl border border-black/5 bg-white p-3 shadow-xl motion-safe:animate-in motion-safe:duration-700 motion-safe:fade-in motion-safe:slide-in-from-top-4 sm:-left-12">
+      <div className="absolute -top-6 -left-4 z-10 flex w-64 items-center gap-3 rounded-2xl border border-line bg-surface p-3 shadow-xl motion-safe:animate-in motion-safe:duration-700 motion-safe:fade-in motion-safe:slide-in-from-top-4 sm:-left-12">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white">
           <Bell className="size-5" aria-hidden="true" />
         </span>
@@ -81,7 +81,7 @@ function ProductMockup() {
         </div>
       </div>
 
-      <div className="rounded-card border border-black/5 bg-white/80 p-4 shadow-2xl shadow-brand/10 backdrop-blur sm:p-5">
+      <div className="rounded-card border border-line bg-surface/80 p-4 shadow-2xl shadow-brand/10 backdrop-blur sm:p-5">
         <p className="px-2 pt-6 text-sm text-ink/50">Thursday, 8 October</p>
         <p className="px-2 pb-4 text-lg font-medium text-ink">
           Good morning, Alex
@@ -97,7 +97,7 @@ function ProductMockup() {
             <br />
             match your profile
           </p>
-          <span className="mt-4 inline-flex rounded-full bg-ink px-4 py-2 text-sm">
+          <span className="mt-4 inline-flex rounded-full bg-ink-panel px-4 py-2 text-sm">
             View matches
           </span>
           <Building2
@@ -117,7 +117,7 @@ function ProductMockup() {
               key={job.company}
               className="flex items-center gap-3 rounded-2xl bg-surface-warm p-3"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white font-semibold text-brand shadow-sm">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface font-semibold text-brand shadow-sm">
                 {job.company.charAt(0)}
               </span>
               <div className="min-w-0 flex-1">
