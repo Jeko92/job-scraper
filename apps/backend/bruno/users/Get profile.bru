@@ -1,0 +1,18 @@
+meta {
+  name: Get profile
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/users/me/profile
+  body: none
+  auth: inherit
+}
+
+docs {
+  The logged-in user's profile: basic info, location, skills (by name),
+  industries (by priority) and preferences (`null` until first saved).
+  
+  - 401: run Login
+}

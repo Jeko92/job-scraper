@@ -1,0 +1,47 @@
+meta {
+  name: Update profile
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/users/me/profile
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "firstName": "Max",
+    "headline": "Backend developer",
+    "yearsExperience": 4.5,
+    "skills": [
+      { "slug": "typescript", "level": "ADVANCED", "yearsExperience": 3 },
+      { "slug": "nestjs", "level": "INTERMEDIATE" },
+      { "slug": "postgresql" }
+    ],
+    "industries": ["artificial-intelligence"],
+    "preferences": {
+      "remotePreference": "HYBRID",
+      "employmentType": "FULL_TIME",
+      "minSalary": 60000,
+      "salaryCurrency": "EUR",
+      "willingToRelocate": false
+    }
+  }
+}
+
+docs {
+  Send only what changes. Returns the full updated profile.
+  
+  - Omitted field: unchanged. `null`: clears it (not firstName/lastName).
+  - `locationId`: an id from **List locations**, e.g. `"{{locationId}}"`.
+  - `skills` / `industries`: replace the whole list; `[]` clears it.
+    Skills and industries are referenced by slug (see List skills/industries).
+  - `industries` order sets the priority (first = 1).
+  - `preferences`: merged into the saved preferences.
+  - Enums: remotePreference REMOTE | HYBRID | ONSITE;
+    employmentType FULL_TIME | PART_TIME | CONTRACT | INTERNSHIP | FREELANCE;
+    level BEGINNER | INTERMEDIATE | ADVANCED | EXPERT.
+  - 400: invalid body, unknown skill/industry slug or location · 401: run Login
+}
