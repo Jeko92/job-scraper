@@ -7,6 +7,7 @@ import { QueryFailedError, Repository } from 'typeorm';
 
 import type { Env } from '../config/env.js';
 import { User } from './entities/user.entity.js';
+import { UserProfile } from './entities/user-profile.entity.js';
 
 const UNIQUE_VIOLATION = '23505';
 
@@ -29,15 +30,22 @@ export class UsersService {
     );
 
     try {
-      const user = await this.usersRepository.save(
-        this.usersRepository.create({
-          firstName: input.firstName,
-          lastName: input.lastName,
-          username: input.username,
-          passwordHash,
-        }),
+      const user = await this.usersRepository.manager.transaction(
+        async (manager) => {
+          const savedUser = await manager.save(
+            manager.create(User, { username: input.username, passwordHash }),
+          );
+          await manager.save(
+            manager.create(UserProfile, {
+              userId: savedUser.id,
+              firstName: input.firstName,
+              lastName: input.lastName,
+            }),
+          );
+          return savedUser;
+        },
       );
-      return toPublicUser(user);
+      return toPublicUser(user, input);
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw usernameTaken(input.username);
@@ -51,7 +59,10 @@ export class UsersService {
   }
 }
 
-function toPublicUser({ id, firstName, lastName, username }: User): PublicUser {
+function toPublicUser(
+  { id, username }: User,
+  { firstName, lastName }: Pick<RegisterRequest, 'firstName' | 'lastName'>,
+): PublicUser {
   return { id, firstName, lastName, username };
 }
 
