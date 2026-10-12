@@ -9,6 +9,9 @@ import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { type Env, envSchema } from './config/env.js';
 import { createDataSourceOptions } from './db/data-source.options.js';
+import { IndustriesModule } from './industries/industries.module.js';
+import { LocationsModule } from './locations/locations.module.js';
+import { SkillsModule } from './skills/skills.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -21,6 +24,9 @@ import { UsersModule } from './users/users.module.js';
     }),
     UsersModule,
     AuthModule,
+    SkillsModule,
+    IndustriesModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],

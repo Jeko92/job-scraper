@@ -1,0 +1,345 @@
+[
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": null,
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Baden-Württemberg",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bavaria",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Berlin",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Brandenburg",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bremen",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Hamburg",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Hesse",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Lower Saxony",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Mecklenburg-Vorpommern",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Rhineland-Palatinate",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saarland",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saxony",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saxony-Anhalt",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Schleswig-Holstein",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Thuringia",
+    "city": null,
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Baden-Württemberg",
+    "city": "Stuttgart",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Baden-Württemberg",
+    "city": "Mannheim",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Baden-Württemberg",
+    "city": "Karlsruhe",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Baden-Württemberg",
+    "city": "Freiburg im Breisgau",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bavaria",
+    "city": "Munich",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bavaria",
+    "city": "Nuremberg",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bavaria",
+    "city": "Augsburg",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bavaria",
+    "city": "Regensburg",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bavaria",
+    "city": "Würzburg",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Berlin",
+    "city": "Berlin",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Brandenburg",
+    "city": "Potsdam",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Bremen",
+    "city": "Bremen",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Hamburg",
+    "city": "Hamburg",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Hesse",
+    "city": "Frankfurt am Main",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Hesse",
+    "city": "Wiesbaden",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Hesse",
+    "city": "Darmstadt",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Lower Saxony",
+    "city": "Hanover",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Lower Saxony",
+    "city": "Braunschweig",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Mecklenburg-Vorpommern",
+    "city": "Rostock",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": "Cologne",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": "Düsseldorf",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": "Dortmund",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": "Essen",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": "Bonn",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "North Rhine-Westphalia",
+    "city": "Münster",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Rhineland-Palatinate",
+    "city": "Mainz",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saarland",
+    "city": "Saarbrücken",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saxony",
+    "city": "Dresden",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saxony",
+    "city": "Leipzig",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Saxony-Anhalt",
+    "city": "Magdeburg",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Schleswig-Holstein",
+    "city": "Kiel",
+    "postalCode": null
+  },
+  {
+    "countryCode": "DE",
+    "countryName": "Germany",
+    "stateName": "Thuringia",
+    "city": "Erfurt",
+    "postalCode": null
+  }
+]
