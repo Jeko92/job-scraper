@@ -14,7 +14,7 @@ export function MissionQuote() {
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="flex flex-col justify-between gap-12 rounded-card border border-black/5 bg-white/70 p-7 sm:p-10">
+        <div className="flex flex-col justify-between gap-12 rounded-card border border-line bg-surface/70 p-7 sm:p-10">
           <SectionChip className="self-start">Our mission</SectionChip>
 
           <blockquote className="text-[1.7rem] leading-snug font-light tracking-tight text-ink sm:text-[2.1rem]">
@@ -39,7 +39,7 @@ export function MissionQuote() {
           </dl>
         </div>
 
-        <div className="relative flex min-h-96 flex-col justify-between overflow-hidden rounded-card bg-ink p-7 text-white sm:p-10">
+        <div className="relative flex min-h-96 flex-col justify-between overflow-hidden rounded-card bg-ink-panel p-7 text-white sm:p-10">
           <LogoMark className="absolute -top-10 -right-10 size-64 text-brand/25" />
           <p className="relative text-sm tracking-widest text-white/50 uppercase">
             Vision
@@ -48,12 +48,12 @@ export function MissionQuote() {
             Job sourcing should be accessible to everyone, automated with
             agentic tools and independent of recruiters&apos; influence.
           </p>
-          <div className="relative flex items-center justify-between gap-4 rounded-3xl bg-white p-4 text-ink">
+          <div className="relative flex items-center justify-between gap-4 rounded-3xl bg-surface p-4 text-ink">
             <div>
               <p className="font-medium">The JobScraper team</p>
               <p className="text-sm text-ink/55">For every job seeker</p>
             </div>
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-ink">
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-ink-panel">
               <LogoMark className="size-6 text-white" />
             </span>
           </div>

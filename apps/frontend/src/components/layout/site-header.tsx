@@ -18,13 +18,13 @@ export const NAV_ITEMS = [
 ] as const;
 
 const navPill =
-  'rounded-full px-4 py-2 text-sm text-ink/70 transition-colors hover:bg-white hover:text-ink';
+  'rounded-full px-4 py-2 text-sm text-ink/70 transition-colors hover:bg-surface hover:text-ink';
 
 export async function SiteHeader() {
   const user = await getSession();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-black/5 bg-surface-warm/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line bg-surface-warm/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" aria-label="JobScraper home">
           <Logo />
@@ -73,11 +73,11 @@ export async function SiteHeader() {
         <details className="group relative md:hidden">
           <summary
             aria-label="Open menu"
-            className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full border border-black/5 bg-white shadow-sm [&::-webkit-details-marker]:hidden"
+            className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full border border-line bg-surface shadow-sm [&::-webkit-details-marker]:hidden"
           >
             <Menu className="size-5" aria-hidden="true" />
           </summary>
-          <div className="absolute top-12 right-0 flex w-60 flex-col gap-1 rounded-3xl border border-black/5 bg-white p-3 shadow-xl">
+          <div className="absolute top-12 right-0 flex w-60 flex-col gap-1 rounded-3xl border border-line bg-surface p-3 shadow-xl">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.id}
@@ -87,7 +87,7 @@ export async function SiteHeader() {
                 {item.label}
               </a>
             ))}
-            <div className="mt-2 grid gap-2 border-t border-black/5 pt-3">
+            <div className="mt-2 grid gap-2 border-t border-line pt-3">
               <Link
                 href={LOGIN_HREF}
                 className={cn(

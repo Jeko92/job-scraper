@@ -12,7 +12,7 @@ export function SectionChip({ children, className }: SectionChipProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 rounded-full border border-black/5 bg-white px-4 py-2 text-sm text-ink shadow-sm',
+        'inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm text-ink shadow-sm',
         className,
       )}
     >

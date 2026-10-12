@@ -52,13 +52,13 @@ export function HowItWorks() {
               aria-hidden="true"
               className="mx-auto hidden h-10 w-px bg-ink/30 md:block"
             />
-            <div className="mt-4 flex flex-1 flex-col gap-4 rounded-3xl border border-black/5 bg-white/70 p-5 md:mt-0">
+            <div className="mt-4 flex flex-1 flex-col gap-4 rounded-3xl border border-line bg-surface/70 p-5 md:mt-0">
               <h3
                 className={cn(
                   'self-start rounded-full px-4 py-2 text-sm',
                   index === 0
                     ? 'bg-brand-strong text-white'
-                    : 'border border-black/5 bg-white text-ink shadow-sm',
+                    : 'border border-line bg-surface text-ink shadow-sm',
                 )}
               >
                 {step.title}
@@ -68,7 +68,7 @@ export function HowItWorks() {
                 {step.tags.map((tag) => (
                   <li
                     key={tag}
-                    className="rounded-full border border-black/10 px-3 py-1 text-xs text-ink/70"
+                    className="rounded-full border border-ink/15 px-3 py-1 text-xs text-ink/70"
                   >
                     {tag}
                   </li>
