@@ -1,0 +1,16 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+docs {
+  # JobScraper API
+
+  1. Select the `local` environment.
+  2. Run **auth / Register** once to create the demo user.
+  3. Run **auth / Login** — it stores `accessToken`, which every protected
+     request inherits from this collection.
+}

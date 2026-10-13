@@ -1,0 +1,27 @@
+meta {
+  name: Register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "Ada",
+    "lastName": "Lovelace",
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+docs {
+  Creates a user and their profile. Returns `{ id, firstName, lastName, username }`.
+
+  - 400: missing field or password shorter than `PASSWORD_MIN_LENGTH`
+  - 409: username already taken (expected when the demo user exists)
+}

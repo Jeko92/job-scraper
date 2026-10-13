@@ -1,0 +1,17 @@
+meta {
+  name: Me
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/auth/me
+  body: none
+  auth: inherit
+}
+
+docs {
+  Returns the logged-in user `{ id, username }`.
+
+  - 401: missing or expired token — run Login
+}

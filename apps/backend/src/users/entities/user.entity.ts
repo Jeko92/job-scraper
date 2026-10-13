@@ -1,19 +1,35 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { UserProfile } from './user-profile.entity.js';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
-  firstName!: string;
-
-  @Column()
-  lastName!: string;
+  @Column({ type: 'varchar', unique: true, nullable: true })
+  email!: string | null;
 
   @Column({ unique: true })
   username!: string;
 
-  @Column()
+  @Column({ name: 'password_hash' })
   passwordHash!: string;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt!: Date;
+
+  @OneToOne(() => UserProfile, (profile) => profile.user)
+  profile?: Relation<UserProfile>;
 }

@@ -1,0 +1,17 @@
+meta {
+  name: Get location
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/locations/{{locationId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  A single location by id. Run **List locations** first to fill `locationId`.
+
+  - 400: id is not a UUID · 404: unknown id · 401: run Login
+}
