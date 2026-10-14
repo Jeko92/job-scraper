@@ -1,50 +1,62 @@
 [
   {
     "city": "Munich",
-    "postal_code": "80331"
+    "postal_code": "80331",
+    "wikidata_id": "Q1726"
   },
   {
     "city": "Berlin",
-    "postal_code": "10115"
+    "postal_code": "10115",
+    "wikidata_id": "Q64"
   },
   {
     "city": "Hamburg",
-    "postal_code": "20095"
+    "postal_code": "20095",
+    "wikidata_id": "Q1055"
   },
   {
     "city": "Frankfurt am Main",
-    "postal_code": "60311"
+    "postal_code": "60311",
+    "wikidata_id": "Q1794"
   },
   {
     "city": "Stuttgart",
-    "postal_code": "70173"
+    "postal_code": "70173",
+    "wikidata_id": "Q1022"
   },
   {
     "city": "Karlsruhe",
-    "postal_code": "76133"
+    "postal_code": "76133",
+    "wikidata_id": "Q1040"
   },
   {
     "city": "Darmstadt",
-    "postal_code": "64283"
+    "postal_code": "64283",
+    "wikidata_id": "Q2973"
   },
   {
     "city": "Düsseldorf",
-    "postal_code": "40210"
+    "postal_code": "40210",
+    "wikidata_id": "Q1718"
   },
   {
     "city": "Erlangen",
-    "postal_code": "91052"
+    "postal_code": "91052",
+    "wikidata_id": "Q3126"
   },
   {
     "city": "Cologne",
-    "postal_code": "50667"
+    "postal_code": "50667",
+    "wikidata_id": "Q365"
   },
   {
     "city": "Regensburg",
-    "postal_code": "93047"
+    "postal_code": "93047",
+    "wikidata_id": "Q2978"
   },
   {
     "city": "Aachen",
-    "postal_code": "52062"
+    "postal_code": "52062",
+    "wikidata_id": "Q1017"
   }
 ]

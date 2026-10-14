@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import targetCities from '../../../common/utils/target-cities.json' with { type: 'json' };
 import type { Env } from '../../../config/env.js';
 import {
   type CompanyCandidate,
@@ -9,12 +8,12 @@ import {
   toDomain,
 } from '../../normalized-company.js';
 import { SourceAdapter } from '../source-adapter.js';
+import { targetCities } from '../target-cities.js';
 import {
   citySearchResponseSchema,
   type CompanyInfo,
   companyInfoSchema,
   companySearchResponseSchema,
-  targetCitiesSchema,
 } from './companyenrich-response.js';
 
 const SOURCE = 'companyenrich';
@@ -42,7 +41,7 @@ export class CompanyEnrichAdapter extends SourceAdapter {
   }
 
   async *fetchBatches(): AsyncIterable<unknown> {
-    for (const { city } of targetCitiesSchema.parse(targetCities)) {
+    for (const { city } of targetCities) {
       const cityId = await this.findCityId(city);
       if (cityId === null) {
         this.logger.warn(`No CompanyEnrich city found for "${city}"`);

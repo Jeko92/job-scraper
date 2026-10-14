@@ -32,8 +32,4 @@ export const citySearchResponseSchema = z.object({
   items: z.array(z.object({ id: z.number().int(), name: z.string() })),
 });
 
-export const targetCitiesSchema = z.array(
-  z.object({ city: z.string(), postal_code: z.string() }),
-);
-
 export type CompanyInfo = z.infer<typeof companyInfoSchema>;

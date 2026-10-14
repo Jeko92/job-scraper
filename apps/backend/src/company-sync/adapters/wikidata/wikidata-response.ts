@@ -8,7 +8,7 @@ export const wikidataResponseSchema = z.object({
       z.object({
         company: binding,
         companyLabel: binding,
-        hqLabel: binding.optional(),
+        targetCity: binding,
         officialWebsite: binding.optional(),
         foundedDate: binding.optional(),
         employeeCount: binding.optional(),
