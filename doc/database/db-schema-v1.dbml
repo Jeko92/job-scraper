@@ -14,7 +14,9 @@
 //   minimum salary and currency, willingness to relocate), 1:1 with
 //   user_profiles (user_preferences.user_profile_id is unique and not null).
 // - skills, industries and locations are shared lookup tables. They are
-//   admin-managed and seeded via migrations, never created on demand.
+//   seeded via migrations as a starting set and grow while company data is
+//   harvested (see ADR-007). A skill row is shared by user_skills and
+//   company_skills.
 //   Skills and industries have a unique name and a URL-friendly slug.
 //   A profile's location is optional.
 // - user_skills, user_industries, company_locations, company_skills,

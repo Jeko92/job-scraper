@@ -1,6 +1,6 @@
 # ADR-007: Company source adapters with scheduled sync
 
-* Status: proposed
+* Status: accepted
 
 ## Decision
 
@@ -24,6 +24,10 @@
   of `country_code`, `state_name`, `city`, `postal_code` and only inserted
   when no row matches. Existing lookup tables keep their columns and
   constraints.
+* The seed migration is only a starting set. Lookups are meant to grow
+  while company information is harvested: from company sources, from tech
+  stacks the AI module fills in, and later from skills users name in their
+  profiles.
 * Each adapter runs on its own cron expression from `.env` through
   `@nestjs/schedule`, inside the backend process.
 * First sources: Wikidata (SPARQL) and CompanyEnrich (company search,
