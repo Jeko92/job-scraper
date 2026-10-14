@@ -1,0 +1,4 @@
+Please explore current project (only @doc/*, @package.json @packages/shared/package.json, @apps/frontend/package.json, @apps/backend/package.json) and read all the files from the folder @doc/*, and help me plan tasks and sub-tasks/issues(only  
+strictly if necessary) for connected project board (kanban) in order to be able to implement this project incrementally in small chunks and with tasks divided between 4 person group members in a manner thath it will allow us to work            
+asynchronously(each task should mention it's blockers if they have such). Before coming up with final plan interveiw me in batches(3-5 questions in each batch so it will be more digestable for me and easy to reason about) to get more           
+understanding of the desired result and final state of the MVP, take collected answers into consideration and plan this project execution from current state to working MVP.  
