@@ -42,11 +42,17 @@
 // Relation markers: `ref: -` is one-to-one, `ref: >` is many-to-one,
 // `ref: >?` is an optional (nullable) many-to-one.
 
+Enum users_role {
+  admin
+  user
+}
+
 Table users {
   id uuid [pk]
   email varchar [unique] // optional
   username varchar [unique, not null]
   password_hash varchar [not null]
+  role users_role [not null, default: 'user']
   created_at timestamptz [not null]
   updated_at timestamptz [not null]
 }
@@ -160,6 +166,19 @@ Table company_industries {
 
   indexes {
     (company_id, industry_id) [pk]
+  }
+}
+
+// Which external source (and its id) a company was synced from.
+Table company_sources {
+  id uuid [pk]
+  company_id uuid [not null, ref: > companies.id]
+  source varchar [not null] // e.g. wikidata, companyenrich
+  external_id varchar [not null]
+  fetched_at timestamptz [not null]
+
+  indexes {
+    (source, external_id) [unique]
   }
 }
 
