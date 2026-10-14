@@ -7,6 +7,7 @@ const targetCitiesSchema = z.array(
     city: z.string().trim().min(1),
     postal_code: z.string(),
     wikidata_id: z.string().regex(/^Q\d+$/),
+    companyenrich_name: z.string().trim().min(1).optional(),
   }),
 );
 

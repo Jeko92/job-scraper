@@ -47,7 +47,8 @@
   {
     "city": "Cologne",
     "postal_code": "50667",
-    "wikidata_id": "Q365"
+    "wikidata_id": "Q365",
+    "companyenrich_name": "Köln"
   },
   {
     "city": "Regensburg",

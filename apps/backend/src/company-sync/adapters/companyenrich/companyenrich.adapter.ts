@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import searchConfig from '../../../common/utils/companyenrich-search.json' with { type: 'json' };
 import type { Env } from '../../../config/env.js';
 import {
   type CompanyCandidate,
@@ -11,15 +12,19 @@ import { SourceAdapter } from '../source-adapter.js';
 import { targetCities } from '../target-cities.js';
 import {
   citySearchResponseSchema,
+  companyCountResponseSchema,
   type CompanyInfo,
   companyInfoSchema,
-  companySearchResponseSchema,
+  companySearchBatchSchema,
+  companySearchConfigSchema,
 } from './companyenrich-response.js';
 
 const SOURCE = 'companyenrich';
-const COUNTRY_CODES = ['DE'];
+const COUNTRY = { code: 'DE', name: 'Germany' };
+const COUNTRY_CODES = [COUNTRY.code];
 const FIRST_PAGE = 1;
 const UNKNOWN_TYPE = 'unknown';
+const SEARCH = companySearchConfigSchema.parse(searchConfig);
 
 @Injectable()
 export class CompanyEnrichAdapter extends SourceAdapter {
@@ -41,23 +46,41 @@ export class CompanyEnrichAdapter extends SourceAdapter {
   }
 
   async *fetchBatches(): AsyncIterable<unknown> {
-    for (const { city } of targetCities) {
-      const cityId = await this.findCityId(city);
+    for (const { city, companyenrich_name } of targetCities) {
+      const lookupName = companyenrich_name ?? city;
+      const cityId = await this.findCityId(lookupName);
       if (cityId === null) {
-        this.logger.warn(`No CompanyEnrich city found for "${city}"`);
+        this.logger.warn(`No CompanyEnrich city found for "${lookupName}"`);
         continue;
       }
-      yield await this.post('/companies/search', {
+      const filters = SEARCH.employee_groups.map((employees) => ({
         countries: COUNTRY_CODES,
         cities: [cityId],
-        page: FIRST_PAGE,
-        pageSize: this.companiesPerCity,
-      });
+        naicsCode: SEARCH.naics_codes,
+        employees,
+      }));
+      const available = await Promise.all(
+        filters.map((filter) => this.count(filter)),
+      );
+      const pageSizes = allocate(this.companiesPerCity, available);
+      for (const [index, filter] of filters.entries()) {
+        const pageSize = pageSizes[index] ?? 0;
+        if (pageSize === 0) {
+          continue;
+        }
+        const response = await this.post('/companies/search', {
+          ...filter,
+          page: FIRST_PAGE,
+          pageSize,
+        });
+        yield { city, response };
+      }
     }
   }
 
   normalize(raw: unknown): CompanyCandidate[] {
-    return companySearchResponseSchema.parse(raw).items.flatMap((item) => {
+    const { city, response } = companySearchBatchSchema.parse(raw);
+    return response.items.flatMap((item) => {
       const result = companyInfoSchema.safeParse(item);
       if (!result.success) {
         const fields = result.error.issues
@@ -68,7 +91,7 @@ export class CompanyEnrichAdapter extends SourceAdapter {
         );
         return [];
       }
-      return [toCandidate(result.data)];
+      return [toCandidate(result.data, city)];
     });
   }
 
@@ -93,6 +116,13 @@ export class CompanyEnrichAdapter extends SourceAdapter {
       );
     }
     return first?.id ?? null;
+  }
+
+  private async count(filter: object): Promise<number> {
+    const { total } = companyCountResponseSchema.parse(
+      await this.post('/companies/search/count', filter),
+    );
+    return total;
   }
 
   private async post(path: string, body: object): Promise<unknown> {
@@ -120,6 +150,25 @@ export class CompanyEnrichAdapter extends SourceAdapter {
   }
 }
 
+function allocate(total: number, available: number[]): number[] {
+  const sizes = available.map(() => 0);
+  let remaining = total;
+  let open = available.flatMap((count, index) => (count > 0 ? [index] : []));
+  while (remaining > 0 && open.length > 0) {
+    const share = Math.max(1, Math.floor(remaining / open.length));
+    for (const index of open) {
+      const room = (available[index] ?? 0) - (sizes[index] ?? 0);
+      const added = Math.min(share, room, remaining);
+      sizes[index] = (sizes[index] ?? 0) + added;
+      remaining -= added;
+    }
+    open = open.filter(
+      (index) => (sizes[index] ?? 0) < (available[index] ?? 0),
+    );
+  }
+  return sizes;
+}
+
 function describe(item: unknown): string {
   if (typeof item === 'object' && item !== null && 'id' in item) {
     return JSON.stringify(item.id);
@@ -127,7 +176,7 @@ function describe(item: unknown): string {
   return '(no id)';
 }
 
-function toCandidate(company: CompanyInfo): CompanyCandidate {
+function toCandidate(company: CompanyInfo, city: string): CompanyCandidate {
   const website = textOrNull(company.website);
   const type = textOrNull(company.type);
   const location = company.location;
@@ -143,17 +192,15 @@ function toCandidate(company: CompanyInfo): CompanyCandidate {
     numberOfEmployees: null,
     employeeRange: textOrNull(company.employees),
     foundingYear: company.founded_year ?? null,
-    locations: location
-      ? [
-          {
-            countryCode: textOrNull(location.country?.code),
-            countryName: textOrNull(location.country?.name),
-            stateName: textOrNull(location.state?.name),
-            city: textOrNull(location.city?.name),
-            postalCode: textOrNull(location.postal_code),
-          },
-        ]
-      : [],
+    locations: [
+      {
+        countryCode: textOrNull(location?.country?.code) ?? COUNTRY.code,
+        countryName: textOrNull(location?.country?.name) ?? COUNTRY.name,
+        stateName: textOrNull(location?.state?.name),
+        city,
+        postalCode: textOrNull(location?.postal_code),
+      },
+    ],
     industries: company.industries ?? [],
     skills: company.technologies ?? [],
   };
