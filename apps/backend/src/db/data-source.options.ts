@@ -1,5 +1,10 @@
 import type { DataSourceOptions } from 'typeorm';
 
+import { Company } from '../companies/entities/company.entity.js';
+import { CompanyIndustry } from '../companies/entities/company-industry.entity.js';
+import { CompanyLocation } from '../companies/entities/company-location.entity.js';
+import { CompanySkill } from '../companies/entities/company-skill.entity.js';
+import { CompanySource } from '../companies/entities/company-source.entity.js';
 import { Industry } from '../industries/entities/industry.entity.js';
 import { Location } from '../locations/entities/location.entity.js';
 import { Skill } from '../skills/entities/skill.entity.js';
@@ -24,6 +29,11 @@ export function createDataSourceOptions(
       Skill,
       Industry,
       Location,
+      Company,
+      CompanySource,
+      CompanyLocation,
+      CompanyIndustry,
+      CompanySkill,
     ],
     synchronize: false,
   };

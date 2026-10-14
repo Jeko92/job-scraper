@@ -9,6 +9,7 @@ import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/roles.guard.js';
+import { CompaniesModule } from './companies/companies.module.js';
 import { type Env, envSchema } from './config/env.js';
 import { createDataSourceOptions } from './db/data-source.options.js';
 import { IndustriesModule } from './industries/industries.module.js';
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module.js';
     SkillsModule,
     IndustriesModule,
     LocationsModule,
+    CompaniesModule,
   ],
   controllers: [AppController],
   providers: [
