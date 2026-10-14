@@ -1,0 +1,50 @@
+[
+  {
+    "city": "Munich",
+    "postal_code": "80331"
+  },
+  {
+    "city": "Berlin",
+    "postal_code": "10115"
+  },
+  {
+    "city": "Hamburg",
+    "postal_code": "20095"
+  },
+  {
+    "city": "Frankfurt am Main",
+    "postal_code": "60311"
+  },
+  {
+    "city": "Stuttgart",
+    "postal_code": "70173"
+  },
+  {
+    "city": "Karlsruhe",
+    "postal_code": "76133"
+  },
+  {
+    "city": "Darmstadt",
+    "postal_code": "64283"
+  },
+  {
+    "city": "Düsseldorf",
+    "postal_code": "40210"
+  },
+  {
+    "city": "Erlangen",
+    "postal_code": "91052"
+  },
+  {
+    "city": "Cologne",
+    "postal_code": "50667"
+  },
+  {
+    "city": "Regensburg",
+    "postal_code": "93047"
+  },
+  {
+    "city": "Aachen",
+    "postal_code": "52062"
+  }
+]
