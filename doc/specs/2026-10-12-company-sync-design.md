@@ -10,13 +10,19 @@ schedule, normalizes the different responses into one shape, matches it to
 the database schema (`doc/database/db-schema-v1.dbml`), drops duplicates and
 writes the result to Postgres. New APIs must be addable with minimal changes.
 
+MVP scope: IT companies of different sizes in 12 cities — the 10 major
+German tech hubs plus Regensburg and Aachen — listed with their Wikidata IDs
+in `apps/backend/src/common/utils/target-cities.json`. Both sources read this
+list, so no other city is ever written.
+
 First sources:
 
-* **Wikidata** — live SPARQL query (`https://query.wikidata.org/`), German IT
-  companies, query from [`../dataset/dataset.md`](../dataset/dataset.md).
+* **Wikidata** — live SPARQL query (`https://query.wikidata.org/`), IT
+  companies headquartered in or inside one of the target cities, based on
+  the query in [`../dataset/dataset.md`](../dataset/dataset.md).
 * **CompanyEnrich** — `POST /companies/search`
-  (`https://api.companyenrich.com`), up to 50 companies for each of the 12
-  cities in `apps/backend/src/common/utils/target-cities.json`.
+  (`https://api.companyenrich.com`), up to 50 IT companies for each target
+  city, spread over employee size groups.
 
 ## Design patterns
 
@@ -128,14 +134,15 @@ zod schema, the contract between adapters and the writer:
 | numberOfEmployees | `employeeCount` (rounded) | – |
 | employeeRange | – | `employees` |
 | foundingYear | year of `foundedDate` | `founded_year` |
-| locations | `hqLabel` as city, country `DE` / `Germany` | `location.country.code/name`, `location.state.name`, `location.city.name`, `location.postal_code` |
+| locations | target city name, country `DE` / `Germany` | `location.country.code/name`, `location.state.name`, `location.city.name`, `location.postal_code` |
 | industries | `Information technology` | `industries` |
 | skills | – | `technologies` |
 
-The Wikidata query asks for labels in `"en,de"` so city names match
-CompanyEnrich and `target-cities.json` (e.g. `Munich`, `Cologne`). Wikidata
-rows are grouped by Q-ID, so a company with several headquarters becomes one
-company with several locations.
+Wikidata stores the city name from `target-cities.json` (e.g. `Munich`,
+`Frankfurt am Main`), not the headquarters label, so districts and streets
+map to their city. Wikidata rows are grouped by Q-ID, so a company with
+headquarters in several target cities becomes one company with several
+locations.
 
 ## Pipeline
 
@@ -203,9 +210,14 @@ For each entry in `target-cities.json`:
 
 1. `POST /geo/cities` `{ query: city, countryCodes: ['DE'], page: 1 }`,
    take the first item's `id`. No match → logged and skipped.
-2. `POST /companies/search`
-   `{ countries: ['DE'], cities: [id], page: 1, pageSize }` with
-   `pageSize = COMPANYENRICH_COMPANIES_PER_CITY`.
+2. For each employee group in
+   `apps/backend/src/common/utils/companyenrich-search.json`:
+   `POST /companies/search`
+   `{ countries: ['DE'], cities: [id], naicsCode, employees, page: 1, pageSize }`.
+   `naicsCode` holds the IT industry codes from the same file (software
+   publishers, data processing and hosting, computer systems design).
+   `COMPANYENRICH_COMPANIES_PER_CITY` is split evenly over the groups
+   (50 over 5 groups = 10 per size group).
 
 Each search response is one batch. `x-credit-cost` and `x-credit-remaining`
 are logged. One run costs about 12 × 50 = 600 credits. `402` and `429` abort
@@ -216,7 +228,8 @@ the run.
 One `GET` to `WIKIDATA_SPARQL_URL` with the query as `query` parameter,
 `Accept: application/sparql-results+json` and `User-Agent` from
 `WIKIDATA_USER_AGENT` (required by the Wikimedia User-Agent policy). The
-whole result is one batch.
+query keeps companies whose headquarters (`P159`) is a target city or lies
+inside one (`P131*`). The whole result is one batch.
 
 ## Scheduling
 
