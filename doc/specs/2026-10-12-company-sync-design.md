@@ -134,12 +134,12 @@ zod schema, the contract between adapters and the writer:
 | numberOfEmployees | `employeeCount` (rounded) | – |
 | employeeRange | – | `employees` |
 | foundingYear | year of `foundedDate` | `founded_year` |
-| locations | target city name, country `DE` / `Germany` | `location.country.code/name`, `location.state.name`, `location.city.name`, `location.postal_code` |
+| locations | target city name, country `DE` / `Germany` | target city name, `location.country.code/name`, `location.state.name`, `location.postal_code` |
 | industries | `Information technology` | `industries` |
 | skills | – | `technologies` |
 
-Wikidata stores the city name from `target-cities.json` (e.g. `Munich`,
-`Frankfurt am Main`), not the headquarters label, so districts and streets
+Both sources store the city name from `target-cities.json` (e.g. `Munich`,
+`Cologne`, `Frankfurt am Main`), not their own city label, so districts and streets
 map to their city. Wikidata rows are grouped by Q-ID, so a company with
 headquarters in several target cities becomes one company with several
 locations.
@@ -208,16 +208,21 @@ Both are documented in `doc/database/db-schema-v1.dbml`.
 
 For each entry in `target-cities.json`:
 
-1. `POST /geo/cities` `{ query: city, countryCodes: ['DE'], page: 1 }`,
-   take the first item's `id`. No match → logged and skipped.
+1. `POST /geo/cities` `{ query, countryCodes: ['DE'], page: 1 }` with
+   `query` = `companyenrich_name` if set (Cologne is only known as `Köln`),
+   else `city`. The exact name match wins, otherwise the first item is
+   taken and logged. No match → logged and skipped.
 2. For each employee group in
    `apps/backend/src/common/utils/companyenrich-search.json`:
    `POST /companies/search`
    `{ countries: ['DE'], cities: [id], naicsCode, employees, page: 1, pageSize }`.
    `naicsCode` holds the IT industry codes from the same file (software
    publishers, data processing and hosting, computer systems design).
-   `COMPANYENRICH_COMPANIES_PER_CITY` is split evenly over the groups
-   (50 over 5 groups = 10 per size group).
+   Before searching, the free `POST /companies/search/count` gives the
+   number of matches per group. `COMPANYENRICH_COMPANIES_PER_CITY` is split
+   evenly over the groups (50 over 5 groups = 10 each); a group with fewer
+   matches passes its leftover to the others, so every city still gets 50
+   when enough companies exist. Empty groups are not searched.
 
 Each search response is one batch. `x-credit-cost` and `x-credit-remaining`
 are logged. One run costs about 12 × 50 = 600 credits. `402` and `429` abort
