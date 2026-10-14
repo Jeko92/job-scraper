@@ -1,3 +1,4 @@
+import { UserRole } from '@job-scraper/shared';
 import {
   Column,
   CreateDateColumn,
@@ -23,6 +24,13 @@ export class User {
 
   @Column({ name: 'password_hash' })
   passwordHash!: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.User,
+  })
+  role!: UserRole;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;

@@ -20,6 +20,13 @@ pnpm dev        # frontend http://localhost:3000, backend http://localhost:3030
 Create an account at http://localhost:3000/register or use `POST /auth/register`
 (NOTE: when inserting users with plain SQL, `password_hash` must hold a bcrypt hash).
 
+New accounts get the role `user`. To make an account admin (needed for
+`/company-sync/*`), run in the database and log in again for a new token:
+
+```sql
+UPDATE users SET role = 'admin' WHERE username = '<username>';
+```
+
 API docs (Swagger UI): http://localhost:3030/api/docs (OpenAPI JSON at
 `/api/docs-json`; disabled when `NODE_ENV=production`). For protected routes,
 paste the token from `POST /auth/login` into **Authorize**.

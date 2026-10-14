@@ -20,7 +20,7 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return null;
     }
-    return { id: user.id, username: user.username };
+    return { id: user.id, username: user.username, role: user.role };
   }
 
   login(user: AuthUser): LoginResponse {
@@ -28,6 +28,7 @@ export class AuthService {
       access_token: this.jwtService.sign({
         sub: user.id,
         username: user.username,
+        role: user.role,
       }),
     };
   }
