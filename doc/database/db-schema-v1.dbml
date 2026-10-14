@@ -127,9 +127,9 @@ Table user_industries {
 
 Table companies {
   id uuid [pk]
-  name varchar
+  name varchar [not null]
   legal_name varchar
-  domain varchar [unique]
+  domain varchar [unique, not null] // dedupe key of the company sync
   website_url varchar
   company_type varchar
   description text

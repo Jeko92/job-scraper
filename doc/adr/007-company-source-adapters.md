@@ -14,6 +14,9 @@
 * Upserts use `companies.domain` as the key and only fill missing values;
   existing values are never overwritten. `company_sources` records which
   source and external id a company came from.
+* `companies.name` and `companies.domain` are `NOT NULL`. Every source
+  gives a name, and a company without a domain cannot be deduplicated, so
+  it is dropped by its adapter.
 * The sync adds missing rows to the existing `skills`, `industries` and
   `locations` lookups. Skills and industries are matched by their existing
   unique `slug`, built the same way as the seeded slugs, so a company's
@@ -38,6 +41,9 @@
   existing table owned by the user profile feature.
 * Linking seeded lookups only: most companies would end up without
   industries, skills or cities.
+* Nullable `companies.name` and `companies.domain` as first drafted in
+  db-schema-v1: allows rows that the sync can neither show nor
+  deduplicate.
 * External scheduler (Render cron job, GitHub Actions): a second deploy
   target for the MVP.
 
