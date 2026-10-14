@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AiModule } from './ai/ai.module.js';
@@ -10,6 +11,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/roles.guard.js';
 import { CompaniesModule } from './companies/companies.module.js';
+import { CompanySyncModule } from './company-sync/company-sync.module.js';
 import { type Env, envSchema } from './config/env.js';
 import { createDataSourceOptions } from './db/data-source.options.js';
 import { IndustriesModule } from './industries/industries.module.js';
@@ -31,7 +33,9 @@ import { UsersModule } from './users/users.module.js';
     SkillsModule,
     IndustriesModule,
     LocationsModule,
+    ScheduleModule.forRoot(),
     CompaniesModule,
+    CompanySyncModule,
   ],
   controllers: [AppController],
   providers: [

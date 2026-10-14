@@ -1,0 +1,19 @@
+meta {
+  name: List sources
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/company-sync/sources
+  body: none
+  auth: inherit
+}
+
+docs {
+  Registered company sources with their cron expression and whether a sync
+  is running right now. Admins only.
+
+  - 401: run Login
+  - 403: the user is not an admin (see README), log in again after promoting
+}

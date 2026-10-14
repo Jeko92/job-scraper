@@ -1,0 +1,27 @@
+meta {
+  name: Run source
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/company-sync/sources/:name/run
+  body: none
+  auth: inherit
+}
+
+params:path {
+  name: wikidata
+}
+
+docs {
+  Runs the sync of one source now and returns
+  `{ source, fetched, upserted, skipped, durationMs }`. Admins only.
+  Sources: `wikidata`, `companyenrich` (costs about 600 credits per run).
+
+  - 401: run Login
+  - 403: the user is not an admin
+  - 404: unknown source
+  - 409: the source is already running
+  - 502: the source API failed (see backend logs)
+}
