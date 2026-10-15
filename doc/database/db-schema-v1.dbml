@@ -58,6 +58,7 @@ Table user_profiles {
   last_name varchar
   headline varchar
   years_experience decimal(4,1)
+  onboarding_completed boolean [not null, default: false]
   location_id uuid [ref: >? locations.id]
   created_at timestamptz [not null]
   updated_at timestamptz [not null]

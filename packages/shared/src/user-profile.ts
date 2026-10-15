@@ -73,6 +73,7 @@ export interface UserProfile {
   industries: UserProfileIndustry[];
   /** null until preferences are first saved. */
   preferences: UserPreferences | null;
+  onboardingCompleted: boolean;
   updatedAt: string;
 }
 
@@ -109,6 +110,7 @@ export const userProfileSchema: z.ZodType<UserProfile> = z.object({
       willingToRelocate: z.boolean(),
     })
     .nullable(),
+  onboardingCompleted: z.boolean(),
   updatedAt: z.iso.datetime(),
 });
 
@@ -143,6 +145,7 @@ export interface UpdateUserProfileRequest {
         willingToRelocate?: boolean | undefined;
       }
     | undefined;
+  onboardingCompleted?: boolean | undefined;
 }
 
 function hasUniqueValues(values: string[]): boolean {
@@ -187,4 +190,5 @@ export const updateUserProfileSchema: z.ZodType<UpdateUserProfileRequest> =
         willingToRelocate: z.boolean().optional(),
       })
       .optional(),
+    onboardingCompleted: z.boolean().optional(),
   });
