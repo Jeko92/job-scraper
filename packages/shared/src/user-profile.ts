@@ -145,7 +145,6 @@ export interface UpdateUserProfileRequest {
         willingToRelocate?: boolean | undefined;
       }
     | undefined;
-  onboardingCompleted?: boolean | undefined;
 }
 
 function hasUniqueValues(values: string[]): boolean {
@@ -190,5 +189,4 @@ export const updateUserProfileSchema: z.ZodType<UpdateUserProfileRequest> =
         willingToRelocate: z.boolean().optional(),
       })
       .optional(),
-    onboardingCompleted: z.boolean().optional(),
   });

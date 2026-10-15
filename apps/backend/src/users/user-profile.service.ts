@@ -62,27 +62,20 @@ export class UserProfileService {
       ) {
         throw new BadRequestException(`Unknown location: ${basics.locationId}`);
       }
-      // Onboarding needs Q1 (headline) and Q2 (location), saved or sent now.
-      if (basics.onboardingCompleted) {
-        const headline =
-          basics.headline !== undefined ? basics.headline : profile.headline;
-        const locationId =
-          basics.locationId !== undefined
-            ? basics.locationId
-            : profile.locationId;
-        const missing = [
-          ...(headline ? [] : ['headline']),
-          ...(locationId ? [] : ['location']),
-        ];
-        if (missing.length > 0) {
-          throw new BadRequestException(
-            `Cannot complete onboarding: missing ${missing.join(', ')}`,
-          );
-        }
-      }
+      // Onboarding is done only while Q1 (headline) and Q2 (location) are both
+      // saved, otherwise false.
+      const headline =
+        basics.headline !== undefined ? basics.headline : profile.headline;
+      const locationId =
+        basics.locationId !== undefined
+          ? basics.locationId
+          : profile.locationId;
+      const onboardingCompleted = Boolean(headline && locationId);
+
       // Always touch updated_at, also when only skills/industries change.
       await manager.update(UserProfile, profile.id, {
         ...definedOnly(basics),
+        onboardingCompleted,
         updatedAt: new Date(),
       });
 
