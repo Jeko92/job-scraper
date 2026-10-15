@@ -60,6 +60,9 @@ export class UserProfile {
   @JoinColumn({ name: 'location_id' })
   location?: Relation<Location> | null;
 
+  @Column({ name: 'onboarding_completed', type: 'boolean', default: false })
+  onboardingCompleted!: boolean;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
