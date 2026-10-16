@@ -24,8 +24,15 @@ export function LogoMark({ tone = 'default', className }: LogoMarkProps) {
       aria-hidden="true"
       className={cn('size-6 shrink-0', RING_COLOR[tone], className)}
     >
-      <circle cx="11" cy="16" r="9" className={DISC_FILL[tone]} />
       <circle
+        data-logo-disc
+        cx="11"
+        cy="16"
+        r="9"
+        className={DISC_FILL[tone]}
+      />
+      <circle
+        data-logo-ring
         cx="19"
         cy="16"
         r="9"
