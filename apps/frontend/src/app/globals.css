@@ -193,3 +193,11 @@
       0 0 0 1000px var(--background) inset;
   }
 }
+
+@utility soft-glow {
+  background-image: radial-gradient(
+    50% 60% at 75% 60%,
+    color-mix(in oklch, var(--glow) 30%, transparent),
+    transparent 70%
+  );
+}
