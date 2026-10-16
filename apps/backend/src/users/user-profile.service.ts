@@ -62,9 +62,20 @@ export class UserProfileService {
       ) {
         throw new BadRequestException(`Unknown location: ${basics.locationId}`);
       }
+      // Onboarding is done only while Q1 (headline) and Q2 (location) are both
+      // saved, otherwise false.
+      const headline =
+        basics.headline !== undefined ? basics.headline : profile.headline;
+      const locationId =
+        basics.locationId !== undefined
+          ? basics.locationId
+          : profile.locationId;
+      const onboardingCompleted = Boolean(headline && locationId);
+
       // Always touch updated_at, also when only skills/industries change.
       await manager.update(UserProfile, profile.id, {
         ...definedOnly(basics),
+        onboardingCompleted,
         updatedAt: new Date(),
       });
 
@@ -225,6 +236,7 @@ function toUserProfileDto(profile: UserProfile): UserProfileDto {
           willingToRelocate: preferences.willingToRelocate,
         }
       : null,
+    onboardingCompleted: profile.onboardingCompleted,
     updatedAt: profile.updatedAt.toISOString(),
   };
 }

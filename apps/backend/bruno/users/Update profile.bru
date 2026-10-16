@@ -14,6 +14,7 @@ body:json {
   {
     "firstName": "Max",
     "headline": "Backend developer",
+    "locationId": null,
     "yearsExperience": 4.5,
     "skills": [
       { "slug": "typescript", "level": "ADVANCED", "yearsExperience": 3 },
@@ -36,6 +37,7 @@ docs {
   
   - Omitted field: unchanged. `null`: clears it (not firstName/lastName).
   - `locationId`: an id from **List locations**, e.g. `"{{locationId}}"`.
+    `null` here keeps onboarding incomplete; set an id to complete it.
   - `skills` / `industries`: replace the whole list; `[]` clears it.
     Skills and industries are referenced by slug (see List skills/industries).
   - `industries` order sets the priority (first = 1).
@@ -44,4 +46,5 @@ docs {
     employmentType FULL_TIME | PART_TIME | CONTRACT | INTERNSHIP | FREELANCE;
     level BEGINNER | INTERMEDIATE | ADVANCED | EXPERT.
   - 400: invalid body, unknown skill/industry slug or location · 401: run Login
+  - onboardingCompleted is computed by the server: true only while headline (Q1 roles) and location (Q2) are both set, otherwise false.
 }
