@@ -1,7 +1,8 @@
 import { Building2, Send, Sparkles } from 'lucide-react';
 
+import { LogoMark } from '@/components/brand/logo';
+
 import { InlineIcon } from './inline-icon';
-import { LogoMark } from './logo';
 import { SectionChip } from './section-chip';
 
 const PROJECT_FACTS = [
