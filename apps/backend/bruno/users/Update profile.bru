@@ -15,7 +15,9 @@ body:json {
     "firstName": "Max",
     "headline": "Backend developer",
     "locationId": null,
+    "relocationLocationIds": ["{{locationId}}"],
     "yearsExperience": 4.5,
+    "seniority": "MID",
     "skills": [
       { "slug": "typescript", "level": "ADVANCED", "yearsExperience": 3 },
       { "slug": "nestjs", "level": "INTERMEDIATE" },
@@ -41,10 +43,13 @@ docs {
   - `skills` / `industries`: replace the whole list; `[]` clears it.
     Skills and industries are referenced by slug (see List skills/industries).
   - `industries` order sets the priority (first = 1).
+  - `relocationLocationIds`: replaces the whole list (max 4, unique); ids from
+    **List locations**. `[]` clears it.
   - `preferences`: merged into the saved preferences.
   - Enums: remotePreference REMOTE | HYBRID | ONSITE;
     employmentType FULL_TIME | PART_TIME | CONTRACT | INTERNSHIP | FREELANCE;
-    level BEGINNER | INTERMEDIATE | ADVANCED | EXPERT.
-  - 400: invalid body, unknown skill/industry slug or location · 401: run Login
+    level BEGINNER | INTERMEDIATE | ADVANCED | EXPERT;
+    seniority INTERN | JUNIOR | MID | SENIOR | LEAD.
+  - 400: invalid body, unknown skill/industry slug or location id · 401: run Login
   - onboardingCompleted is computed by the server: true only while headline (Q1 roles) and location (Q2) are both set, otherwise false.
 }

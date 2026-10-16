@@ -31,7 +31,7 @@ export class UserProfileController {
   @Patch()
   @ApiOperation({
     summary:
-      'Update basic information, skills, industries and preferences (omitted fields stay unchanged; skills/industries replace the whole list)',
+      'Update basic information, skills, industries, relocation locations and preferences (omitted fields stay unchanged; skills/industries/relocationLocationIds replace the whole list)',
   })
   update(
     @Req() request: RequestWithUser,

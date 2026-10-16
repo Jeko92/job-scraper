@@ -16,6 +16,7 @@ import { Location } from '../../locations/entities/location.entity.js';
 import { User } from './user.entity.js';
 import { UserIndustry } from './user-industry.entity.js';
 import { UserPreferences } from './user-preferences.entity.js';
+import { UserRelocationLocation } from './user-relocation-location.entity.js';
 import { UserSkill } from './user-skill.entity.js';
 
 @Entity('user_profiles')
@@ -53,6 +54,9 @@ export class UserProfile {
   })
   yearsExperience!: number | null;
 
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  seniority!: string | null;
+
   @Column({ name: 'location_id', type: 'uuid', nullable: true })
   locationId!: string | null;
 
@@ -77,4 +81,10 @@ export class UserProfile {
 
   @OneToMany(() => UserIndustry, (userIndustry) => userIndustry.userProfile)
   industries?: Relation<UserIndustry>[];
+
+  @OneToMany(
+    () => UserRelocationLocation,
+    (relocationLocation) => relocationLocation.userProfile,
+  )
+  relocationLocations?: Relation<UserRelocationLocation>[];
 }
