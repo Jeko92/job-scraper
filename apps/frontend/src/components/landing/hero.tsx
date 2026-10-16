@@ -30,7 +30,7 @@ const SAMPLE_MATCHES = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-warm-glow">
+    <section className="relative overflow-hidden">
       {/* Giant faded wordmark, echoing the reference's "FamilyAI" backdrop. */}
       <span
         aria-hidden="true"
