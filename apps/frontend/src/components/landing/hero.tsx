@@ -1,6 +1,7 @@
 import { ChevronDown, Circle } from 'lucide-react';
 
-import { Logo, LogoMark } from '@/components/brand/logo';
+import { AnimatedLogoMark } from '@/components/brand/animated-logo-mark';
+import { Logo } from '@/components/brand/logo';
 import { cn } from '@/lib/utils';
 
 import { GlowPanel } from './glow-panel';
@@ -16,12 +17,9 @@ export function Hero() {
   return (
     <section className="px-4 sm:px-8">
       <div className="grid overflow-hidden rounded-tile border border-line bg-surface lg:grid-cols-[5fr_9fr]">
-        <div className="flex min-h-56 flex-col justify-between bg-highlight p-8 text-on-highlight lg:min-h-110">
+        <div className="flex min-h-56 flex-col justify-between overflow-hidden bg-highlight p-8 text-on-highlight lg:min-h-110">
           <p className={overline}>JobScraper</p>
-          <LogoMark
-            tone="on-highlight"
-            className="mx-auto size-32 lg:size-40"
-          />
+          <AnimatedLogoMark className="mx-auto size-32 lg:size-40" />
           <p className={overline}>Job matching</p>
         </div>
 
