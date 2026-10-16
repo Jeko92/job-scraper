@@ -1,0 +1,24 @@
+meta {
+  name: List industries
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/industries
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~search: energy
+  ~limit: 20
+}
+
+docs {
+  Industries ordered by name. Enable a query param to filter.
+  
+  - `search`: case-insensitive match on the name
+  - `limit`: 1–200, default 50
+  - 400: invalid filter · 401: run Login
+}

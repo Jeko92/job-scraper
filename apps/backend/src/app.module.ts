@@ -3,12 +3,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AiModule } from './ai/ai.module.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { type Env, envSchema } from './config/env.js';
 import { createDataSourceOptions } from './db/data-source.options.js';
+import { IndustriesModule } from './industries/industries.module.js';
+import { LocationsModule } from './locations/locations.module.js';
+import { SkillsModule } from './skills/skills.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -21,6 +25,10 @@ import { UsersModule } from './users/users.module.js';
     }),
     UsersModule,
     AuthModule,
+    AiModule,
+    SkillsModule,
+    IndustriesModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],

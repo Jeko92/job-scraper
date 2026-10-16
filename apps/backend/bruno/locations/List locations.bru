@@ -1,0 +1,35 @@
+meta {
+  name: List locations
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/locations?search=berg&state=Bavaria
+  body: none
+  auth: inherit
+}
+
+params:query {
+  search: berg
+  state: Bavaria
+  ~countryCode: DE
+  ~limit: 20
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.length > 0) {
+    bru.setEnvVar("locationId", res.body[0].id);
+  }
+}
+
+docs {
+  Locations ordered by country, state, city. Enable a query param to filter.
+  Stores the first result's id as `locationId` for **Get location**.
+  
+  - `search`: case-insensitive match on country, state or city
+  - `countryCode`: two letters, e.g. DE
+  - `state`: exact state name (case-insensitive)
+  - `limit`: 1–200, default 50
+  - 400: invalid filter · 401: run Login
+}

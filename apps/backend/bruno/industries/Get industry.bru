@@ -1,0 +1,17 @@
+meta {
+  name: Get industry
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/industries/software-development
+  body: none
+  auth: inherit
+}
+
+docs {
+  A single industry by slug.
+  
+  - 404: unknown slug · 401: run Login
+}
