@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 
+import { Logo } from '@/components/brand/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { logout } from '@/lib/auth/actions';
@@ -9,7 +10,6 @@ import { getThemeCookieMaxAge } from '@/lib/env';
 import { cn } from '@/lib/utils';
 
 import { LOGIN_HREF, SIGNUP_HREF } from '../landing/cta-links';
-import { Logo } from '../landing/logo';
 
 export const NAV_ITEMS = [
   { id: 'features', label: 'Features' },

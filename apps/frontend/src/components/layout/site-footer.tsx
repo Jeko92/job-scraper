@@ -1,4 +1,4 @@
-import { Logo } from '../landing/logo';
+import { Logo } from '@/components/brand/logo';
 
 export function SiteFooter() {
   return (
