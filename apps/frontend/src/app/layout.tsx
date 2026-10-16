@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 import { DM_Sans, Fraunces } from 'next/font/google';
 import { cookies } from 'next/headers';
 
+import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
-import { SiteFooter } from '@/components/layout/site-footer';
 import { isTheme, THEME_COOKIE } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 
@@ -60,7 +60,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="flex min-h-full flex-col">
         <Header />
         {children}
-        <SiteFooter />
+        <Footer />
       </body>
     </html>
   );

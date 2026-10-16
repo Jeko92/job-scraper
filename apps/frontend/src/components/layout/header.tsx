@@ -8,21 +8,11 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { logout } from '@/lib/auth/actions';
 import { getSession } from '@/lib/auth/session';
 import { getThemeCookieMaxAge } from '@/lib/env';
-import {
-  HOME_HREF,
-  LOGIN_HREF,
-  PLACEHOLDER_HREF,
-  REGISTER_HREF,
-} from '@/lib/routes';
+import { HOME_HREF, LOGIN_HREF, REGISTER_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 import { AppNav } from './app-nav';
-
-const PUBLIC_NAV_ITEMS = [
-  { label: 'Explore jobs', href: PLACEHOLDER_HREF },
-  { label: 'How it works', href: PLACEHOLDER_HREF },
-  { label: 'Pricing', href: PLACEHOLDER_HREF },
-] as const;
+import { PUBLIC_NAV_ITEMS } from './nav-items';
 
 const INITIALS_LENGTH = 2;
 

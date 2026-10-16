@@ -1,18 +1,11 @@
 'use client';
 
-import { Bookmark, House, Search, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { HOME_HREF, PROFILE_HREF, SAVED_HREF, SEARCH_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
-const APP_NAV_ITEMS = [
-  { label: 'Home', href: HOME_HREF, icon: House },
-  { label: 'Search', href: SEARCH_HREF, icon: Search },
-  { label: 'Saved', href: SAVED_HREF, icon: Bookmark },
-  { label: 'Profile', href: PROFILE_HREF, icon: UserRound },
-] as const;
+import { APP_NAV_ITEMS } from './nav-items';
 
 interface AppNavProps {
   className?: string;
