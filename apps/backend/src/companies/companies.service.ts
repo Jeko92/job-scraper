@@ -146,46 +146,6 @@ export class CompaniesService {
   }
 
   /**
-   * Fetch a single company from external APIs.
-   */
-  async fetchFromApisByIdentifier(
-    identifier: string,
-    providers: ('wikidata' | 'company-enrich')[] = [
-      'wikidata',
-      'company-enrich',
-    ],
-  ): Promise<NormalizedCompany | null> {
-    for (const providerName of providers) {
-      try {
-        this.logger.debug(
-          `Fetching company "${identifier}" from ${providerName}`,
-        );
-
-        if (providerName === 'wikidata') {
-          const rawCompany =
-            await this.wikidataProvider.fetchCompany(identifier);
-          if (rawCompany) {
-            return this.wikidataProvider.normalizeCompany(rawCompany);
-          }
-        } else {
-          const rawCompany =
-            await this.companyEnrichProvider.fetchCompany(identifier);
-          if (rawCompany) {
-            return this.companyEnrichProvider.normalizeCompany(rawCompany);
-          }
-        }
-      } catch (error) {
-        this.logger.warn(
-          `Failed to fetch company from ${providerName}: ${String(error)}`,
-        );
-        // Continue with other providers
-      }
-    }
-
-    return null;
-  }
-
-  /**
    * Create a company from normalized data.
    */
   async createFromNormalized(company: NormalizedCompany): Promise<CompanyDto> {

@@ -171,32 +171,6 @@ export class CompaniesController {
     return this.companiesService.fetchFromCompanyEnrich(toSearchParams(params));
   }
 
-  @Post('fetch/:identifier')
-  @ApiOperation({
-    summary: 'Fetch a single company from external APIs by identifier',
-    description:
-      'Tries to fetch a company by name or domain from external APIs',
-  })
-  @HttpCode(HttpStatus.OK)
-  async fetchCompanyByIdentifier(
-    @Param('identifier') identifier: string,
-    @Query('providers') providers?: string,
-  ): Promise<NormalizedCompany | null> {
-    const providerList: ('wikidata' | 'company-enrich')[] = providers
-      ? providers
-          .split(',')
-          .filter(
-            (p): p is 'wikidata' | 'company-enrich' =>
-              p === 'wikidata' || p === 'company-enrich',
-          )
-      : ['wikidata', 'company-enrich'];
-
-    return this.companiesService.fetchFromApisByIdentifier(
-      identifier,
-      providerList,
-    );
-  }
-
   @Post()
   @ApiOperation({ summary: 'Create a company directly' })
   @HttpCode(HttpStatus.CREATED)
