@@ -86,28 +86,12 @@ export class CompaniesService {
     // Fetch from each provider
     for (const providerName of providers) {
       try {
-        this.logger.debug(`Fetching from ${providerName} provider`);
-
-        let providerResults: NormalizedCompany[] = [];
-
-        if (providerName === 'wikidata') {
-          const rawCompanies =
-            await this.wikidataProvider.fetchCompanies(params);
-          providerResults = rawCompanies.map((c) =>
-            this.wikidataProvider.normalizeCompany(c),
-          );
-        } else {
-          const rawCompanies =
-            await this.companyEnrichProvider.fetchCompanies(params);
-          providerResults = rawCompanies.map((c) =>
-            this.companyEnrichProvider.normalizeCompany(c),
-          );
-        }
+        const providerResults =
+          providerName === 'wikidata'
+            ? await this.fetchFromWikidata(params)
+            : await this.fetchFromCompanyEnrich(params);
 
         results.push(...providerResults);
-        this.logger.debug(
-          `Fetched ${String(providerResults.length)} companies from ${providerName}`,
-        );
       } catch (error) {
         this.logger.warn(
           `Failed to fetch from ${providerName} provider: ${String(error)}`,
@@ -122,6 +106,43 @@ export class CompaniesService {
     }
 
     return results;
+  }
+
+  /**
+   * Fetch companies from Wikidata only.
+   * Errors are propagated to the caller.
+   */
+  async fetchFromWikidata(
+    params: CompanySearchParams,
+  ): Promise<NormalizedCompany[]> {
+    this.logger.debug('Fetching from wikidata provider');
+    const rawCompanies = await this.wikidataProvider.fetchCompanies(params);
+    const companies = rawCompanies.map((c) =>
+      this.wikidataProvider.normalizeCompany(c),
+    );
+    this.logger.debug(
+      `Fetched ${String(companies.length)} companies from wikidata`,
+    );
+    return companies;
+  }
+
+  /**
+   * Fetch companies from CompanyEnrich only.
+   * Errors are propagated to the caller.
+   */
+  async fetchFromCompanyEnrich(
+    params: CompanySearchParams,
+  ): Promise<NormalizedCompany[]> {
+    this.logger.debug('Fetching from company-enrich provider');
+    const rawCompanies =
+      await this.companyEnrichProvider.fetchCompanies(params);
+    const companies = rawCompanies.map((c) =>
+      this.companyEnrichProvider.normalizeCompany(c),
+    );
+    this.logger.debug(
+      `Fetched ${String(companies.length)} companies from company-enrich`,
+    );
+    return companies;
   }
 
   /**

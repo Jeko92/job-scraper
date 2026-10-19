@@ -52,6 +52,25 @@ export const createCompanySchema = z.object({
   foundingYear: z.number().int().positive().nullable().optional(),
 });
 
+/**
+ * Map the validated request body to CompanySearchParams, dropping null values.
+ */
+function toSearchParams(
+  params: z.infer<typeof companySearchParamsSchema>,
+): CompanySearchParams {
+  return {
+    query: params.query ?? undefined,
+    location: params.location ?? undefined,
+    industry: params.industry ?? undefined,
+    minEmployees: params.minEmployees ?? undefined,
+    maxEmployees: params.maxEmployees ?? undefined,
+    foundedAfter: params.foundedAfter ?? undefined,
+    foundedBefore: params.foundedBefore ?? undefined,
+    limit: params.limit,
+    offset: params.offset,
+  };
+}
+
 @ApiTags('companies')
 @ApiBearerAuth()
 @Controller('companies')
@@ -113,23 +132,44 @@ export class CompaniesController {
       pipes: [StandardSchemaValidationPipe],
     })
     params: z.infer<typeof companySearchParamsSchema>,
-  ): Promise<unknown[]> {
-    // Map the inferred params to CompanySearchParams, filtering out null/undefined
-    const searchParams: CompanySearchParams = {
-      query: params.query ?? undefined,
-      location: params.location ?? undefined,
-      industry: params.industry ?? undefined,
-      minEmployees: params.minEmployees ?? undefined,
-      maxEmployees: params.maxEmployees ?? undefined,
-      foundedAfter: params.foundedAfter ?? undefined,
-      foundedBefore: params.foundedBefore ?? undefined,
-      limit: params.limit,
-      offset: params.offset,
-    };
+  ): Promise<NormalizedCompany[]> {
     return this.companiesService.fetchFromApis({
       ...options,
-      params: searchParams,
+      params: toSearchParams(params),
     });
+  }
+
+  // Declared before 'fetch/:identifier' so these paths are not treated as identifiers
+  @Post('fetch/wikidata')
+  @ApiOperation({
+    summary: 'Fetch companies from Wikidata',
+    description: 'Fetches company data from Wikidata only',
+  })
+  @HttpCode(HttpStatus.OK)
+  async fetchFromWikidata(
+    @Body({
+      schema: companySearchParamsSchema,
+      pipes: [StandardSchemaValidationPipe],
+    })
+    params: z.infer<typeof companySearchParamsSchema>,
+  ): Promise<NormalizedCompany[]> {
+    return this.companiesService.fetchFromWikidata(toSearchParams(params));
+  }
+
+  @Post('fetch/company-enrich')
+  @ApiOperation({
+    summary: 'Fetch companies from CompanyEnrich',
+    description: 'Fetches company data from CompanyEnrich only',
+  })
+  @HttpCode(HttpStatus.OK)
+  async fetchFromCompanyEnrich(
+    @Body({
+      schema: companySearchParamsSchema,
+      pipes: [StandardSchemaValidationPipe],
+    })
+    params: z.infer<typeof companySearchParamsSchema>,
+  ): Promise<NormalizedCompany[]> {
+    return this.companiesService.fetchFromCompanyEnrich(toSearchParams(params));
   }
 
   @Post('fetch/:identifier')
@@ -205,21 +245,9 @@ export class CompaniesController {
     })
     params: z.infer<typeof companySearchParamsSchema>,
   ): Promise<CompanyDto[]> {
-    // Map the inferred params to CompanySearchParams, filtering out null/undefined
-    const searchParams: CompanySearchParams = {
-      query: params.query ?? undefined,
-      location: params.location ?? undefined,
-      industry: params.industry ?? undefined,
-      minEmployees: params.minEmployees ?? undefined,
-      maxEmployees: params.maxEmployees ?? undefined,
-      foundedAfter: params.foundedAfter ?? undefined,
-      foundedBefore: params.foundedBefore ?? undefined,
-      limit: params.limit,
-      offset: params.offset,
-    };
     const companies = await this.companiesService.fetchFromApis({
       ...options,
-      params: searchParams,
+      params: toSearchParams(params),
       saveToDatabase: true, // Always save when using refresh endpoint
     });
 
