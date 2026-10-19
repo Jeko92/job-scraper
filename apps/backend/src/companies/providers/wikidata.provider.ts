@@ -47,6 +47,41 @@ interface WikidataCompany {
   industryLabel?: string | undefined;
 }
 
+/**
+ * Request headers for the Wikidata Query Service.
+ * The charset is required: without it, the service decodes the query as
+ * Latin-1 and non-ASCII search terms (e.g. "München") never match.
+ * Wikimedia's User-Agent policy asks clients to identify themselves.
+ */
+const SPARQL_HEADERS = {
+  'Content-Type': 'application/sparql-query; charset=utf-8',
+  Accept: 'application/sparql-results+json',
+  'User-Agent': 'job-scraper/0.0.0 (company import)',
+};
+
+/**
+ * Projection and optional attributes shared by all company queries.
+ * Multi-valued properties are aggregated so each company yields one row.
+ */
+const COMPANY_SELECT = `
+  SELECT ?company ?companyLabel
+    (SAMPLE(?w) AS ?website) (MIN(?f) AS ?founded) (MAX(?e) AS ?employees)
+    (SAMPLE(?h) AS ?hq) (SAMPLE(?hl) AS ?hqLabel)
+    (SAMPLE(?i) AS ?industry) (SAMPLE(?il) AS ?industryLabel)
+`;
+
+const COMPANY_OPTIONAL_ATTRIBUTES = `
+  OPTIONAL { ?company wdt:P856 ?w. }
+  OPTIONAL { ?company wdt:P571 ?f. }
+  OPTIONAL { ?company wdt:P1128 ?e. }
+  OPTIONAL { ?company wdt:P159 ?h. ?h rdfs:label ?hl. FILTER(LANG(?hl) = "de") }
+  OPTIONAL { ?company wdt:P452 ?i. ?i rdfs:label ?il. FILTER(LANG(?il) = "de") }
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,en".
+    ?company rdfs:label ?companyLabel.
+  }
+`;
+
 @Injectable()
 export class WikidataProvider implements CompanyDataProvider {
   private readonly logger = new Logger(WikidataProvider.name);
@@ -68,10 +103,7 @@ export class WikidataProvider implements CompanyDataProvider {
     try {
       const response = await fetch(this.endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/sparql-query',
-          Accept: 'application/sparql-results+json',
-        },
+        headers: SPARQL_HEADERS,
         body: query,
       });
 
@@ -95,18 +127,13 @@ export class WikidataProvider implements CompanyDataProvider {
   async fetchCompany(identifier: string): Promise<WikidataCompany | null> {
     const query = this.buildSingleCompanyQuery(identifier);
     this.logger.debug(`Executing single company SPARQL query: ${query}`);
-    console.log(query); //TODO: Remove
 
     try {
       const response = await fetch(this.endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/sparql-query',
-          Accept: 'application/sparql-results+json',
-        },
+        headers: SPARQL_HEADERS,
         body: query,
       });
-      console.log(response.body); //TODO: Remove
 
       if (!response.ok) {
         throw new Error(
@@ -207,78 +234,74 @@ export class WikidataProvider implements CompanyDataProvider {
       ?company wdt:P452/wdt:P279* wd:Q11661.
     `;
 
-    // Add filters based on params
-    const filters: string[] = [];
-
+    // Filters match against rdfs:label directly, because variables bound by
+    // the label service are not yet available when FILTERs are evaluated.
     if (query !== undefined) {
-      filters.push(
-        `REGEX(?companyLabel, "${this.escapeSparqlString(query)}", "i")`,
-      );
-    }
-
-    if (location !== undefined) {
-      filters.push(
-        `?company wdt:P159 ?hq . ?hq rdfs:label ?hqLabel . ` +
-          `REGEX(?hqLabel, "${this.escapeSparqlString(location)}", "i")`,
-      );
-    }
-
-    if (industry !== undefined) {
-      filters.push(
-        `?company wdt:P452 ?industry . ?industry rdfs:label ?industryLabel . ` +
-          `REGEX(?industryLabel, "${this.escapeSparqlString(industry)}", "i")`,
-      );
-    }
-
-    if (filters.length > 0) {
       whereClause += `
-        FILTER(${filters.join(' && ')})
+        ?company rdfs:label ?nameFilter.
+        FILTER(LANG(?nameFilter) IN ("de", "en") && ${this.containsIgnoreCase('?nameFilter', query)})
       `;
     }
 
-    const limitOffset = `LIMIT ${String(limit)} OFFSET ${String(offset)}`;
+    if (location !== undefined) {
+      whereClause += `
+        ?company wdt:P159 ?hqFilter. ?hqFilter rdfs:label ?hqFilterLabel.
+        FILTER(LANG(?hqFilterLabel) IN ("de", "en") && ${this.containsIgnoreCase('?hqFilterLabel', location)})
+      `;
+    }
+
+    if (industry !== undefined) {
+      whereClause += `
+        ?company wdt:P452 ?industryFilter. ?industryFilter rdfs:label ?industryFilterLabel.
+        FILTER(LANG(?industryFilterLabel) IN ("de", "en") && ${this.containsIgnoreCase('?industryFilterLabel', industry)})
+      `;
+    }
 
     return `
-      SELECT ?company ?companyLabel ?website ?founded ?employees ?hq ?hqLabel ?industry ?industryLabel
+      ${COMPANY_SELECT}
       WHERE {
         ${whereClause}
-
-        # Optional attributes
-        OPTIONAL { ?company wdt:P856 ?website. }
-        OPTIONAL { ?company wdt:P571 ?founded. }
-        OPTIONAL { ?company wdt:P1128 ?employees. }
-        OPTIONAL { ?company wdt:P159 ?hq. }
-        OPTIONAL { ?company wdt:P452 ?industry. }
-
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "de,en". }
+        ${COMPANY_OPTIONAL_ATTRIBUTES}
       }
-      GROUP BY ?company ?companyLabel ?website ?founded ?employees ?hq ?hqLabel ?industry ?industryLabel
+      GROUP BY ?company ?companyLabel
       ORDER BY ?companyLabel
-      ${limitOffset}
+      LIMIT ${String(limit)} OFFSET ${String(offset)}
     `;
   }
 
   /**
    * Build SPARQL query for a single company by name.
+   * Uses the Wikidata entity search API, as a regex over all labels times out.
    */
   private buildSingleCompanyQuery(identifier: string): string {
     return `
-      SELECT ?company ?companyLabel ?website ?founded ?employees ?hq ?hqLabel ?industry ?industryLabel
+      ${COMPANY_SELECT}
       WHERE {
-        ?company rdfs:label ?companyLabel .
-        FILTER(REGEX(?companyLabel, "${this.escapeSparqlString(identifier)}", "i"))
+        SERVICE wikibase:mwapi {
+          bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                          wikibase:api "EntitySearch";
+                          mwapi:search "${this.escapeSparqlString(identifier)}";
+                          mwapi:language "de".
+          ?company wikibase:apiOutputItem mwapi:item.
+          ?ordinal wikibase:apiOrdinal true.
+        }
 
-        # Optional attributes
-        OPTIONAL { ?company wdt:P856 ?website. }
-        OPTIONAL { ?company wdt:P571 ?founded. }
-        OPTIONAL { ?company wdt:P1128 ?employees. }
-        OPTIONAL { ?company wdt:P159 ?hq. }
-        OPTIONAL { ?company wdt:P452 ?industry. }
-
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "de,en". }
+        # Restrict to instances of business (or subclasses)
+        ?company wdt:P31/wdt:P279* wd:Q4830453.
+        ${COMPANY_OPTIONAL_ATTRIBUTES}
       }
+      GROUP BY ?company ?companyLabel ?ordinal
+      ORDER BY ?ordinal
       LIMIT 1
     `;
+  }
+
+  /**
+   * Build a case-insensitive substring match expression.
+   * Uses CONTAINS instead of REGEX so user input is not treated as a pattern.
+   */
+  private containsIgnoreCase(variable: string, value: string): string {
+    return `CONTAINS(LCASE(${variable}), LCASE("${this.escapeSparqlString(value)}"))`;
   }
 
   /**
