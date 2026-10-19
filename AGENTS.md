@@ -17,9 +17,21 @@ JobScraper: pnpm + Turborepo monorepo. Read `README.md` first.
 - Backend relative imports end in `.js` (ESM, NodeNext).
 - Conventional Commits; branch from `develop` as `feature/*`, `fix/*` or
   `doc/*`, or commit to `develop` directly (ADR-006).
+- Commit messages follow `.conventionalcommit.json`: `type(scope): subject`,
+  using only the types and scopes listed there; combine scopes with a comma
+  (`feat(backend,shared): ...`). Footers: `BREAKING CHANGE:`, `Closes #<issue>`,
+  `Co-authored-by:`.
 - Architecture decisions go to `doc/adr/` using `doc/adr/template.md`.
 - For this project, no additional tests are needed. Existing tests stay.
 - In the folder `apps/backend`, when you create or update controllers, please create and update Bruno files respectively, in `apps/backend/bruno` for each controller method, for local testing. 
+- Whenever you work with the database (create, change or drop a table, column,
+  index, relation or enum, in an entity under `apps/backend/src/**/entities/`
+  or a migration in `apps/backend/src/db/migrations/`), update
+  `doc/database/db-schema-v1.dbml` in the same change: the table definitions,
+  refs and the header comment that explains the tables. Also update the Mermaid
+  ER diagram in `doc/database/db-schema.md` (tables, columns and relations) so
+  it matches the DBML. If the diagram changed, tell the user to regenerate
+  `doc/database/db_schema.png` from dbdiagram.io.
 
 <!-- BEGIN:turborepo-agent-rules -->
 
