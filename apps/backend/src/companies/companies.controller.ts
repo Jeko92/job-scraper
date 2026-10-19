@@ -84,6 +84,19 @@ export class CompaniesController {
     return this.companiesService.findAll();
   }
 
+  @Get('search')
+  @ApiOperation({ summary: 'Search companies in the database' })
+  @HttpCode(HttpStatus.OK)
+  async search(
+    @Query({
+      schema: companySearchParamsSchema,
+      pipes: [StandardSchemaValidationPipe],
+    })
+    params: CompanySearchParams,
+  ): Promise<CompanyDto[]> {
+    return this.companiesService.search(params);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a company by its ID' })
   @HttpCode(HttpStatus.OK)
@@ -98,19 +111,6 @@ export class CompaniesController {
     @Param('domain') domain: string,
   ): Promise<CompanyDto | null> {
     return this.companiesService.findByDomain(domain);
-  }
-
-  @Get('search')
-  @ApiOperation({ summary: 'Search companies in the database' })
-  @HttpCode(HttpStatus.OK)
-  async search(
-    @Query({
-      schema: companySearchParamsSchema,
-      pipes: [StandardSchemaValidationPipe],
-    })
-    params: CompanySearchParams,
-  ): Promise<CompanyDto[]> {
-    return this.companiesService.search(params);
   }
 
   @Post('fetch')
@@ -139,7 +139,6 @@ export class CompaniesController {
     });
   }
 
-  // Declared before 'fetch/:identifier' so these paths are not treated as identifiers
   @Post('fetch/wikidata')
   @ApiOperation({
     summary: 'Fetch companies from Wikidata',
