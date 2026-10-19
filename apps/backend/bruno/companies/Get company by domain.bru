@@ -1,0 +1,25 @@
+meta {
+  name: Get company by domain
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/companies/domain/{{domain}}
+  body: none
+  auth: inherit
+}
+
+params:path {
+  domain: example.com
+}
+
+docs {
+  Get a company by its domain.
+  
+  - `domain`: The domain name of the company
+  
+  - 200: OK - company object
+  - 404: Not Found - unknown domain
+  - 401: Unauthorized - run Login
+}

@@ -1,0 +1,20 @@
+meta {
+  name: List companies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/companies
+  body: none
+  auth: inherit
+}
+
+docs {
+  List all companies from the database.
+  
+  Returns an array of company objects with normalized data.
+  
+  - 200: OK - array of companies
+  - 401: Unauthorized - run Login
+}

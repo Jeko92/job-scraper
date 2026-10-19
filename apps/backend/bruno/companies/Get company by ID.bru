@@ -1,0 +1,25 @@
+meta {
+  name: Get company by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/companies/{{companyId}}
+  body: none
+  auth: inherit
+}
+
+params:path {
+  companyId: 12345678-1234-1234-1234-123456789012
+}
+
+docs {
+  Get a single company by its UUID.
+  
+  - `companyId`: The UUID of the company
+  
+  - 200: OK - company object
+  - 404: Not Found - unknown ID
+  - 401: Unauthorized - run Login
+}
