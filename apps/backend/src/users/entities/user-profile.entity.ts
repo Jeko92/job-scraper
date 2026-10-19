@@ -16,7 +16,7 @@ import { Location } from '../../locations/entities/location.entity.js';
 import { User } from './user.entity.js';
 import { UserIndustry } from './user-industry.entity.js';
 import { UserPreferences } from './user-preferences.entity.js';
-import { UserRelocationLocation } from './user-relocation-location.entity.js';
+import { UserPreferencesLocation } from './user-preferences-locations.entity.js';
 import { UserSkill } from './user-skill.entity.js';
 
 @Entity('user_profiles')
@@ -83,8 +83,8 @@ export class UserProfile {
   industries?: Relation<UserIndustry>[];
 
   @OneToMany(
-    () => UserRelocationLocation,
-    (relocationLocation) => relocationLocation.userProfile,
+    () => UserPreferencesLocation,
+    (preferencesLocations) => preferencesLocations.userProfile,
   )
-  relocationLocations?: Relation<UserRelocationLocation>[];
+  preferencesLocations?: Relation<UserPreferencesLocation>[];
 }

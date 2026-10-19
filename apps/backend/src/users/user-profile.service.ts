@@ -20,8 +20,8 @@ import { toLocationDto } from '../locations/locations.service.js';
 import { Skill } from '../skills/entities/skill.entity.js';
 import { UserIndustry } from './entities/user-industry.entity.js';
 import { UserPreferences } from './entities/user-preferences.entity.js';
+import { UserPreferencesLocation } from './entities/user-preferences-locations.entity.js';
 import { UserProfile } from './entities/user-profile.entity.js';
-import { UserRelocationLocation } from './entities/user-relocation-location.entity.js';
 import { UserSkill } from './entities/user-skill.entity.js';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class UserProfileService {
       where: { userId },
       relations: {
         location: true,
-        relocationLocations: { location: true },
+        preferencesLocations: { location: true },
         preferences: true,
         skills: { skill: true },
         industries: { industry: true },
@@ -60,7 +60,7 @@ export class UserProfileService {
       const {
         skills,
         industries,
-        relocationLocationIds,
+        preferencesLocationIds,
         preferences,
         ...basics
       } = input;
@@ -134,25 +134,27 @@ export class UserProfileService {
         }
       }
 
-      if (relocationLocationIds) {
+      if (preferencesLocationIds) {
         const found = await manager.find(Location, {
           select: { id: true },
-          where: { id: In(relocationLocationIds) },
+          where: { id: In(preferencesLocationIds) },
         });
         const foundIds = new Set(found.map((location) => location.id));
-        const unknown = relocationLocationIds.filter((id) => !foundIds.has(id));
+        const unknown = preferencesLocationIds.filter(
+          (id) => !foundIds.has(id),
+        );
         if (unknown.length > 0) {
           throw new BadRequestException(
             `Unknown locations: ${unknown.join(', ')}`,
           );
         }
-        await manager.delete(UserRelocationLocation, {
+        await manager.delete(UserPreferencesLocation, {
           userProfileId: profile.id,
         });
-        if (relocationLocationIds.length > 0) {
+        if (preferencesLocationIds.length > 0) {
           await manager.insert(
-            UserRelocationLocation,
-            relocationLocationIds.map((locationId) => ({
+            UserPreferencesLocation,
+            preferencesLocationIds.map((locationId) => ({
               userProfileId: profile.id,
               locationId,
             })),
@@ -227,7 +229,7 @@ function toUserProfileDto(profile: UserProfile): UserProfileDto {
     yearsExperience: profile.yearsExperience,
     seniority: oneOf(SENIORITY_LEVELS, profile.seniority),
     location: profile.location ? toLocationDto(profile.location) : null,
-    relocationLocations: (profile.relocationLocations ?? [])
+    preferencesLocations: (profile.preferencesLocations ?? [])
       .flatMap(({ location }) => (location ? [location] : []))
       .sort(compareLocations)
       .map(toLocationDto),

@@ -40,7 +40,7 @@ export const seniorityLevelSchema: z.ZodType<SeniorityLevel> =
 
 export const MAX_PROFILE_SKILLS = 50;
 export const MAX_PROFILE_INDUSTRIES = 10;
-export const MAX_RELOCATION_LOCATIONS = 4;
+export const MAX_PREFERENCES_LOCATIONS = 4;
 
 // numeric(4,1) and numeric(12,2) in the database.
 const yearsExperienceSchema = z.number().min(0).max(99.9).multipleOf(0.1);
@@ -80,7 +80,7 @@ export interface UserProfile {
   yearsExperience: number | null;
   seniority: SeniorityLevel | null;
   location: Location | null;
-  relocationLocations: Location[];
+  preferencesLocations: Location[];
   /** Ordered by name. */
   skills: UserProfileSkill[];
   /** Ordered by priority. */
@@ -99,7 +99,7 @@ export const userProfileSchema: z.ZodType<UserProfile> = z.object({
   yearsExperience: z.number().nullable(),
   seniority: seniorityLevelSchema.nullable(),
   location: locationSchema.nullable(),
-  relocationLocations: z.array(locationSchema),
+  preferencesLocations: z.array(locationSchema),
   skills: z.array(
     z.object({
       id: z.uuid(),
@@ -134,7 +134,7 @@ export const userProfileSchema: z.ZodType<UserProfile> = z.object({
 
 /**
  * Every field is optional: an omitted field stays unchanged, `null` clears a
- * nullable one. `skills`, `industries` and `relocationLocationIds` replace the
+ * nullable one. `skills`, `industries` and `preferencesLocationIds` replace the
  * whole list; the order of `industries` sets their priority.
  */
 export interface UpdateUserProfileRequest {
@@ -145,7 +145,7 @@ export interface UpdateUserProfileRequest {
   seniority?: SeniorityLevel | null | undefined;
   locationId?: string | null | undefined;
   /** Location ids */
-  relocationLocationIds?: string[] | undefined;
+  preferencesLocationIds?: string[] | undefined;
   skills?:
     | {
         slug: string;
@@ -178,9 +178,9 @@ export const updateUserProfileSchema: z.ZodType<UpdateUserProfileRequest> =
     yearsExperience: yearsExperienceSchema.nullable().optional(),
     seniority: seniorityLevelSchema.nullable().optional(),
     locationId: z.uuid().nullable().optional(),
-    relocationLocationIds: z
+    preferencesLocationIds: z
       .array(z.uuid())
-      .max(MAX_RELOCATION_LOCATIONS)
+      .max(MAX_PREFERENCES_LOCATIONS)
       .refine(hasUniqueValues, { message: 'Location ids must be unique' })
       .optional(),
     skills: z

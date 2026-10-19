@@ -77,7 +77,7 @@ erDiagram
         decimal years_experience "decimal(4,1)"
     }
 
-    user_relocation_locations {
+    user_preferences_locations {
         uuid user_profile_id PK, FK
         uuid location_id PK, FK
     }
@@ -177,8 +177,8 @@ erDiagram
     skills ||--o{ user_skills : ""
     user_profiles ||--o{ user_industries : ""
     industries ||--o{ user_industries : ""
-    user_profiles ||--o{ user_relocation_locations : ""
-    locations ||--o{ user_relocation_locations : ""
+    user_profiles ||--o{ user_preferences_locations : ""
+    locations ||--o{ user_preferences_locations : ""
 
     companies ||--o{ company_locations : ""
     locations ||--o{ company_locations : ""

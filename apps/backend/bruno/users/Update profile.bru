@@ -15,7 +15,7 @@ body:json {
     "firstName": "Max",
     "headline": "Backend developer",
     "locationId": null,
-    "relocationLocationIds": ["{{locationId}}","{{locationId1}}","{{locationId2}}"],
+    "preferencesLocationIds": ["{{locationId}}","{{locationId1}}","{{locationId2}}"],
     "yearsExperience": 4.5,
     "seniority": "MID",
     "skills": [
@@ -35,7 +35,7 @@ body:json {
 }
 
 vars:pre-request {
-  locationId: f853c0cb-c66d-411a-89f6-ae6cc6dcaf5b
+  locationId: 47f03b00-eeae-4bcc-8c84-c71505c0e90a
   locationId1: 64392f03-80d2-4e68-ab51-8cdf43b0d10c
   locationId2: 06f7c3b1-7e77-46e5-97b9-15362655ad93
 }
@@ -49,7 +49,7 @@ docs {
   - `skills` / `industries`: replace the whole list; `[]` clears it.
     Skills and industries are referenced by slug (see List skills/industries).
   - `industries` order sets the priority (first = 1).
-  - `relocationLocationIds`: replaces the whole list (max 4, unique); ids from
+  - `preferencesLocationIds`: replaces the whole list (max 4, unique); ids from
     **List locations**, which stores the first three results as `locationId`,
     `locationId1`, `locationId2` (run it first). `[]` clears it.
   - `preferences`: merged into the saved preferences.

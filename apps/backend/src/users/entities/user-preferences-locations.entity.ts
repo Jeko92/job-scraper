@@ -9,15 +9,15 @@ import {
 import { Location } from '../../locations/entities/location.entity.js';
 import { UserProfile } from './user-profile.entity.js';
 
-@Entity('user_relocation_locations')
-export class UserRelocationLocation {
+@Entity('user_preferences_locations')
+export class UserPreferencesLocation {
   @PrimaryColumn({ name: 'user_profile_id', type: 'uuid' })
   userProfileId!: string;
 
   @PrimaryColumn({ name: 'location_id', type: 'uuid' })
   locationId!: string;
 
-  @ManyToOne(() => UserProfile, (profile) => profile.relocationLocations, {
+  @ManyToOne(() => UserProfile, (profile) => profile.preferencesLocations, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_profile_id' })
