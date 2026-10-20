@@ -1,0 +1,121 @@
+'use client';
+
+import { JOB_SORTS, type JobsQuery } from '@job-scraper/shared';
+import { SlidersHorizontal } from 'lucide-react';
+
+import { GlowPanel } from '@/components/landing/glow-panel';
+import {
+  EMPLOYMENT_TYPE_LABELS,
+  formatEuros,
+  formatJobCount,
+  formatPostedWithin,
+  JOB_SORT_LABELS,
+  WORKPLACE_TYPE_LABELS,
+} from '@/lib/jobs/format';
+import { toggleValue } from '@/lib/jobs/search-params';
+
+import { FieldSelect } from './field-select';
+import { FilterChip } from './filter-chip';
+import { useJobsSearch } from './jobs-search-provider';
+
+const SORT_ITEMS = JOB_SORTS.map((sort) => ({
+  value: sort,
+  label: JOB_SORT_LABELS[sort],
+}));
+
+interface JobsHeaderProps {
+  /** null when the jobs could not be loaded. */
+  total: number | null;
+}
+
+export function JobsHeader({ total }: JobsHeaderProps) {
+  const { query, applyQuery } = useJobsSearch();
+  const filters = getActiveFilters(query);
+
+  return (
+    <GlowPanel className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6 sm:p-8">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
+          {total === null
+            ? 'Search'
+            : `${formatJobCount(total)} ${total === 1 ? 'match' : 'matches'}`}
+        </h1>
+        <FieldSelect
+          label="Sort by"
+          items={SORT_ITEMS}
+          value={query.sort}
+          onChange={(sort) => {
+            applyQuery({ ...query, sort: sort ?? 'newest' });
+          }}
+          className="w-full sm:w-60"
+        />
+      </div>
+
+      {filters.length > 0 && (
+        <div
+          role="group"
+          aria-label="Active filters"
+          className="flex flex-wrap items-center gap-2"
+        >
+          <SlidersHorizontal
+            className="size-5 text-ink-muted"
+            aria-hidden="true"
+          />
+          {filters.map((filter) => (
+            <FilterChip
+              key={filter.key}
+              variant="selected"
+              label={filter.label}
+              onClick={() => {
+                applyQuery(filter.without);
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </GlowPanel>
+  );
+}
+
+interface ActiveFilter {
+  key: string;
+  label: string;
+  /** The query after removing this filter. */
+  without: JobsQuery;
+}
+
+function getActiveFilters(query: JobsQuery): ActiveFilter[] {
+  const filters: ActiveFilter[] = [
+    ...(query.workplaceType ?? []).map((value) => ({
+      key: `workplaceType:${value}`,
+      label: WORKPLACE_TYPE_LABELS[value],
+      without: {
+        ...query,
+        workplaceType: toggleValue(query.workplaceType, value),
+      },
+    })),
+    ...(query.employmentType ?? []).map((value) => ({
+      key: `employmentType:${value}`,
+      label: EMPLOYMENT_TYPE_LABELS[value],
+      without: {
+        ...query,
+        employmentType: toggleValue(query.employmentType, value),
+      },
+    })),
+  ];
+  if (query.postedWithinDays !== undefined) {
+    filters.push({
+      key: 'postedWithinDays',
+      label: formatPostedWithin(query.postedWithinDays),
+      without: { ...query, postedWithinDays: undefined },
+    });
+  }
+  if (query.salaryMin !== undefined) {
+    filters.push({
+      key: 'salaryMin',
+      label: `From ${formatEuros(query.salaryMin)}`,
+      without: { ...query, salaryMin: undefined },
+    });
+  }
+  return filters;
+}

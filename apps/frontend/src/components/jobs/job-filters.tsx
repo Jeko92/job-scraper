@@ -7,13 +7,6 @@ import { useId, useState } from 'react';
 import { LogoMark } from '@/components/brand/logo';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   EMPLOYMENT_TYPE_LABELS,
   formatEuros,
   formatPostedWithin,
@@ -22,9 +15,10 @@ import {
   WORKPLACE_TYPE_LABELS,
 } from '@/lib/jobs/format';
 import { toggleValue } from '@/lib/jobs/search-params';
-import { field, fieldLabel, overline } from '@/lib/styles';
+import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
+import { FieldSelect } from './field-select';
 import { useJobsSearch } from './jobs-search-provider';
 
 export function JobFilters() {
@@ -191,34 +185,15 @@ function NumberSelect({
     { value: null, label: anyLabel },
     ...values.map((option) => ({ value: option, label: format(option) })),
   ];
-  const labelId = useId();
 
   return (
-    <div className="flex flex-col gap-2">
-      <span id={labelId} className={fieldLabel}>
-        {label}
-      </span>
-      <Select
-        items={items}
-        value={value ?? null}
-        onValueChange={(next) => {
-          onChange(next ?? undefined);
-        }}
-      >
-        <SelectTrigger
-          aria-labelledby={labelId}
-          className={cn(field, 'w-full text-base data-[size=default]:h-12')}
-        >
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {items.map((item) => (
-            <SelectItem key={item.label} value={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <FieldSelect
+      label={label}
+      items={items}
+      value={value ?? null}
+      onChange={(next) => {
+        onChange(next ?? undefined);
+      }}
+    />
   );
 }

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { JobFilters } from '@/components/jobs/job-filters';
 import { JobsFeed } from '@/components/jobs/jobs-feed';
+import { JobsHeader } from '@/components/jobs/jobs-header';
 import {
   JobsResults,
   JobsSearchProvider,
@@ -10,7 +11,6 @@ import {
 import { Card } from '@/components/ui/card';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
-import { formatJobCount } from '@/lib/jobs/format';
 import { parseJobsQuery, toJobsSearchParams } from '@/lib/jobs/search-params';
 import { LOGIN_HREF } from '@/lib/routes';
 
@@ -36,11 +36,7 @@ export default async function SearchPage({
               aria-labelledby="jobs-heading"
               className="flex flex-col gap-4"
             >
-              <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
-                {firstPage
-                  ? `${formatJobCount(firstPage.total)} ${firstPage.total === 1 ? 'match' : 'matches'}`
-                  : 'Search'}
-              </h1>
+              <JobsHeader total={firstPage?.total ?? null} />
               {firstPage ? (
                 // A new query string starts a fresh list.
                 <JobsFeed
