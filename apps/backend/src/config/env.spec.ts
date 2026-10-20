@@ -9,6 +9,9 @@ const required = {
   JWT_SECRET: 'test-secret',
   JWT_EXPIRES_IN: '3600',
   OPENAI_API_KEY: 'test-openai-key',
+  COMPANYENRICH_API_KEY: 'test-companyenrich-key',
+  COMPANYENRICH_API_URL: 'https://api.companyenrich.com/',
+  WIKIDATA_API_URL: 'https://query.wikidata.org/sparql',
 };
 
 describe('envSchema', () => {
@@ -23,6 +26,9 @@ describe('envSchema', () => {
       JWT_EXPIRES_IN: 3600,
       OPENAI_API_KEY: required.OPENAI_API_KEY,
       OPENAI_MODEL: 'gpt-5-mini',
+      COMPANYENRICH_API_KEY: required.COMPANYENRICH_API_KEY,
+      COMPANYENRICH_API_URL: required.COMPANYENRICH_API_URL,
+      WIKIDATA_API_URL: required.WIKIDATA_API_URL,
     });
   });
 

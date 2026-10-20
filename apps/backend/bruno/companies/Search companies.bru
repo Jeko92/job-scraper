@@ -1,0 +1,42 @@
+meta {
+  name: Search companies
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/companies/search
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~query: Google
+  ~location: Berlin
+  ~industry: Technology
+  ~minEmployees: 100
+  ~maxEmployees: 10000
+  ~foundedAfter: 2000
+  ~foundedBefore: 2020
+  ~limit: 20
+  ~offset: 0
+}
+
+docs {
+  Search companies in the database with filters.
+  
+  Query Parameters:
+  - `query`: search in name, legal name, or website (optional)
+  - `location`: filter by location (optional)
+  - `industry`: filter by industry/company type (optional)
+  - `minEmployees`: minimum number of employees (optional)
+  - `maxEmployees`: maximum number of employees (optional)
+  - `foundedAfter`: minimum founded year (optional)
+  - `foundedBefore`: maximum founded year (optional)
+  - `limit`: maximum results per page, 1-100, default 20
+  - `offset`: pagination offset, default 0
+  
+  - 200: OK - array of matching companies
+  - 400: Bad Request - invalid filter parameters
+  - 401: Unauthorized - run Login
+}

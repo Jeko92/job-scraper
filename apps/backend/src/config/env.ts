@@ -12,6 +12,9 @@ export const envSchema = z.object({
   JWT_EXPIRES_IN: z.coerce.number().int().positive(),
   OPENAI_API_KEY: z.string().nonempty(),
   OPENAI_MODEL: z.string().nonempty().default('gpt-5-mini'),
+  COMPANYENRICH_API_KEY: z.string().nonempty(),
+  COMPANYENRICH_API_URL: z.url(),
+  WIKIDATA_API_URL: z.url(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -1,0 +1,46 @@
+meta {
+  name: Create company
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/companies
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Acme Corporation",
+    "legalName": "Acme Corp Ltd.",
+    "domain": "acme.com",
+    "websiteUrl": "https://www.acme.com",
+    "companyType": "private",
+    "description": "A leading technology company",
+    "numberOfEmployees": 500,
+    "employeeRange": "501-1K",
+    "foundingYear": 2000
+  }
+}
+
+docs {
+  Create a company directly in the database.
+  
+  Request Body:
+  - `name`: company name (optional)
+  - `legalName`: legal name of the company (optional)
+  - `domain`: domain name (optional)
+  - `websiteUrl`: website URL (optional)
+  - `companyType`: type of company (optional)
+  - `description`: company description (optional)
+  - `numberOfEmployees`: number of employees (optional)
+  - `employeeRange`: employee range as string (optional)
+  - `foundingYear`: year founded (optional)
+  
+  Creates a company with source set to 'manual'.
+  
+  - 201: Created - company object with ID
+  - 400: Bad Request - invalid input
+  - 401: Unauthorized - run Login
+}
