@@ -1,6 +1,7 @@
 import {
   EMPLOYMENT_TYPES,
   REMOTE_PREFERENCES,
+  SENIORITY_LEVELS,
   SKILL_LEVELS,
   type UpdateUserProfileRequest,
   type UserProfile as UserProfileDto,
@@ -19,6 +20,7 @@ import { toLocationDto } from '../locations/locations.service.js';
 import { Skill } from '../skills/entities/skill.entity.js';
 import { UserIndustry } from './entities/user-industry.entity.js';
 import { UserPreferences } from './entities/user-preferences.entity.js';
+import { UserPreferencesLocation } from './entities/user-preferences-locations.entity.js';
 import { UserProfile } from './entities/user-profile.entity.js';
 import { UserSkill } from './entities/user-skill.entity.js';
 
@@ -34,6 +36,7 @@ export class UserProfileService {
       where: { userId },
       relations: {
         location: true,
+        preferencesLocations: { location: true },
         preferences: true,
         skills: { skill: true },
         industries: { industry: true },
@@ -54,7 +57,13 @@ export class UserProfileService {
       if (!profile) {
         throw profileNotFound();
       }
-      const { skills, industries, preferences, ...basics } = input;
+      const {
+        skills,
+        industries,
+        preferencesLocationIds,
+        preferences,
+        ...basics
+      } = input;
 
       if (
         basics.locationId &&
@@ -125,6 +134,34 @@ export class UserProfileService {
         }
       }
 
+      if (preferencesLocationIds) {
+        const found = await manager.find(Location, {
+          select: { id: true },
+          where: { id: In(preferencesLocationIds) },
+        });
+        const foundIds = new Set(found.map((location) => location.id));
+        const unknown = preferencesLocationIds.filter(
+          (id) => !foundIds.has(id),
+        );
+        if (unknown.length > 0) {
+          throw new BadRequestException(
+            `Unknown locations: ${unknown.join(', ')}`,
+          );
+        }
+        await manager.delete(UserPreferencesLocation, {
+          userProfileId: profile.id,
+        });
+        if (preferencesLocationIds.length > 0) {
+          await manager.insert(
+            UserPreferencesLocation,
+            preferencesLocationIds.map((locationId) => ({
+              userProfileId: profile.id,
+              locationId,
+            })),
+          );
+        }
+      }
+
       if (preferences) {
         const existing = await manager.findOneBy(UserPreferences, {
           userProfileId: profile.id,
@@ -190,7 +227,12 @@ function toUserProfileDto(profile: UserProfile): UserProfileDto {
     lastName: profile.lastName,
     headline: profile.headline,
     yearsExperience: profile.yearsExperience,
+    seniority: oneOf(SENIORITY_LEVELS, profile.seniority),
     location: profile.location ? toLocationDto(profile.location) : null,
+    preferencesLocations: (profile.preferencesLocations ?? [])
+      .flatMap(({ location }) => (location ? [location] : []))
+      .sort(compareLocations)
+      .map(toLocationDto),
     skills: (profile.skills ?? [])
       .flatMap(({ skill, level, yearsExperience }) =>
         skill
@@ -239,6 +281,15 @@ function toUserProfileDto(profile: UserProfile): UserProfileDto {
     onboardingCompleted: profile.onboardingCompleted,
     updatedAt: profile.updatedAt.toISOString(),
   };
+}
+
+/** Same order as the locations list: country, state, city. */
+function compareLocations(a: Location, b: Location): number {
+  return (
+    (a.countryName ?? '').localeCompare(b.countryName ?? '') ||
+    (a.stateName ?? '').localeCompare(b.stateName ?? '') ||
+    (a.city ?? '').localeCompare(b.city ?? '')
+  );
 }
 
 function profileNotFound(): NotFoundException {

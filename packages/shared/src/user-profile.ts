@@ -27,8 +27,20 @@ export const SKILL_LEVELS = [
 export type SkillLevel = (typeof SKILL_LEVELS)[number];
 export const skillLevelSchema: z.ZodType<SkillLevel> = z.enum(SKILL_LEVELS);
 
+export const SENIORITY_LEVELS = [
+  'INTERN',
+  'JUNIOR',
+  'MID',
+  'SENIOR',
+  'LEAD',
+] as const;
+export type SeniorityLevel = (typeof SENIORITY_LEVELS)[number];
+export const seniorityLevelSchema: z.ZodType<SeniorityLevel> =
+  z.enum(SENIORITY_LEVELS);
+
 export const MAX_PROFILE_SKILLS = 50;
 export const MAX_PROFILE_INDUSTRIES = 10;
+export const MAX_PREFERENCES_LOCATIONS = 4;
 
 // numeric(4,1) and numeric(12,2) in the database.
 const yearsExperienceSchema = z.number().min(0).max(99.9).multipleOf(0.1);
@@ -66,7 +78,9 @@ export interface UserProfile {
   lastName: string | null;
   headline: string | null;
   yearsExperience: number | null;
+  seniority: SeniorityLevel | null;
   location: Location | null;
+  preferencesLocations: Location[];
   /** Ordered by name. */
   skills: UserProfileSkill[];
   /** Ordered by priority. */
@@ -83,7 +97,9 @@ export const userProfileSchema: z.ZodType<UserProfile> = z.object({
   lastName: z.string().nullable(),
   headline: z.string().nullable(),
   yearsExperience: z.number().nullable(),
+  seniority: seniorityLevelSchema.nullable(),
   location: locationSchema.nullable(),
+  preferencesLocations: z.array(locationSchema),
   skills: z.array(
     z.object({
       id: z.uuid(),
@@ -118,15 +134,18 @@ export const userProfileSchema: z.ZodType<UserProfile> = z.object({
 
 /**
  * Every field is optional: an omitted field stays unchanged, `null` clears a
- * nullable one. `skills` and `industries` replace the whole list; the order of
- * `industries` sets their priority.
+ * nullable one. `skills`, `industries` and `preferencesLocationIds` replace the
+ * whole list; the order of `industries` sets their priority.
  */
 export interface UpdateUserProfileRequest {
   firstName?: string | undefined;
   lastName?: string | undefined;
   headline?: string | null | undefined;
   yearsExperience?: number | null | undefined;
+  seniority?: SeniorityLevel | null | undefined;
   locationId?: string | null | undefined;
+  /** Location ids */
+  preferencesLocationIds?: string[] | undefined;
   skills?:
     | {
         slug: string;
@@ -157,7 +176,13 @@ export const updateUserProfileSchema: z.ZodType<UpdateUserProfileRequest> =
     lastName: z.string().trim().nonempty().max(100).optional(),
     headline: z.string().trim().max(200).nullable().optional(),
     yearsExperience: yearsExperienceSchema.nullable().optional(),
+    seniority: seniorityLevelSchema.nullable().optional(),
     locationId: z.uuid().nullable().optional(),
+    preferencesLocationIds: z
+      .array(z.uuid())
+      .max(MAX_PREFERENCES_LOCATIONS)
+      .refine(hasUniqueValues, { message: 'Location ids must be unique' })
+      .optional(),
     skills: z
       .array(
         z.object({

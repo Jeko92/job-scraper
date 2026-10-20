@@ -2,7 +2,7 @@ Flow (Mermaid)
 
 ```mermaid
 flowchart TD
-    Welcome --> Essentials["Essentials<br/>Q1 roles + Q2 based"]
+    Welcome --> Essentials["Essentials<br/>Q1 role + Q2 based"]
     Essentials -->|Continue| Q3
     Essentials -->|Skip the rest| Review
     Q3 --> Q4 --> Q5 --> Q6{"Q6 open to relocating?"}
@@ -21,7 +21,7 @@ Flow (ASCII backup)
 
 /onboarding:
 
-  Welcome ──► Essentials (Q1 roles + Q2 based) ──► Q3 ──► Q4 ──► Q5 ──► Q6
+  Welcome ──► Essentials (Q1 role + Q2 based)  ──► Q3 ──► Q4 ──► Q5 ──► Q6
                       │                                              │
                       │                                    Yes ──► Q6b ──┐
                       │                                    No  ──────────┤
@@ -38,7 +38,7 @@ Flow (ASCII backup)
   "Skip for now" on Q3–Q9 moves to the next question (answer stays "Not set").
   Review: [ Edit / Add ] jumps back to a question, then returns to Review.
 
-Required: Q1 (roles) and Q2 (based), both on the Essentials screen.
+Required: Q1 (role) and Q2 (based), both on the Essentials screen.
 Everything else is optional.
 "Onboarding done" is set on Submit once the required answers are present.
 
@@ -53,11 +53,11 @@ Everything else is optional.
    └───────────────────────────────────────────┘
 
 ── ESSENTIALS (required) ────────────
-1  What roles are you looking for?            → tag input (1-3)
-   Mix fields freely, e.g. Fullstack developer
-   [ Frontend Developer ✕ ][ UI Engineer ✕ ] [type + Enter…]
+1  What role are you looking for?             → text input (saved as headline)
+   e.g. Fullstack developer
+   [ Frontend Developer                    ]
 
-2  Where are you based?                       → searchable dropdown (from DB)
+2  Where are you based?                      → autocomplete (from DB)
    [ ber…                        ▾ ]
      Berlin, Germany
      Bavaria, Germany
@@ -81,10 +81,11 @@ Everything else is optional.
 ── RELOCATION ───────────────────────────────────
 6  Are you open to relocating?                → [Y] Yes   [N] No
                                                    Skip for now
+   (skipping saves "No")
 
-6b Which locations would you consider?        → multi-select dropdown (from DB, 0–10)
+6b Which locations would you consider?        → autocomplete (from DB, 0–4)
    (shown only if Q6 = Yes)
-   [ mun…                        ▾ ]
+   [ mun…                          ]
      Munich, Germany
    [ Hamburg, Germany ✕ ][ Vienna, Austria ✕ ]
                                                    Skip for now
@@ -103,21 +104,27 @@ Everything else is optional.
    React       ○ Beginner ● Intermediate ○ Advanced ○ Expert  ✕
                                                    Skip for now
 
-9  Which languages do you speak?              → tag input (1–5)
-   [ English ✕ ][ German ✕ ] [type + Enter…]
+9  Which industries interest you?             → autocomplete (from DB, 0–10)
+   Order = priority (first is most important)
+   [ fin…                          ]
+     Finance
+     Fintech
+   [ Software ✕ ][ Healthcare ✕ ]
                                                    Skip for now
 
 ── WRAP-UP ──────────────────────────────────────
 10 REVIEW
    ┌───────────────────────────────────────────┐
    │ Job preferences                 [ Edit ]  │ ← Edit jumps back to that question
-   │  Frontend Dev, UI Engineer · Mid          │
+   │  Frontend Developer · Mid                 │
    │  Full-time · Remote                       │
    │ Location                        [ Edit ]  │
    │  Berlin, Germany · open to relocate:      │
    │  Hamburg, Vienna                          │
    │ Skills & experience             [ Add ]   │ ← skipped answers show "Not set"
    │  Not set                                  │
+   │ Industries                      [ Edit ]  │
+   │  Software, Healthcare                     │
    │                                           │
    │              ( Submit ↵ )                 │
    └───────────────────────────────────────────┘

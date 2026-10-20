@@ -17,10 +17,15 @@
 //   admin-managed and seeded via migrations, never created on demand.
 //   Skills and industries have a unique name and a URL-friendly slug.
 //   A profile's location is optional.
-// - user_skills, user_industries, company_locations, company_skills,
-//   company_industries and job_skills are many-to-many join tables. They use
-//   composite primary keys and can carry extra data (e.g. skill level,
-//   industry priority, whether a job skill is required).
+// - user_profiles.seniority is one of INTERN, JUNIOR, MID, SENIOR, LEAD
+//   (SENIORITY_LEVELS in packages/shared), or null.
+// - user_skills, user_industries, user_preferences_locations,
+//   company_locations, company_skills, company_industries and job_skills are
+//   many-to-many join tables. They use composite primary keys and can carry
+//   extra data (e.g. skill level, industry priority, whether a job skill is
+//   required).
+// - user_preferences_locations holds the locations a user would relocate to
+//   (at most 4, MAX_PREFERENCES_LOCATIONS in packages/shared).
 //
 // Crawling flow:
 // - companies -> crawl_targets: each company has one or more career-page
@@ -36,7 +41,9 @@
 //
 // On delete (not expressible with inline refs, enforced in the backend):
 // - Rows owned by a user (user_profiles, user_preferences, user_skills,
-//   user_industries) cascade from their parent.
+//   user_industries, user_preferences_locations) cascade from their parent.
+// - Deleting a skill, industry or location also deletes the user_skills,
+//   user_industries or user_preferences_locations rows that point to it.
 // - user_profiles.location_id and jobs.crawl_run_id are set to null.
 //
 // Relation markers: `ref: -` is one-to-one, `ref: >` is many-to-one,
@@ -58,6 +65,7 @@ Table user_profiles {
   last_name varchar
   headline varchar
   years_experience decimal(4,1)
+  seniority varchar(50) // INTERN | JUNIOR | MID | SENIOR | LEAD
   onboarding_completed boolean [not null, default: false]
   location_id uuid [ref: >? locations.id]
   created_at timestamptz [not null]
@@ -71,7 +79,7 @@ Table user_preferences {
   employment_type varchar(50)
   min_salary decimal(12,2)
   salary_currency char(3) // ISO 4217, e.g. EUR
-  willing_to_relocate boolean [default: false]
+  willing_to_relocate boolean [not null, default: false]
   created_at timestamptz [not null]
   updated_at timestamptz [not null]
 }
@@ -102,10 +110,19 @@ Table user_skills {
   skill_id uuid [ref: > skills.id]
 
   level varchar
-  years_experience decimal
+  years_experience decimal(4,1)
 
   indexes {
     (user_profile_id, skill_id) [pk]
+  }
+}
+
+Table user_preferences_locations {
+  user_profile_id uuid [ref: > user_profiles.id]
+  location_id uuid [ref: > locations.id]
+
+  indexes {
+    (user_profile_id, location_id) [pk]
   }
 }
 
