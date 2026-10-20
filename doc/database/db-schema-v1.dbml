@@ -42,8 +42,11 @@
 // On delete (not expressible with inline refs, enforced in the backend):
 // - Rows owned by a user (user_profiles, user_preferences, user_skills,
 //   user_industries, user_preferences_locations) cascade from their parent.
+// - Rows owned by a company (company_locations, company_skills,
+//   company_industries) cascade from it.
 // - Deleting a skill, industry or location also deletes the user_skills,
-//   user_industries or user_preferences_locations rows that point to it.
+//   user_industries, user_preferences_locations, company_locations,
+//   company_skills or company_industries rows that point to it.
 // - user_profiles.location_id and jobs.crawl_run_id are set to null.
 //
 // Relation markers: `ref: -` is one-to-one, `ref: >` is many-to-one,
