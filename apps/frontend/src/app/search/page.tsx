@@ -1,7 +1,12 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
+import { JobFilters } from '@/components/jobs/job-filters';
 import { JobsFeed } from '@/components/jobs/jobs-feed';
+import {
+  JobsResults,
+  JobsSearchProvider,
+} from '@/components/jobs/jobs-search-provider';
 import { Card } from '@/components/ui/card';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
@@ -23,30 +28,40 @@ export default async function SearchPage({
 
   return (
     <main className="flex-1 px-4 pb-12 sm:px-8">
-      <section aria-labelledby="jobs-heading" className="flex flex-col gap-4">
-        <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
-          {firstPage
-            ? `${formatJobCount(firstPage.total)} ${firstPage.total === 1 ? 'match' : 'matches'}`
-            : 'Search'}
-        </h1>
-        {firstPage ? (
-          // A new query string starts a fresh list.
-          <JobsFeed
-            key={toJobsSearchParams(query).toString()}
-            query={query}
-            initialPage={firstPage}
-          />
-        ) : (
-          <Card className="gap-2 rounded-card p-10 text-center ring-line">
-            <p className="font-heading text-2xl text-ink">
-              Jobs are not available right now
-            </p>
-            <p className="text-sm text-ink-muted">
-              We could not load jobs. Please try again in a moment.
-            </p>
-          </Card>
-        )}
-      </section>
+      <JobsSearchProvider query={query}>
+        <div className="grid items-start gap-4 lg:grid-cols-[18rem_minmax(0,1fr)]">
+          <JobFilters />
+          <JobsResults>
+            <section
+              aria-labelledby="jobs-heading"
+              className="flex flex-col gap-4"
+            >
+              <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
+                {firstPage
+                  ? `${formatJobCount(firstPage.total)} ${firstPage.total === 1 ? 'match' : 'matches'}`
+                  : 'Search'}
+              </h1>
+              {firstPage ? (
+                // A new query string starts a fresh list.
+                <JobsFeed
+                  key={toJobsSearchParams(query).toString()}
+                  query={query}
+                  initialPage={firstPage}
+                />
+              ) : (
+                <Card className="gap-2 rounded-card p-10 text-center ring-line">
+                  <p className="font-heading text-2xl text-ink">
+                    Jobs are not available right now
+                  </p>
+                  <p className="text-sm text-ink-muted">
+                    We could not load jobs. Please try again in a moment.
+                  </p>
+                </Card>
+              )}
+            </section>
+          </JobsResults>
+        </div>
+      </JobsSearchProvider>
     </main>
   );
 }
