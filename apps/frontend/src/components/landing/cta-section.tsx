@@ -1,5 +1,6 @@
+import { LogoMark } from '@/components/brand/logo';
+
 import { CtaLinks } from './cta-links';
-import { LogoMark } from './logo';
 
 export function CtaSection() {
   return (

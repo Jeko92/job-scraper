@@ -16,6 +16,7 @@ import { Location } from '../../locations/entities/location.entity.js';
 import { User } from './user.entity.js';
 import { UserIndustry } from './user-industry.entity.js';
 import { UserPreferences } from './user-preferences.entity.js';
+import { UserPreferencesLocation } from './user-preferences-locations.entity.js';
 import { UserSkill } from './user-skill.entity.js';
 
 @Entity('user_profiles')
@@ -53,12 +54,18 @@ export class UserProfile {
   })
   yearsExperience!: number | null;
 
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  seniority!: string | null;
+
   @Column({ name: 'location_id', type: 'uuid', nullable: true })
   locationId!: string | null;
 
   @ManyToOne(() => Location, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'location_id' })
   location?: Relation<Location> | null;
+
+  @Column({ name: 'onboarding_completed', type: 'boolean', default: false })
+  onboardingCompleted!: boolean;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
@@ -74,4 +81,10 @@ export class UserProfile {
 
   @OneToMany(() => UserIndustry, (userIndustry) => userIndustry.userProfile)
   industries?: Relation<UserIndustry>[];
+
+  @OneToMany(
+    () => UserPreferencesLocation,
+    (preferencesLocations) => preferencesLocations.userProfile,
+  )
+  preferencesLocations?: Relation<UserPreferencesLocation>[];
 }

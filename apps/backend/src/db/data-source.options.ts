@@ -6,6 +6,7 @@ import { Skill } from '../skills/entities/skill.entity.js';
 import { User } from '../users/entities/user.entity.js';
 import { UserIndustry } from '../users/entities/user-industry.entity.js';
 import { UserPreferences } from '../users/entities/user-preferences.entity.js';
+import { UserPreferencesLocation } from '../users/entities/user-preferences-locations.entity.js';
 import { UserProfile } from '../users/entities/user-profile.entity.js';
 import { UserSkill } from '../users/entities/user-skill.entity.js';
 
@@ -21,6 +22,7 @@ export function createDataSourceOptions(
       UserPreferences,
       UserSkill,
       UserIndustry,
+      UserPreferencesLocation,
       Skill,
       Industry,
       Location,

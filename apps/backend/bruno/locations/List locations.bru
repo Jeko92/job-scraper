@@ -18,14 +18,18 @@ params:query {
 }
 
 script:post-response {
-  if (res.status === 200 && res.body.length > 0) {
-    bru.setEnvVar("locationId", res.body[0].id);
+  if (res.status === 200) {
+    // First three ids, used by Get location and Update profile
+    ["locationId", "locationId1", "locationId2"].forEach((name, i) => {
+      if (res.body[i]) bru.setEnvVar(name, res.body[i].id);
+    });
   }
 }
 
 docs {
   Locations ordered by country, state, city. Enable a query param to filter.
-  Stores the first result's id as `locationId` for **Get location**.
+  Stores the first three results' ids as `locationId`, `locationId1` and
+  `locationId2` for **Get location** and **Update profile**.
   
   - `search`: case-insensitive match on country, state or city
   - `countryCode`: two letters, e.g. DE

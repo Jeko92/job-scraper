@@ -1,6 +1,7 @@
 import {
   EMPLOYMENT_TYPES,
   REMOTE_PREFERENCES,
+  SENIORITY_LEVELS,
   SKILL_LEVELS,
   type UpdateUserProfileRequest,
   type UserProfile as UserProfileDto,
@@ -19,6 +20,7 @@ import { toLocationDto } from '../locations/locations.service.js';
 import { Skill } from '../skills/entities/skill.entity.js';
 import { UserIndustry } from './entities/user-industry.entity.js';
 import { UserPreferences } from './entities/user-preferences.entity.js';
+import { UserPreferencesLocation } from './entities/user-preferences-locations.entity.js';
 import { UserProfile } from './entities/user-profile.entity.js';
 import { UserSkill } from './entities/user-skill.entity.js';
 
@@ -34,6 +36,7 @@ export class UserProfileService {
       where: { userId },
       relations: {
         location: true,
+        preferencesLocations: { location: true },
         preferences: true,
         skills: { skill: true },
         industries: { industry: true },
@@ -54,7 +57,13 @@ export class UserProfileService {
       if (!profile) {
         throw profileNotFound();
       }
-      const { skills, industries, preferences, ...basics } = input;
+      const {
+        skills,
+        industries,
+        preferencesLocationIds,
+        preferences,
+        ...basics
+      } = input;
 
       if (
         basics.locationId &&
@@ -62,9 +71,20 @@ export class UserProfileService {
       ) {
         throw new BadRequestException(`Unknown location: ${basics.locationId}`);
       }
+      // Onboarding is done only while Q1 (headline) and Q2 (location) are both
+      // saved, otherwise false.
+      const headline =
+        basics.headline !== undefined ? basics.headline : profile.headline;
+      const locationId =
+        basics.locationId !== undefined
+          ? basics.locationId
+          : profile.locationId;
+      const onboardingCompleted = Boolean(headline && locationId);
+
       // Always touch updated_at, also when only skills/industries change.
       await manager.update(UserProfile, profile.id, {
         ...definedOnly(basics),
+        onboardingCompleted,
         updatedAt: new Date(),
       });
 
@@ -111,6 +131,34 @@ export class UserProfileService {
         });
         if (rows.length > 0) {
           await manager.insert(UserIndustry, rows);
+        }
+      }
+
+      if (preferencesLocationIds) {
+        const found = await manager.find(Location, {
+          select: { id: true },
+          where: { id: In(preferencesLocationIds) },
+        });
+        const foundIds = new Set(found.map((location) => location.id));
+        const unknown = preferencesLocationIds.filter(
+          (id) => !foundIds.has(id),
+        );
+        if (unknown.length > 0) {
+          throw new BadRequestException(
+            `Unknown locations: ${unknown.join(', ')}`,
+          );
+        }
+        await manager.delete(UserPreferencesLocation, {
+          userProfileId: profile.id,
+        });
+        if (preferencesLocationIds.length > 0) {
+          await manager.insert(
+            UserPreferencesLocation,
+            preferencesLocationIds.map((locationId) => ({
+              userProfileId: profile.id,
+              locationId,
+            })),
+          );
         }
       }
 
@@ -179,7 +227,12 @@ function toUserProfileDto(profile: UserProfile): UserProfileDto {
     lastName: profile.lastName,
     headline: profile.headline,
     yearsExperience: profile.yearsExperience,
+    seniority: oneOf(SENIORITY_LEVELS, profile.seniority),
     location: profile.location ? toLocationDto(profile.location) : null,
+    preferencesLocations: (profile.preferencesLocations ?? [])
+      .flatMap(({ location }) => (location ? [location] : []))
+      .sort(compareLocations)
+      .map(toLocationDto),
     skills: (profile.skills ?? [])
       .flatMap(({ skill, level, yearsExperience }) =>
         skill
@@ -225,8 +278,18 @@ function toUserProfileDto(profile: UserProfile): UserProfileDto {
           willingToRelocate: preferences.willingToRelocate,
         }
       : null,
+    onboardingCompleted: profile.onboardingCompleted,
     updatedAt: profile.updatedAt.toISOString(),
   };
+}
+
+/** Same order as the locations list: country, state, city. */
+function compareLocations(a: Location, b: Location): number {
+  return (
+    (a.countryName ?? '').localeCompare(b.countryName ?? '') ||
+    (a.stateName ?? '').localeCompare(b.stateName ?? '') ||
+    (a.city ?? '').localeCompare(b.city ?? '')
+  );
 }
 
 function profileNotFound(): NotFoundException {

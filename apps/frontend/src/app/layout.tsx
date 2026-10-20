@@ -1,17 +1,24 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { DM_Sans, Fraunces } from 'next/font/google';
 import { cookies } from 'next/headers';
 
-import { SiteFooter } from '@/components/layout/site-footer';
-import { SiteHeader } from '@/components/layout/site-header';
+import { Footer } from '@/components/layout/footer';
+import { Header } from '@/components/layout/header';
 import { isTheme, THEME_COOKIE } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 
-const geistSans = Geist({
+const fraunces = Fraunces({
+  variable: '--font-heading',
+  subsets: ['latin'],
+  fallback: ['ui-serif', 'Georgia', 'serif'],
+});
+
+const dmSans = DM_Sans({
   variable: '--font-sans',
   subsets: ['latin'],
+  fallback: ['Noto Sans', 'ui-sans-serif', 'system-ui'],
 });
 
 export const metadata: Metadata = {
@@ -34,7 +41,8 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang="en"
       className={cn(
-        geistSans.variable,
+        fraunces.variable,
+        dmSans.variable,
         'h-full antialiased',
         theme === 'dark' && 'dark',
       )}
@@ -49,10 +57,10 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
           />
         )}
       </head>
-      <body className="flex min-h-full flex-col">
-        <SiteHeader />
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        <Header />
         {children}
-        <SiteFooter />
+        <Footer />
       </body>
     </html>
   );
