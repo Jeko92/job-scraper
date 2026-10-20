@@ -1,40 +1,67 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { CompanyIndustry } from './company-industry.entity.js';
+import { CompanyLocation } from './company-location.entity.js';
+import { CompanySkill } from './company-skill.entity.js';
 
 @Entity('companies')
 export class Company {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   name!: string | null;
 
-  @Column({ nullable: true })
+  @Column({ name: 'legal_name', type: 'varchar', nullable: true })
   legalName!: string | null;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ type: 'varchar', unique: true, nullable: true })
   domain!: string | null;
 
-  @Column({ nullable: true })
+  @Column({ name: 'website_url', type: 'varchar', nullable: true })
   websiteUrl!: string | null;
 
-  @Column({ nullable: true })
+  @Column({ name: 'company_type', type: 'varchar', nullable: true })
   companyType!: string | null;
 
   @Column({ type: 'text', nullable: true })
   description!: string | null;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ name: 'number_of_employees', type: 'int', nullable: true })
   numberOfEmployees!: number | null;
 
-  @Column({ nullable: true })
+  @Column({ name: 'employee_range', type: 'varchar', nullable: true })
   employeeRange!: string | null;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ name: 'founding_year', type: 'int', nullable: true })
   foundingYear!: number | null;
 
-  @Column({ type: 'timestamptz', nullable: false })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
-  @Column({ type: 'timestamptz', nullable: false })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt!: Date;
+
+  @OneToMany(
+    () => CompanyLocation,
+    (companyLocation) => companyLocation.company,
+  )
+  locations?: Relation<CompanyLocation>[];
+
+  @OneToMany(() => CompanySkill, (companySkill) => companySkill.company)
+  skills?: Relation<CompanySkill>[];
+
+  @OneToMany(
+    () => CompanyIndustry,
+    (companyIndustry) => companyIndustry.company,
+  )
+  industries?: Relation<CompanyIndustry>[];
 }
