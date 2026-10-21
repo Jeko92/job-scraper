@@ -2,18 +2,10 @@
 
 import { locationsQuerySchema, skillsQuerySchema } from '@job-scraper/shared';
 
-import {
-  LOOKUP_SEARCH_LIMIT,
-  type LookupOption,
-  searchLocations,
-  searchSkills,
-  toLocationOption,
-} from './lookups';
+import { searchLocations, searchSkills, toLocationOption } from './api';
+import { LOOKUP_SEARCH_LIMIT, type LookupSearchResult } from './types';
 
-export type LookupSearchResult =
-  { options: LookupOption[] } | { error: string };
-
-export async function searchJobSkills(
+export async function searchSkillOptions(
   search: string,
 ): Promise<LookupSearchResult> {
   const parsed = skillsQuerySchema.safeParse({
@@ -37,7 +29,7 @@ export async function searchJobSkills(
   }
 }
 
-export async function searchJobLocations(
+export async function searchLocationOptions(
   search: string,
 ): Promise<LookupSearchResult> {
   const parsed = locationsQuerySchema.safeParse({

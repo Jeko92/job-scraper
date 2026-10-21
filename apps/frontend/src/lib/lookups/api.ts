@@ -10,16 +10,10 @@ import {
 import { readAuthToken } from '@/lib/auth/auth-token';
 import { getFromBackend } from '@/lib/backend';
 
-/** A lookup value as a filter shows it: slug or id, plus a readable label. */
-export interface LookupOption {
-  value: string;
-  label: string;
-}
+import { LOOKUP_SEARCH_LIMIT, type LookupOption } from './types';
 
-export const LOOKUP_SEARCH_LIMIT = 10;
-
-/** Names for the selected skill slugs; unknown slugs are left out. */
-export async function fetchJobSkills(
+/** Skills by slug, e.g. for chip labels; unknown slugs are left out. */
+export async function fetchSkillsBySlugs(
   slugs: string[] | undefined,
 ): Promise<Skill[]> {
   if (slugs === undefined || slugs.length === 0) {
@@ -62,8 +56,8 @@ export async function searchSkills(search: string): Promise<Skill[]> {
   return skillListSchema.parse(await response.json());
 }
 
-/** Selected locations by id; unknown ids are left out. */
-export async function fetchJobLocations(
+/** Locations by id, e.g. for chip labels; unknown ids are left out. */
+export async function fetchLocationsByIds(
   ids: string[] | undefined,
 ): Promise<Location[]> {
   if (ids === undefined || ids.length === 0) {

@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Input } from '@/components/ui/input';
-import type { LookupSearchResult } from '@/lib/jobs/actions';
-import type { LookupOption } from '@/lib/jobs/lookups';
+import type { LookupOption, LookupSearchResult } from '@/lib/lookups/types';
 import { field, overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 

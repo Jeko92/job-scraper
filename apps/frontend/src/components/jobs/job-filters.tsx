@@ -6,7 +6,6 @@ import { useId, useState } from 'react';
 
 import { LogoMark } from '@/components/brand/logo';
 import { Checkbox } from '@/components/ui/checkbox';
-import { searchJobLocations, searchJobSkills } from '@/lib/jobs/actions';
 import {
   EMPLOYMENT_TYPE_LABELS,
   formatPostedWithin,
@@ -22,6 +21,10 @@ import {
   removeSkill,
   toggleValue,
 } from '@/lib/jobs/search-params';
+import {
+  searchLocationOptions,
+  searchSkillOptions,
+} from '@/lib/lookups/actions';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
@@ -84,7 +87,7 @@ export function JobFilters() {
           placeholder="Search a skill, e.g. React"
           values={query.skill}
           max={MAX_SKILLS}
-          search={searchJobSkills}
+          search={searchSkillOptions}
           onAdd={(slug) => {
             applyQuery(addSkill(query, slug));
           }}
@@ -97,7 +100,7 @@ export function JobFilters() {
           placeholder="Search a city or region"
           values={query.locationId}
           max={MAX_LOCATIONS}
-          search={searchJobLocations}
+          search={searchLocationOptions}
           onAdd={(id) => {
             applyQuery(addLocation(query, id));
           }}
