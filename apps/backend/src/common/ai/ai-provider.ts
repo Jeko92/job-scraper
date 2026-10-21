@@ -30,7 +30,7 @@ export interface AiJsonResult {
 
 /**
  * Vendor-neutral access to a large language model. Implementations live next
- * to this file; `AiModule` decides which one is injected.
+ * to this file; `AiProviderModule` decides which one is injected.
  */
 export abstract class AiProvider {
   abstract generateJson(request: AiJsonRequest): Promise<AiJsonResult>;
