@@ -16,7 +16,10 @@ import {
   type CreateJobRequest,
   createJobSchema,
 } from './dto/create-job.dto.js';
-import { UpdateJobDto } from './dto/update-job.dto.js';
+import {
+  type UpdateJobRequest,
+  updateJobSchema,
+} from './dto/update-job.dto.js';
 import { JobsService } from './jobs.service.js';
 
 @ApiTags('jobs')
@@ -46,8 +49,16 @@ export class JobsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobsService.update(id, updateJobDto);
+  @ApiOperation({
+    summary:
+      'Update a job (omitted fields stay unchanged, null clears; skills replace the whole list)',
+  })
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body({ schema: updateJobSchema, pipes: [StandardSchemaValidationPipe] })
+    input: UpdateJobRequest,
+  ): Promise<JobListItem> {
+    return this.jobsService.update(id, input);
   }
 
   @Delete(':id')

@@ -14,8 +14,12 @@ import { type EntityManager, In, QueryFailedError, Repository } from 'typeorm';
 
 import { toLocationDto } from '../locations/locations.service.js';
 import { Skill } from '../skills/entities/skill.entity.js';
-import type { CreateJobRequest, JobSkillInput } from './dto/create-job.dto.js';
-import { UpdateJobDto } from './dto/update-job.dto.js';
+import {
+  type CreateJobRequest,
+  type JobSkillInput,
+  salaryRangeIsValid,
+} from './dto/create-job.dto.js';
+import type { UpdateJobRequest } from './dto/update-job.dto.js';
 import { Job } from './entities/job.entity.js';
 import { JobSkill } from './entities/job-skill.entity.js';
 
@@ -58,8 +62,28 @@ export class JobsService {
     return item;
   }
 
-  update(id: string, _updateJobDto: UpdateJobDto) {
-    return `This action updates a #${id} job`;
+  async update(id: string, input: UpdateJobRequest): Promise<JobListItem> {
+    const { skills, publishedAt, ...fields } = input;
+    await this.write(async (manager) => {
+      const job = await manager.findOneBy(Job, { id });
+      if (!job) {
+        throw jobNotFound(id);
+      }
+      manager.merge(Job, job, definedOnly(fields));
+      if (publishedAt !== undefined) {
+        job.publishedAt = toDate(publishedAt);
+      }
+      if (!salaryRangeIsValid(job)) {
+        throw new BadRequestException(
+          'salaryMin must not be greater than salaryMax',
+        );
+      }
+      await manager.save(job);
+      if (skills) {
+        await replaceSkills(manager, id, skills);
+      }
+    });
+    return this.findOne(id);
   }
 
   remove(id: string) {
