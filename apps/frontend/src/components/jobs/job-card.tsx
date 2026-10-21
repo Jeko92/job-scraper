@@ -21,10 +21,17 @@ export function JobCard({ job }: JobCardProps) {
   const skills = formatJobSkills(job);
 
   return (
-    <Card className="gap-6 rounded-card p-6 ring-line">
+    <Card className="gap-6 rounded-card p-6 ring-line transition-shadow duration-200 focus-within:shadow-lg hover:shadow-lg hover:ring-ink/20">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
-          <h2 className="text-xl font-medium text-ink">{job.title}</h2>
+          <h2 className="text-xl font-medium text-ink">
+            <Link
+              href={jobHref(job.id)}
+              className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:underline focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              {job.title}
+            </Link>
+          </h2>
           <p className="text-sm text-ink-muted">{formatJobMeta(job)}</p>
           {salary && <p className="text-sm text-ink">{salary}</p>}
         </div>
