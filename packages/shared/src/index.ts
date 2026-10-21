@@ -19,6 +19,21 @@ export {
   industrySchema,
 } from './industries';
 export {
+  DEFAULT_JOBS_LIMIT,
+  JOB_SORTS,
+  type JobCompany,
+  type JobListItem,
+  jobListItemSchema,
+  type JobSkill,
+  type JobsListResponse,
+  jobsListResponseSchema,
+  type JobSort,
+  jobSortSchema,
+  type JobsQuery,
+  jobsQuerySchema,
+  MAX_JOBS_LIMIT,
+} from './jobs';
+export {
   type Location,
   locationListSchema,
   locationSchema,

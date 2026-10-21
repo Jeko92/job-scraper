@@ -122,7 +122,7 @@ erDiagram
         uuid id PK
         uuid company_id FK
         uuid location_id FK "nullable, primary location only"
-        uuid crawl_run_id FK "nullable, latest run that saw the job"
+        uuid crawl_run_id FK "nullable, latest run that saw the job, not created yet"
         varchar title
         text description
         varchar employment_type
@@ -133,8 +133,8 @@ erDiagram
         decimal salary_max "decimal(12,2)"
         char salary_currency
         timestamptz published_at
-        timestamptz first_seen_at
-        timestamptz last_seen_at
+        timestamptz first_seen_at "default now()"
+        timestamptz last_seen_at "default now()"
         boolean is_active "default true"
         timestamptz created_at
         timestamptz updated_at

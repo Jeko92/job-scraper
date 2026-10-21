@@ -43,11 +43,13 @@
 // - Rows owned by a user (user_profiles, user_preferences, user_skills,
 //   user_industries, user_preferences_locations) cascade from their parent.
 // - Rows owned by a company (company_locations, company_skills,
-//   company_industries) cascade from it.
+//   company_industries, jobs) cascade from it. job_skills cascade from
+//   their job.
 // - Deleting a skill, industry or location also deletes the user_skills,
 //   user_industries, user_preferences_locations, company_locations,
-//   company_skills or company_industries rows that point to it.
-// - user_profiles.location_id and jobs.crawl_run_id are set to null.
+//   company_skills, company_industries or job_skills rows that point to it.
+// - user_profiles.location_id, jobs.location_id and jobs.crawl_run_id are
+//   set to null.
 //
 // Relation markers: `ref: -` is one-to-one, `ref: >` is many-to-one,
 // `ref: >?` is an optional (nullable) many-to-one.
@@ -192,7 +194,7 @@ Table jobs {
   // backend enforces this, the database does not.
   company_id uuid [not null, ref: > companies.id]
   location_id uuid [ref: >? locations.id] // primary location only (MVP)
-  crawl_run_id uuid [ref: >? crawl_runs.id] // latest run that saw the job, updated with last_seen_at; null for seeded/manual jobs
+  crawl_run_id uuid [ref: >? crawl_runs.id] // latest run that saw the job, updated with last_seen_at; null for seeded/manual jobs; not created yet, added with the crawl_runs migration
 
   // Job information
   title varchar(255) [not null]
@@ -211,8 +213,8 @@ Table jobs {
 
   // Dates
   published_at timestamptz
-  first_seen_at timestamptz [not null]
-  last_seen_at timestamptz [not null]
+  first_seen_at timestamptz [not null, default: `now()`]
+  last_seen_at timestamptz [not null, default: `now()`]
 
   // Lifecycle
   is_active boolean [not null, default: true] // false once no longer seen

@@ -1,0 +1,39 @@
+meta {
+  name: List jobs
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/jobs?workplaceType=HYBRID&workplaceType=REMOTE&employmentType=FULL_TIME&skill=typescript&postedWithinDays=30&page=1&limit=20
+  body: none
+  auth: inherit
+}
+
+params:query {
+  workplaceType: HYBRID
+  workplaceType: REMOTE
+  employmentType: FULL_TIME
+  skill: typescript
+  postedWithinDays: 30
+  page: 1
+  limit: 20
+  ~locationId: {{locationId}}
+  ~sort: newest
+}
+
+docs {
+  Active jobs, sorted by posted date (published date, or first-seen date when there is none), newest first by default. Every filter is optional; repeat a param for several values (OR-ed).
+
+  - `workplaceType`: REMOTE, HYBRID, ONSITE
+  - `employmentType`: FULL_TIME, PART_TIME, CONTRACT, INTERNSHIP, FREELANCE
+  - `locationId`: location UUIDs (run **List locations**)
+  - `skill`: skill slugs (run **List skills**)
+  - `postedWithinDays`: 1-365
+  - `sort`: newest (default) or oldest
+  - `page`: starts at 1, default 1
+  - `limit`: jobs per page, 1-100, default 20
+
+  - 200: OK - `{ items, total, page, limit, totalPages }`; a page past the end returns empty `items`
+  - 400: invalid filter, sort, page or limit, 401: run Login
+}

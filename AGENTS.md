@@ -26,6 +26,9 @@ JobScraper: pnpm + Turborepo monorepo. Read `README.md` first.
   update `doc/database/db-schema-v1.dbml` and the Mermaid diagram in
   `doc/database/db-schema.md` so they show the actual state of the database. If the diagram changed, tell the user to regenerate
   `doc/database/db_schema.png` from dbdiagram.io.
+- A Mermaid render of the db diagram is also acceptable, next to the dbdiagram.io image. Render the Mermaid block from
+  `doc/database/db-schema.md` with `mmdc` (Mermaid CLI) and save it as
+  `doc/database/db_schema_DD-MM-YYYY-HHmm.png` (local 24h time).
 
 <!-- BEGIN:turborepo-agent-rules -->
 
