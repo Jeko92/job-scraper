@@ -1,15 +1,20 @@
 'use client';
 
 import type { UserProfile } from '@job-scraper/shared';
-import { useReducer } from 'react';
+import { type Dispatch, useReducer } from 'react';
 
 import { Button } from '@/components/ui/button';
 
 import {
   createInitialState,
   getSteps,
+  type OnboardingAction,
   onboardingReducer,
+  type OnboardingState,
 } from './onboarding-state';
+import { EssentialsStep } from './steps/essentials-step';
+import { SeniorityStep } from './steps/seniority-step';
+import { WelcomeStep } from './steps/welcome-step';
 
 interface OnboardingFlowProps {
   profile: UserProfile;
@@ -22,6 +27,40 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     createInitialState,
   );
 
+  switch (state.step) {
+    case 'welcome':
+      return (
+        <WelcomeStep
+          firstName={profile.firstName}
+          onStart={() => {
+            dispatch({ type: 'next' });
+          }}
+        />
+      );
+    case 'essentials':
+      return (
+        <EssentialsStep
+          headline={state.answers.headline}
+          locationId={state.answers.locationId}
+          dispatch={dispatch}
+        />
+      );
+    case 'seniority':
+      return (
+        <SeniorityStep value={state.answers.seniority} dispatch={dispatch} />
+      );
+    default:
+      return <DebugView state={state} dispatch={dispatch} />;
+  }
+}
+
+// Temporary: shown DebugView.
+interface DebugViewProps {
+  state: OnboardingState;
+  dispatch: Dispatch<OnboardingAction>;
+}
+
+function DebugView({ state, dispatch }: DebugViewProps) {
   const steps = getSteps(state.answers);
   const position = steps.indexOf(state.step) + 1;
 
