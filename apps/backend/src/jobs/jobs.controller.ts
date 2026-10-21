@@ -8,10 +8,14 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  StandardSchemaValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { CreateJobDto } from './dto/create-job.dto.js';
+import {
+  type CreateJobRequest,
+  createJobSchema,
+} from './dto/create-job.dto.js';
 import { UpdateJobDto } from './dto/update-job.dto.js';
 import { JobsService } from './jobs.service.js';
 
@@ -22,8 +26,12 @@ export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Post()
-  create(@Body() createJobDto: CreateJobDto) {
-    return this.jobsService.create(createJobDto);
+  @ApiOperation({ summary: 'Create a job with its skills (by slug)' })
+  create(
+    @Body({ schema: createJobSchema, pipes: [StandardSchemaValidationPipe] })
+    input: CreateJobRequest,
+  ): Promise<JobListItem> {
+    return this.jobsService.create(input);
   }
 
   @Get()

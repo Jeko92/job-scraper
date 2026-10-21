@@ -3,14 +3,24 @@ import {
   type JobListItem,
   REMOTE_PREFERENCES,
 } from '@job-scraper/shared';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { type EntityManager, In, QueryFailedError, Repository } from 'typeorm';
 
 import { toLocationDto } from '../locations/locations.service.js';
-import { CreateJobDto } from './dto/create-job.dto.js';
+import { Skill } from '../skills/entities/skill.entity.js';
+import type { CreateJobRequest, JobSkillInput } from './dto/create-job.dto.js';
 import { UpdateJobDto } from './dto/update-job.dto.js';
 import { Job } from './entities/job.entity.js';
+import { JobSkill } from './entities/job-skill.entity.js';
+
+const UNIQUE_VIOLATION = '23505';
+const FOREIGN_KEY_VIOLATION = '23503';
 
 @Injectable()
 export class JobsService {
@@ -19,8 +29,21 @@ export class JobsService {
     private readonly jobsRepository: Repository<Job>,
   ) {}
 
-  create(_createJobDto: CreateJobDto) {
-    return 'This action adds a new job';
+  async create(input: CreateJobRequest): Promise<JobListItem> {
+    const { skills, publishedAt, ...fields } = input;
+    const id = await this.write(async (manager) => {
+      const job = await manager.save(
+        manager.create(Job, {
+          ...definedOnly(fields),
+          publishedAt: toDate(publishedAt),
+        }),
+      );
+      if (skills) {
+        await replaceSkills(manager, job.id, skills);
+      }
+      return job.id;
+    });
+    return this.findOne(id);
   }
 
   findAll() {
@@ -43,6 +66,24 @@ export class JobsService {
     return `This action removes a #${id} job`;
   }
 
+  private async write<T>(
+    work: (manager: EntityManager) => Promise<T>,
+  ): Promise<T> {
+    try {
+      return await this.jobsRepository.manager.transaction(work);
+    } catch (error) {
+      if (hasPgCode(error, UNIQUE_VIOLATION)) {
+        throw new ConflictException(
+          'A job with this sourceUrl or externalId already exists for the company',
+        );
+      }
+      if (hasPgCode(error, FOREIGN_KEY_VIOLATION)) {
+        throw new BadRequestException('Unknown companyId or locationId');
+      }
+      throw error;
+    }
+  }
+
   private async loadItems(ids: string[]): Promise<JobListItem[]> {
     if (ids.length === 0) {
       return [];
@@ -61,6 +102,32 @@ export class JobsService {
       const job = byId.get(id);
       return job ? [toJobListItem(job)] : [];
     });
+  }
+}
+
+async function replaceSkills(
+  manager: EntityManager,
+  jobId: string,
+  skills: JobSkillInput[],
+): Promise<void> {
+  const slugs = skills.map(({ slug }) => slug);
+  const found =
+    slugs.length > 0
+      ? await manager.find(Skill, { where: { slug: In(slugs) } })
+      : [];
+  const idBySlug = new Map(found.map((skill) => [skill.slug, skill.id]));
+  const unknown = slugs.filter((slug) => !idBySlug.has(slug));
+  if (unknown.length > 0) {
+    throw new BadRequestException(`Unknown skills: ${unknown.join(', ')}`);
+  }
+
+  await manager.delete(JobSkill, { jobId });
+  const rows = skills.flatMap(({ slug, required }) => {
+    const skillId = idBySlug.get(slug);
+    return skillId ? [{ jobId, skillId, required: required ?? true }] : [];
+  });
+  if (rows.length > 0) {
+    await manager.insert(JobSkill, rows);
   }
 }
 
@@ -88,6 +155,18 @@ function toJobListItem(job: Job): JobListItem {
   };
 }
 
+type DefinedOnly<T> = { [K in keyof T]?: Exclude<T[K], undefined> };
+
+function definedOnly<T extends object>(value: T): DefinedOnly<T> {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, v]) => v !== undefined),
+  ) as DefinedOnly<T>;
+}
+
+function toDate(value: string | null | undefined): Date | null {
+  return value ? new Date(value) : null;
+}
+
 function oneOf<T extends string>(
   values: readonly T[],
   value: string | null,
@@ -97,4 +176,17 @@ function oneOf<T extends string>(
 
 function jobNotFound(id: string): NotFoundException {
   return new NotFoundException(`Job "${id}" not found`);
+}
+
+function hasPgCode(error: unknown, code: string): boolean {
+  if (!(error instanceof QueryFailedError)) {
+    return false;
+  }
+  const driverError: unknown = error.driverError;
+  return (
+    typeof driverError === 'object' &&
+    driverError !== null &&
+    'code' in driverError &&
+    driverError.code === code
+  );
 }
