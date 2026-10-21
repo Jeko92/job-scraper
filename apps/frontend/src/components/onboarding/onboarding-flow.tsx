@@ -12,9 +12,13 @@ import {
   onboardingReducer,
   type OnboardingState,
 } from './onboarding-state';
+import { EmploymentStep } from './steps/employment-step';
 import { EssentialsStep } from './steps/essentials-step';
+import { PreferenceLocationsStep } from './steps/preference-locations-step';
+import { RelocateStep } from './steps/relocate-step';
 import { SeniorityStep } from './steps/seniority-step';
 import { WelcomeStep } from './steps/welcome-step';
+import { WorkSetupStep } from './steps/work-setup-step';
 
 interface OnboardingFlowProps {
   profile: UserProfile;
@@ -48,6 +52,34 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     case 'seniority':
       return (
         <SeniorityStep value={state.answers.seniority} dispatch={dispatch} />
+      );
+    case 'employment':
+      return (
+        <EmploymentStep
+          value={state.answers.preferences?.employmentType}
+          dispatch={dispatch}
+        />
+      );
+    case 'workSetup':
+      return (
+        <WorkSetupStep
+          value={state.answers.preferences?.remotePreference}
+          dispatch={dispatch}
+        />
+      );
+    case 'relocate':
+      return (
+        <RelocateStep
+          value={state.answers.preferences?.willingToRelocate}
+          dispatch={dispatch}
+        />
+      );
+    case 'preferenceLocations':
+      return (
+        <PreferenceLocationsStep
+          locationIds={state.answers.preferencesLocationIds}
+          dispatch={dispatch}
+        />
       );
     default:
       return <DebugView state={state} dispatch={dispatch} />;
