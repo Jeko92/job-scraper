@@ -40,12 +40,18 @@ export function JobsFeed({ query, result }: JobsFeedProps) {
         ))}
       </ul>
 
-      <div className="flex flex-col items-center gap-3 pt-3">
-        <Badge className="h-7 bg-highlight px-3 text-on-highlight">
+      {/* Phones: only the pagination, centred. Wider: range left, pages right. */}
+      <div className="flex items-center justify-center gap-3 pt-3 sm:justify-between">
+        <Badge className="hidden h-7 bg-highlight px-3 text-on-highlight sm:inline-flex">
           Showing {formatJobCount(from)}–{formatJobCount(to)} of{' '}
           {formatJobCount(total)}
         </Badge>
-        <JobsPagination query={query} page={page} totalPages={totalPages} />
+        <JobsPagination
+          query={query}
+          page={page}
+          totalPages={totalPages}
+          className="mx-0 w-auto"
+        />
       </div>
     </div>
   );

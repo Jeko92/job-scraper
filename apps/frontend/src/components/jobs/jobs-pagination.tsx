@@ -18,6 +18,7 @@ interface JobsPaginationProps {
   query: JobsQuery;
   page: number;
   totalPages: number;
+  className?: string;
 }
 
 /** Previous, numbered pages and Next as links; compact on phones. */
@@ -25,13 +26,14 @@ export function JobsPagination({
   query,
   page,
   totalPages,
+  className,
 }: JobsPaginationProps) {
   if (totalPages <= 1) {
     return null;
   }
 
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent className="gap-1">
         <PaginationItem>
           <StepLink
