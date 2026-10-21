@@ -18,20 +18,25 @@ import {
 } from './lookups';
 
 export type LoadMoreJobsResult =
-  { items: JobListItem[]; nextCursor: string | null } | { error: string };
+  | { items: JobListItem[]; page: number; totalPages: number }
+  | { error: string };
 
 export async function loadMoreJobs(
   query: JobsQuery,
-  cursor: string,
+  page: number,
 ): Promise<LoadMoreJobsResult> {
-  const parsed = jobsQuerySchema.safeParse({ ...query, cursor });
+  const parsed = jobsQuerySchema.safeParse({ ...query, page });
   if (!parsed.success) {
     return { error: 'This search is not valid.' };
   }
 
   try {
-    const page = await fetchJobsPage(parsed.data);
-    return { items: page.items, nextCursor: page.nextCursor };
+    const result = await fetchJobsPage(parsed.data);
+    return {
+      items: result.items,
+      page: result.page,
+      totalPages: result.totalPages,
+    };
   } catch {
     return { error: 'Could not load more jobs. Please try again.' };
   }

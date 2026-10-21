@@ -63,7 +63,7 @@ export function JobsSearchProvider({
   }
 
   function applyQuery(next: JobsQuery) {
-    const qs = toJobsSearchParams({ ...next, cursor: undefined }).toString();
+    const qs = toJobsSearchParams({ ...next, page: 1 }).toString();
     startTransition(() => {
       setOptimisticQuery(next);
       router.replace(qs === '' ? SEARCH_HREF : `${SEARCH_HREF}?${qs}`, {

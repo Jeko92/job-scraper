@@ -10,14 +10,17 @@ const ARRAY_KEYS = [
   'workplaceType',
   'employmentType',
   'locationId',
-  'industry',
   'skill',
 ] as const satisfies readonly (keyof JobsQuery)[];
 
-/** Invalid search params fall back to the default query. */
+/**
+ * Invalid search params fall back to the default query. The page always
+ * starts at 1: further pages are loaded in the browser with "Load more".
+ */
 export function parseJobsQuery(params: RawSearchParams): JobsQuery {
   const parsed = jobsQuerySchema.safeParse(params);
-  return parsed.success ? parsed.data : jobsQuerySchema.parse({});
+  const query = parsed.success ? parsed.data : jobsQuerySchema.parse({});
+  return { ...query, page: 1 };
 }
 
 /** Repeats keys for arrays and leaves out defaults. */
@@ -37,8 +40,8 @@ export function toJobsSearchParams(query: JobsQuery): URLSearchParams {
   if (query.limit !== DEFAULT_JOBS_LIMIT) {
     params.set('limit', String(query.limit));
   }
-  if (query.cursor !== undefined) {
-    params.set('cursor', query.cursor);
+  if (query.page !== 1) {
+    params.set('page', String(query.page));
   }
   return params;
 }

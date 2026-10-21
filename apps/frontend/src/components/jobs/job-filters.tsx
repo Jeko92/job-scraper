@@ -48,7 +48,7 @@ export function JobFilters() {
           <button
             type="button"
             onClick={() => {
-              applyQuery({ sort: query.sort, limit: query.limit });
+              applyQuery({ sort: query.sort, page: 1, limit: query.limit });
             }}
             className="text-sm text-ink-muted transition-colors hover:text-ink"
           >

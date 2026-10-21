@@ -19,7 +19,8 @@ interface JobsFeedProps {
 
 export function JobsFeed({ query, initialPage }: JobsFeedProps) {
   const [items, setItems] = useState(initialPage.items);
-  const [nextCursor, setNextCursor] = useState(initialPage.nextCursor);
+  const [page, setPage] = useState(initialPage.page);
+  const [totalPages, setTotalPages] = useState(initialPage.totalPages);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -34,19 +35,21 @@ export function JobsFeed({ query, initialPage }: JobsFeedProps) {
     );
   }
 
+  const hasMore = page < totalPages;
+
   function loadMore() {
-    if (nextCursor === null) {
+    if (!hasMore) {
       return;
     }
-    const cursor = nextCursor;
     startTransition(async () => {
-      const result = await loadMoreJobs(query, cursor);
+      const result = await loadMoreJobs(query, page + 1);
       startTransition(() => {
         if ('error' in result) {
           setError(result.error);
           return;
         }
         setError(null);
+        // Offset paging: a job added meanwhile could repeat, so skip known ids.
         setItems((current) => {
           const seen = new Set(current.map((job) => job.id));
           return [
@@ -54,7 +57,8 @@ export function JobsFeed({ query, initialPage }: JobsFeedProps) {
             ...result.items.filter((job) => !seen.has(job.id)),
           ];
         });
-        setNextCursor(result.nextCursor);
+        setPage(result.page);
+        setTotalPages(result.totalPages);
       });
     });
   }
@@ -77,11 +81,11 @@ export function JobsFeed({ query, initialPage }: JobsFeedProps) {
           aria-live="polite"
           className="h-7 bg-highlight px-3 text-on-highlight"
         >
-          {nextCursor === null
-            ? `Showing all ${shown}`
-            : `Showing ${shown} of ${formatJobCount(initialPage.total)}`}
+          {hasMore
+            ? `Showing ${shown} of ${formatJobCount(initialPage.total)}`
+            : `Showing all ${shown}`}
         </Badge>
-        {nextCursor !== null && (
+        {hasMore && (
           <Button
             variant="outline"
             onClick={loadMore}
