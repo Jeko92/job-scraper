@@ -12,7 +12,7 @@ export const DEFAULT_JOBS_LIMIT = 20;
 export const MAX_JOBS_LIMIT = 100;
 const MAX_FILTER_VALUES = 20;
 
-export const JOB_SORTS = ['newest'] as const;
+export const JOB_SORTS = ['newest', 'oldest'] as const;
 export type JobSort = (typeof JOB_SORTS)[number];
 export const jobSortSchema: z.ZodType<JobSort> = z.enum(JOB_SORTS);
 
