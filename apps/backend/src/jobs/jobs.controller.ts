@@ -1,4 +1,12 @@
-import type { JobListItem } from '@job-scraper/shared';
+import {
+  EMPLOYMENT_TYPES,
+  JOB_SORTS,
+  type JobListItem,
+  type JobsListResponse,
+  type JobsQuery,
+  jobsQuerySchema,
+  REMOTE_PREFERENCES,
+} from '@job-scraper/shared';
 import {
   Body,
   Controller,
@@ -10,9 +18,15 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   StandardSchemaValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import {
   type CreateJobRequest,
@@ -40,8 +54,42 @@ export class JobsController {
   }
 
   @Get()
-  findAll() {
-    return this.jobsService.findAll();
+  @ApiOperation({
+    summary: 'List active jobs, newest first, filtered and paginated',
+  })
+  @ApiQuery({
+    name: 'workplaceType',
+    required: false,
+    enum: REMOTE_PREFERENCES,
+    isArray: true,
+  })
+  @ApiQuery({
+    name: 'employmentType',
+    required: false,
+    enum: EMPLOYMENT_TYPES,
+    isArray: true,
+  })
+  @ApiQuery({ name: 'locationId', required: false, isArray: true })
+  @ApiQuery({
+    name: 'skill',
+    required: false,
+    isArray: true,
+    description: 'Skill slugs',
+  })
+  @ApiQuery({ name: 'postedWithinDays', required: false, type: Number })
+  @ApiQuery({ name: 'sort', required: false, enum: JOB_SORTS })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Starts at 1',
+  })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  findAll(
+    @Query({ schema: jobsQuerySchema, pipes: [StandardSchemaValidationPipe] })
+    query: JobsQuery,
+  ): Promise<JobsListResponse> {
+    return this.jobsService.findAll(query);
   }
 
   @Get(':id')

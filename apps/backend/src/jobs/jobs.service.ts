@@ -1,6 +1,8 @@
 import {
   EMPLOYMENT_TYPES,
   type JobListItem,
+  type JobsListResponse,
+  type JobsQuery,
   REMOTE_PREFERENCES,
 } from '@job-scraper/shared';
 import {
@@ -10,7 +12,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { type EntityManager, In, QueryFailedError, Repository } from 'typeorm';
+import {
+  type EntityManager,
+  In,
+  QueryFailedError,
+  Repository,
+  type SelectQueryBuilder,
+} from 'typeorm';
 
 import { toLocationDto } from '../locations/locations.service.js';
 import { Skill } from '../skills/entities/skill.entity.js';
@@ -25,6 +33,8 @@ import { JobSkill } from './entities/job-skill.entity.js';
 
 const UNIQUE_VIOLATION = '23505';
 const FOREIGN_KEY_VIOLATION = '23503';
+
+const POSTED_AT = 'COALESCE(job.publishedAt, job.firstSeenAt)';
 
 @Injectable()
 export class JobsService {
@@ -50,8 +60,21 @@ export class JobsService {
     return this.findOne(id);
   }
 
-  findAll() {
-    return `This action returns all jobs`;
+  async findAll(query: JobsQuery): Promise<JobsListResponse> {
+    const { page, limit } = query;
+
+    const total = await this.filteredQuery(query).getCount();
+
+    const rows = await this.filteredQuery(query)
+      .select('job.id', 'id')
+      .orderBy(POSTED_AT, 'DESC')
+      .addOrderBy('job.id', 'DESC')
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .getRawMany<{ id: string }>();
+
+    const items = await this.loadItems(rows.map((row) => row.id));
+    return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async findOne(id: string): Promise<JobListItem> {
@@ -109,6 +132,43 @@ export class JobsService {
       }
       throw error;
     }
+  }
+
+  private filteredQuery(query: JobsQuery): SelectQueryBuilder<Job> {
+    const builder = this.jobsRepository
+      .createQueryBuilder('job')
+      .where('job.isActive = true');
+
+    if (query.workplaceType) {
+      builder.andWhere('job.workplaceType IN (:...workplaceType)', {
+        workplaceType: query.workplaceType,
+      });
+    }
+    if (query.employmentType) {
+      builder.andWhere('job.employmentType IN (:...employmentType)', {
+        employmentType: query.employmentType,
+      });
+    }
+    if (query.locationId) {
+      builder.andWhere('job.locationId IN (:...locationId)', {
+        locationId: query.locationId,
+      });
+    }
+    if (query.skill) {
+      builder.andWhere(
+        `EXISTS (SELECT 1 FROM job_skills js
+          JOIN skills s ON s.id = js.skill_id
+          WHERE js.job_id = job.id AND s.slug IN (:...skill))`,
+        { skill: query.skill },
+      );
+    }
+    if (query.postedWithinDays) {
+      builder.andWhere(
+        `${POSTED_AT} >= NOW() - make_interval(days => :postedWithinDays)`,
+        { postedWithinDays: query.postedWithinDays },
+      );
+    }
+    return builder;
   }
 
   private async loadItems(ids: string[]): Promise<JobListItem[]> {
