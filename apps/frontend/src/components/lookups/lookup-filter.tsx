@@ -8,34 +8,35 @@ import { field, overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { FilterChip } from './filter-chip';
-import { useJobsSearch } from './jobs-search-provider';
 
 const SEARCH_DELAY_MS = 250;
 
 interface LookupFilterProps {
   legend: string;
   placeholder: string;
-  /** Selected values: skill slugs, location ids. */
-  values: string[] | undefined;
+  /** Selected values (skill slugs, location ids) with their labels. */
+  selected: LookupOption[];
   /** "+ Add" disappears once this many values are selected. */
   max: number;
-  /** Server action that finds values by name. */
+  /** Server action that finds values by name, e.g. `searchSkillOptions`. */
   search: (text: string) => Promise<LookupSearchResult>;
-  onAdd: (value: string) => void;
+  onAdd: (option: LookupOption) => void;
   onRemove: (value: string) => void;
 }
 
-/** Selected values as chips, plus "+ Add" with a search for more. */
+/**
+ * Selected values as chips, plus "+ Add" with a search for more. Holds only
+ * its own search state; the caller owns the selection.
+ */
 export function LookupFilter({
   legend,
   placeholder,
-  values = [],
+  selected,
   max,
   search,
   onAdd,
   onRemove,
 }: LookupFilterProps) {
-  const { labelFor, rememberLabel } = useJobsSearch();
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const [results, setResults] = useState<LookupOption[]>([]);
@@ -73,7 +74,9 @@ export function LookupFilter({
   const suggestions =
     term === ''
       ? []
-      : results.filter((option) => !values.includes(option.value));
+      : results.filter(
+          (option) => !selected.some((item) => item.value === option.value),
+        );
 
   function close() {
     setOpen(false);
@@ -86,22 +89,22 @@ export function LookupFilter({
     <fieldset className="flex flex-col gap-3">
       <legend className={cn(overline, 'mb-3 text-ink-muted')}>{legend}</legend>
 
-      {values.length > 0 && (
+      {selected.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {values.map((value) => (
+          {selected.map((option) => (
             <FilterChip
-              key={value}
+              key={option.value}
               variant="selected"
-              label={labelFor(value)}
+              label={option.label}
               onClick={() => {
-                onRemove(value);
+                onRemove(option.value);
               }}
             />
           ))}
         </div>
       )}
 
-      {values.length >= max ? (
+      {selected.length >= max ? (
         <p className="text-sm text-ink-muted">
           Up to {max} {legend.toLowerCase()}. Remove one to add another.
         </p>
@@ -130,8 +133,7 @@ export function LookupFilter({
                   variant="add"
                   label={option.label}
                   onClick={() => {
-                    rememberLabel(option);
-                    onAdd(option.value);
+                    onAdd(option);
                     setText('');
                   }}
                 />

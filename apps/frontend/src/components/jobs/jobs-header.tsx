@@ -4,6 +4,7 @@ import { JOB_SORTS, type JobsQuery } from '@job-scraper/shared';
 import { SlidersHorizontal } from 'lucide-react';
 
 import { GlowPanel } from '@/components/landing/glow-panel';
+import { FilterChip } from '@/components/lookups/filter-chip';
 import {
   EMPLOYMENT_TYPE_LABELS,
   formatJobCount,
@@ -18,7 +19,6 @@ import {
 } from '@/lib/jobs/search-params';
 
 import { FieldSelect } from './field-select';
-import { FilterChip } from './filter-chip';
 import { useJobsSearch } from './jobs-search-provider';
 
 const SORT_ITEMS = JOB_SORTS.map((sort) => ({

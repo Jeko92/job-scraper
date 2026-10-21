@@ -5,6 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { LogoMark } from '@/components/brand/logo';
+import { LookupFilter } from '@/components/lookups/lookup-filter';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   EMPLOYMENT_TYPE_LABELS,
@@ -25,17 +26,21 @@ import {
   searchLocationOptions,
   searchSkillOptions,
 } from '@/lib/lookups/actions';
+import type { LookupOption } from '@/lib/lookups/types';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { FieldSelect } from './field-select';
 import { useJobsSearch } from './jobs-search-provider';
-import { LookupFilter } from './lookup-filter';
 
 export function JobFilters() {
-  const { query, applyQuery } = useJobsSearch();
+  const { query, applyQuery, labelFor, rememberLabel } = useJobsSearch();
   const [open, setOpen] = useState(false);
   const bodyId = useId();
+
+  function toOptions(values: string[] | undefined): LookupOption[] {
+    return (values ?? []).map((value) => ({ value, label: labelFor(value) }));
+  }
 
   return (
     <aside
@@ -85,11 +90,12 @@ export function JobFilters() {
         <LookupFilter
           legend="Skills"
           placeholder="Search a skill, e.g. React"
-          values={query.skill}
+          selected={toOptions(query.skill)}
           max={MAX_SKILLS}
           search={searchSkillOptions}
-          onAdd={(slug) => {
-            applyQuery(addSkill(query, slug));
+          onAdd={(option) => {
+            rememberLabel(option);
+            applyQuery(addSkill(query, option.value));
           }}
           onRemove={(slug) => {
             applyQuery(removeSkill(query, slug));
@@ -98,11 +104,12 @@ export function JobFilters() {
         <LookupFilter
           legend="Locations"
           placeholder="Search a city or region"
-          values={query.locationId}
+          selected={toOptions(query.locationId)}
           max={MAX_LOCATIONS}
           search={searchLocationOptions}
-          onAdd={(id) => {
-            applyQuery(addLocation(query, id));
+          onAdd={(option) => {
+            rememberLabel(option);
+            applyQuery(addLocation(query, option.value));
           }}
           onRemove={(id) => {
             applyQuery(removeLocation(query, id));
