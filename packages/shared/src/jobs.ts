@@ -78,16 +78,18 @@ export const jobListItemSchema: z.ZodType<JobListItem> = z.object({
 
 export interface JobsListResponse {
   items: JobListItem[];
-  /** Matches for the filters, ignoring the cursor. */
   total: number;
-  /** Opaque; pass it as `cursor` for the next page. null at the end. */
-  nextCursor: string | null;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export const jobsListResponseSchema: z.ZodType<JobsListResponse> = z.object({
   items: z.array(jobListItemSchema),
   total: z.number().int().min(0),
-  nextCursor: z.string().nullable(),
+  page: z.number().int().min(1),
+  limit: z.number().int().min(1),
+  totalPages: z.number().int().min(0),
 });
 
 // --- Query ----------------------------------------------------------------
@@ -101,8 +103,8 @@ export interface JobsQuery {
   skill?: string[] | undefined;
   postedWithinDays?: number | undefined;
   sort: JobSort;
+  page: number;
   limit: number;
-  cursor?: string | undefined;
 }
 
 /** `?a=1` arrives as a string and `?a=1&a=2` as an array. */
@@ -124,11 +126,11 @@ export const jobsQuerySchema: z.ZodType<JobsQuery> = z.object({
   skill: queryArray(slugSchema),
   postedWithinDays: z.coerce.number().int().min(1).max(365).optional(),
   sort: jobSortSchema.default('newest'),
+  page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce
     .number()
     .int()
     .min(1)
     .max(MAX_JOBS_LIMIT)
     .default(DEFAULT_JOBS_LIMIT),
-  cursor: z.string().nonempty().optional(),
 });
