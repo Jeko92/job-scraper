@@ -9,3 +9,4 @@ export const PLACEHOLDER_HREF = '#';
 export function jobHref(id: string): string {
   return `/jobs/${id}`;
 }
+export const ONBOARDING_HREF = '/onboarding';
