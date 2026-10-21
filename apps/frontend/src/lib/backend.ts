@@ -59,3 +59,20 @@ export function postToBackend(path: string, body: unknown): Promise<Response> {
     signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
   });
 }
+
+export function patchToBackend(
+  path: string,
+  token: string,
+  body: unknown,
+): Promise<Response> {
+  return fetch(new URL(path, getBackendUrl()), {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
+  });
+}
