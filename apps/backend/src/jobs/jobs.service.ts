@@ -86,8 +86,11 @@ export class JobsService {
     return this.findOne(id);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} job`;
+  async remove(id: string): Promise<void> {
+    const result = await this.jobsRepository.delete({ id });
+    if (!result.affected) {
+      throw jobNotFound(id);
+    }
   }
 
   private async write<T>(

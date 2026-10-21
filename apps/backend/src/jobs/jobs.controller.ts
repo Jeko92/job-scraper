@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -62,7 +64,9 @@ export class JobsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a job and its skills' })
+  remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.jobsService.remove(id);
   }
 }
