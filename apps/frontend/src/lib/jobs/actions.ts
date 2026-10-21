@@ -4,6 +4,7 @@ import {
   type JobListItem,
   type JobsQuery,
   jobsQuerySchema,
+  locationsQuerySchema,
   skillsQuerySchema,
 } from '@job-scraper/shared';
 
@@ -11,7 +12,9 @@ import { fetchJobsPage } from './api';
 import {
   LOOKUP_SEARCH_LIMIT,
   type LookupOption,
+  searchLocations,
   searchSkills,
+  toLocationOption,
 } from './lookups';
 
 export type LoadMoreJobsResult =
@@ -58,5 +61,24 @@ export async function searchJobSkills(
     };
   } catch {
     return { error: 'Could not search skills. Please try again.' };
+  }
+}
+
+export async function searchJobLocations(
+  search: string,
+): Promise<LookupSearchResult> {
+  const parsed = locationsQuerySchema.safeParse({
+    search,
+    limit: LOOKUP_SEARCH_LIMIT,
+  });
+  if (!parsed.success || parsed.data.search === undefined) {
+    return { options: [] };
+  }
+
+  try {
+    const locations = await searchLocations(parsed.data.search);
+    return { options: locations.map(toLocationOption) };
+  } catch {
+    return { error: 'Could not search locations. Please try again.' };
   }
 }

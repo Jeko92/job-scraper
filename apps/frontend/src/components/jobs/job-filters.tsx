@@ -6,14 +6,22 @@ import { useId, useState } from 'react';
 
 import { LogoMark } from '@/components/brand/logo';
 import { Checkbox } from '@/components/ui/checkbox';
-import { searchJobSkills } from '@/lib/jobs/actions';
+import { searchJobLocations, searchJobSkills } from '@/lib/jobs/actions';
 import {
   EMPLOYMENT_TYPE_LABELS,
   formatPostedWithin,
   POSTED_WITHIN_OPTIONS,
   WORKPLACE_TYPE_LABELS,
 } from '@/lib/jobs/format';
-import { addSkill, removeSkill, toggleValue } from '@/lib/jobs/search-params';
+import {
+  addLocation,
+  addSkill,
+  MAX_LOCATIONS,
+  MAX_SKILLS,
+  removeLocation,
+  removeSkill,
+  toggleValue,
+} from '@/lib/jobs/search-params';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
@@ -75,12 +83,26 @@ export function JobFilters() {
           legend="Skills"
           placeholder="Search a skill, e.g. React"
           values={query.skill}
+          max={MAX_SKILLS}
           search={searchJobSkills}
           onAdd={(slug) => {
             applyQuery(addSkill(query, slug));
           }}
           onRemove={(slug) => {
             applyQuery(removeSkill(query, slug));
+          }}
+        />
+        <LookupFilter
+          legend="Locations"
+          placeholder="Search a city or region"
+          values={query.locationId}
+          max={MAX_LOCATIONS}
+          search={searchJobLocations}
+          onAdd={(id) => {
+            applyQuery(addLocation(query, id));
+          }}
+          onRemove={(id) => {
+            applyQuery(removeLocation(query, id));
           }}
         />
         <CheckboxGroup

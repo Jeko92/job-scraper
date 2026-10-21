@@ -11,7 +11,11 @@ import {
   JOB_SORT_LABELS,
   WORKPLACE_TYPE_LABELS,
 } from '@/lib/jobs/format';
-import { removeSkill, toggleValue } from '@/lib/jobs/search-params';
+import {
+  removeLocation,
+  removeSkill,
+  toggleValue,
+} from '@/lib/jobs/search-params';
 
 import { FieldSelect } from './field-select';
 import { FilterChip } from './filter-chip';
@@ -30,15 +34,24 @@ interface JobsHeaderProps {
 export function JobsHeader({ total }: JobsHeaderProps) {
   const { query, applyQuery, labelFor } = useJobsSearch();
   const filters = getActiveFilters(query, labelFor);
+  const locationCount = query.locationId?.length ?? 0;
 
   return (
     <GlowPanel className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6 sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
-          {total === null
-            ? 'Search'
-            : `${formatJobCount(total)} ${total === 1 ? 'match' : 'matches'}`}
-        </h1>
+        <div className="flex flex-col gap-2">
+          <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
+            {total === null
+              ? 'Search'
+              : `${formatJobCount(total)} ${total === 1 ? 'match' : 'matches'}`}
+          </h1>
+          {locationCount > 0 && (
+            <p className="text-ink-muted">
+              in {locationCount}{' '}
+              {locationCount === 1 ? 'location' : 'locations'}
+            </p>
+          )}
+        </div>
         <FieldSelect
           label="Sort by"
           items={SORT_ITEMS}
@@ -93,6 +106,11 @@ function getActiveFilters(
       key: `skill:${slug}`,
       label: labelFor(slug),
       without: removeSkill(query, slug),
+    })),
+    ...(query.locationId ?? []).map((id) => ({
+      key: `locationId:${id}`,
+      label: labelFor(id),
+      without: removeLocation(query, id),
     })),
     ...(query.workplaceType ?? []).map((value) => ({
       key: `workplaceType:${value}`,

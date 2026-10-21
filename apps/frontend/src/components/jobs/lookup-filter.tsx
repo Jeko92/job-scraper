@@ -18,6 +18,8 @@ interface LookupFilterProps {
   placeholder: string;
   /** Selected values: skill slugs, location ids. */
   values: string[] | undefined;
+  /** "+ Add" disappears once this many values are selected. */
+  max: number;
   /** Server action that finds values by name. */
   search: (text: string) => Promise<LookupSearchResult>;
   onAdd: (value: string) => void;
@@ -29,6 +31,7 @@ export function LookupFilter({
   legend,
   placeholder,
   values = [],
+  max,
   search,
   onAdd,
   onRemove,
@@ -99,7 +102,11 @@ export function LookupFilter({
         </div>
       )}
 
-      {open ? (
+      {values.length >= max ? (
+        <p className="text-sm text-ink-muted">
+          Up to {max} {legend.toLowerCase()}. Remove one to add another.
+        </p>
+      ) : open ? (
         <div className="flex flex-col gap-3">
           <Input
             autoFocus

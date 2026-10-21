@@ -11,7 +11,11 @@ import {
 import { Card } from '@/components/ui/card';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
-import { fetchJobSkills } from '@/lib/jobs/lookups';
+import {
+  fetchJobLocations,
+  fetchJobSkills,
+  toLocationOption,
+} from '@/lib/jobs/lookups';
 import { parseJobsQuery, toJobsSearchParams } from '@/lib/jobs/search-params';
 import { LOGIN_HREF } from '@/lib/routes';
 
@@ -25,14 +29,15 @@ export default async function SearchPage({
   }
 
   const query = parseJobsQuery(await searchParams);
-  const [firstPage, skills] = await Promise.all([
+  const [firstPage, skills, locations] = await Promise.all([
     fetchJobsPage(query).catch(() => null),
     fetchJobSkills(query.skill).catch(() => []),
+    fetchJobLocations(query.locationId).catch(() => []),
   ]);
-  const labels = skills.map((skill) => ({
-    value: skill.slug,
-    label: skill.name,
-  }));
+  const labels = [
+    ...skills.map((skill) => ({ value: skill.slug, label: skill.name })),
+    ...locations.map(toLocationOption),
+  ];
 
   return (
     <main className="flex-1 px-4 pb-12 sm:px-8">
