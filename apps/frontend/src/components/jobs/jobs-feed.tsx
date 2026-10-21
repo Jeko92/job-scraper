@@ -1,28 +1,20 @@
-'use client';
-
 import type { JobsListResponse, JobsQuery } from '@job-scraper/shared';
-import { useState, useTransition } from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { loadMoreJobs } from '@/lib/jobs/actions';
 import { formatJobCount } from '@/lib/jobs/format';
 
 import { JobCard } from './job-card';
-import { JobCardSkeleton } from './job-card-skeleton';
+import { JobsPagination } from './jobs-pagination';
 
 interface JobsFeedProps {
   query: JobsQuery;
-  initialPage: JobsListResponse;
+  /** One page of results, loaded on the server. */
+  result: JobsListResponse;
 }
 
-export function JobsFeed({ query, initialPage }: JobsFeedProps) {
-  const [items, setItems] = useState(initialPage.items);
-  const [page, setPage] = useState(initialPage.page);
-  const [totalPages, setTotalPages] = useState(initialPage.totalPages);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+export function JobsFeed({ query, result }: JobsFeedProps) {
+  const { items, total, page, limit, totalPages } = result;
 
   if (items.length === 0) {
     return (
@@ -35,35 +27,8 @@ export function JobsFeed({ query, initialPage }: JobsFeedProps) {
     );
   }
 
-  const hasMore = page < totalPages;
-
-  function loadMore() {
-    if (!hasMore) {
-      return;
-    }
-    startTransition(async () => {
-      const result = await loadMoreJobs(query, page + 1);
-      startTransition(() => {
-        if ('error' in result) {
-          setError(result.error);
-          return;
-        }
-        setError(null);
-        // Offset paging: a job added meanwhile could repeat, so skip known ids.
-        setItems((current) => {
-          const seen = new Set(current.map((job) => job.id));
-          return [
-            ...current,
-            ...result.items.filter((job) => !seen.has(job.id)),
-          ];
-        });
-        setPage(result.page);
-        setTotalPages(result.totalPages);
-      });
-    });
-  }
-
-  const shown = formatJobCount(items.length);
+  const from = (page - 1) * limit + 1;
+  const to = from + items.length - 1;
 
   return (
     <div className="flex flex-col gap-3">
@@ -74,33 +39,14 @@ export function JobsFeed({ query, initialPage }: JobsFeedProps) {
           </li>
         ))}
       </ul>
-      {isPending && <JobCardSkeleton />}
 
-      <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-        <Badge
-          aria-live="polite"
-          className="h-7 bg-highlight px-3 text-on-highlight"
-        >
-          {hasMore
-            ? `Showing ${shown} of ${formatJobCount(initialPage.total)}`
-            : `Showing all ${shown}`}
+      <div className="flex flex-col items-center gap-3 pt-3">
+        <Badge className="h-7 bg-highlight px-3 text-on-highlight">
+          Showing {formatJobCount(from)}–{formatJobCount(to)} of{' '}
+          {formatJobCount(total)}
         </Badge>
-        {hasMore && (
-          <Button
-            variant="outline"
-            onClick={loadMore}
-            disabled={isPending}
-            className="h-11 rounded-pill px-5 font-semibold text-ink"
-          >
-            {isPending ? 'Loading…' : error ? 'Try again' : 'Load more'}
-          </Button>
-        )}
+        <JobsPagination query={query} page={page} totalPages={totalPages} />
       </div>
-      {error && (
-        <p role="alert" className="text-center text-sm text-destructive">
-          {error}
-        </p>
-      )}
     </div>
   );
 }

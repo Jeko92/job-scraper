@@ -1,14 +1,7 @@
 'use server';
 
-import {
-  type JobListItem,
-  type JobsQuery,
-  jobsQuerySchema,
-  locationsQuerySchema,
-  skillsQuerySchema,
-} from '@job-scraper/shared';
+import { locationsQuerySchema, skillsQuerySchema } from '@job-scraper/shared';
 
-import { fetchJobsPage } from './api';
 import {
   LOOKUP_SEARCH_LIMIT,
   type LookupOption,
@@ -16,31 +9,6 @@ import {
   searchSkills,
   toLocationOption,
 } from './lookups';
-
-export type LoadMoreJobsResult =
-  | { items: JobListItem[]; page: number; totalPages: number }
-  | { error: string };
-
-export async function loadMoreJobs(
-  query: JobsQuery,
-  page: number,
-): Promise<LoadMoreJobsResult> {
-  const parsed = jobsQuerySchema.safeParse({ ...query, page });
-  if (!parsed.success) {
-    return { error: 'This search is not valid.' };
-  }
-
-  try {
-    const result = await fetchJobsPage(parsed.data);
-    return {
-      items: result.items,
-      page: result.page,
-      totalPages: result.totalPages,
-    };
-  } catch {
-    return { error: 'Could not load more jobs. Please try again.' };
-  }
-}
 
 export type LookupSearchResult =
   { options: LookupOption[] } | { error: string };

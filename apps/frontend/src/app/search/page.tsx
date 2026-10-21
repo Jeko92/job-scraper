@@ -16,7 +16,7 @@ import {
   fetchJobSkills,
   toLocationOption,
 } from '@/lib/jobs/lookups';
-import { parseJobsQuery, toJobsSearchParams } from '@/lib/jobs/search-params';
+import { jobsPageHref, parseJobsQuery } from '@/lib/jobs/search-params';
 import { LOGIN_HREF } from '@/lib/routes';
 
 export const metadata: Metadata = { title: 'Search' };
@@ -29,11 +29,15 @@ export default async function SearchPage({
   }
 
   const query = parseJobsQuery(await searchParams);
-  const [firstPage, skills, locations] = await Promise.all([
+  const [result, skills, locations] = await Promise.all([
     fetchJobsPage(query).catch(() => null),
     fetchJobSkills(query.skill).catch(() => []),
     fetchJobLocations(query.locationId).catch(() => []),
   ]);
+  // A page past the end, e.g. from an old link: show the last page instead.
+  if (result && result.totalPages > 0 && query.page > result.totalPages) {
+    redirect(jobsPageHref(query, result.totalPages));
+  }
   const labels = [
     ...skills.map((skill) => ({ value: skill.slug, label: skill.name })),
     ...locations.map(toLocationOption),
@@ -49,14 +53,9 @@ export default async function SearchPage({
               aria-labelledby="jobs-heading"
               className="flex flex-col gap-4"
             >
-              <JobsHeader total={firstPage?.total ?? null} />
-              {firstPage ? (
-                // A new query string starts a fresh list.
-                <JobsFeed
-                  key={toJobsSearchParams(query).toString()}
-                  query={query}
-                  initialPage={firstPage}
-                />
+              <JobsHeader total={result?.total ?? null} />
+              {result ? (
+                <JobsFeed query={query} result={result} />
               ) : (
                 <Card className="gap-2 rounded-card p-10 text-center ring-line">
                   <p className="font-heading text-2xl text-ink">

@@ -47,7 +47,7 @@ export function JobCard({ job }: JobCardProps) {
             'ml-auto rounded-pill px-4 font-semibold',
           )}
         >
-          View role
+          View details
         </Link>
       </div>
     </Card>
