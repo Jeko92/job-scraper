@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation';
 
 import { postToBackend, readErrorMessages } from '@/lib/backend';
 import { getAuthCookieMaxAge, getPasswordMinLength } from '@/lib/env';
+import { ONBOARDING_HREF } from '@/lib/routes';
 
 import { AUTH_COOKIE } from './cookie';
 
@@ -61,7 +62,7 @@ export async function login(
     path: '/',
     ...(maxAge === undefined ? {} : { maxAge }),
   });
-  redirect('/');
+  redirect(ONBOARDING_HREF);
 }
 
 export async function register(

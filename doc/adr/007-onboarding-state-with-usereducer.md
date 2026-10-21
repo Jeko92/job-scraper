@@ -1,6 +1,6 @@
 # ADR-007: Onboarding flow state with `useReducer`
 
-* Status: proposed
+* Status: accepted
 
 ## Decision
 
