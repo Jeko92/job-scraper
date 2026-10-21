@@ -12,7 +12,7 @@ export const DEFAULT_JOBS_LIMIT = 20;
 export const MAX_JOBS_LIMIT = 100;
 const MAX_FILTER_VALUES = 20;
 
-export const JOB_SORTS = ['newest', 'salary'] as const;
+export const JOB_SORTS = ['newest'] as const;
 export type JobSort = (typeof JOB_SORTS)[number];
 export const jobSortSchema: z.ZodType<JobSort> = z.enum(JOB_SORTS);
 
@@ -97,13 +97,9 @@ export interface JobsQuery {
   workplaceType?: RemotePreference[] | undefined;
   employmentType?: EmploymentType[] | undefined;
   locationId?: string[] | undefined;
-  /** Industry slugs of the company. */
-  industry?: string[] | undefined;
   /** Skill slugs. */
   skill?: string[] | undefined;
   postedWithinDays?: number | undefined;
-  /** Matches jobs whose top salary reaches this value. */
-  salaryMin?: number | undefined;
   sort: JobSort;
   limit: number;
   cursor?: string | undefined;
@@ -125,10 +121,8 @@ export const jobsQuerySchema: z.ZodType<JobsQuery> = z.object({
   workplaceType: queryArray(remotePreferenceSchema),
   employmentType: queryArray(employmentTypeSchema),
   locationId: queryArray(z.uuid()),
-  industry: queryArray(slugSchema),
   skill: queryArray(slugSchema),
   postedWithinDays: z.coerce.number().int().min(1).max(365).optional(),
-  salaryMin: z.coerce.number().min(0).optional(),
   sort: jobSortSchema.default('newest'),
   limit: z.coerce
     .number()
