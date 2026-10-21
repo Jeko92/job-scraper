@@ -46,6 +46,24 @@ export function toJobsSearchParams(query: JobsQuery): URLSearchParams {
   return params;
 }
 
+/** Same cap as the shared contract allows per filter. */
+const MAX_SKILLS = 20;
+
+/** Appends the skill slug, unless it is already there or the list is full. */
+export function addSkill(query: JobsQuery, slug: string): JobsQuery {
+  const skills = query.skill ?? [];
+  if (skills.includes(slug) || skills.length >= MAX_SKILLS) {
+    return query;
+  }
+  return { ...query, skill: [...skills, slug] };
+}
+
+/** Removes the skill slug; the last one removed drops `skill` from the URL. */
+export function removeSkill(query: JobsQuery, slug: string): JobsQuery {
+  const skills = (query.skill ?? []).filter((item) => item !== slug);
+  return { ...query, skill: skills.length > 0 ? skills : undefined };
+}
+
 /** Adds the value, or removes it when present; an empty list becomes undefined. */
 export function toggleValue<T>(
   values: T[] | undefined,

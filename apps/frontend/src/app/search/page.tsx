@@ -11,6 +11,7 @@ import {
 import { Card } from '@/components/ui/card';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
+import { fetchJobSkills } from '@/lib/jobs/lookups';
 import { parseJobsQuery, toJobsSearchParams } from '@/lib/jobs/search-params';
 import { LOGIN_HREF } from '@/lib/routes';
 
@@ -24,11 +25,18 @@ export default async function SearchPage({
   }
 
   const query = parseJobsQuery(await searchParams);
-  const firstPage = await fetchJobsPage(query).catch(() => null);
+  const [firstPage, skills] = await Promise.all([
+    fetchJobsPage(query).catch(() => null),
+    fetchJobSkills(query.skill).catch(() => []),
+  ]);
+  const labels = skills.map((skill) => ({
+    value: skill.slug,
+    label: skill.name,
+  }));
 
   return (
     <main className="flex-1 px-4 pb-12 sm:px-8">
-      <JobsSearchProvider query={query}>
+      <JobsSearchProvider query={query} labels={labels}>
         <div className="grid items-start gap-4 lg:grid-cols-[18rem_minmax(0,1fr)]">
           <JobFilters />
           <JobsResults>

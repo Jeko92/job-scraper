@@ -6,6 +6,7 @@ import { useId, useState } from 'react';
 
 import { LogoMark } from '@/components/brand/logo';
 import { Checkbox } from '@/components/ui/checkbox';
+import { searchJobSkills } from '@/lib/jobs/actions';
 import {
   EMPLOYMENT_TYPE_LABELS,
   formatEuros,
@@ -14,12 +15,13 @@ import {
   SALARY_FROM_OPTIONS,
   WORKPLACE_TYPE_LABELS,
 } from '@/lib/jobs/format';
-import { toggleValue } from '@/lib/jobs/search-params';
+import { addSkill, removeSkill, toggleValue } from '@/lib/jobs/search-params';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { FieldSelect } from './field-select';
 import { useJobsSearch } from './jobs-search-provider';
+import { LookupFilter } from './lookup-filter';
 
 export function JobFilters() {
   const { query, applyQuery } = useJobsSearch();
@@ -71,6 +73,18 @@ export function JobFilters() {
         id={bodyId}
         className={cn('flex-col gap-6', open ? 'flex' : 'hidden lg:flex')}
       >
+        <LookupFilter
+          legend="Skills"
+          placeholder="Search a skill, e.g. React"
+          values={query.skill}
+          search={searchJobSkills}
+          onAdd={(slug) => {
+            applyQuery(addSkill(query, slug));
+          }}
+          onRemove={(slug) => {
+            applyQuery(removeSkill(query, slug));
+          }}
+        />
         <CheckboxGroup
           legend="Work mode"
           options={REMOTE_PREFERENCES.map((value) => ({

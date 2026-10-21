@@ -12,7 +12,7 @@ import {
   JOB_SORT_LABELS,
   WORKPLACE_TYPE_LABELS,
 } from '@/lib/jobs/format';
-import { toggleValue } from '@/lib/jobs/search-params';
+import { removeSkill, toggleValue } from '@/lib/jobs/search-params';
 
 import { FieldSelect } from './field-select';
 import { FilterChip } from './filter-chip';
@@ -29,8 +29,8 @@ interface JobsHeaderProps {
 }
 
 export function JobsHeader({ total }: JobsHeaderProps) {
-  const { query, applyQuery } = useJobsSearch();
-  const filters = getActiveFilters(query);
+  const { query, applyQuery, labelFor } = useJobsSearch();
+  const filters = getActiveFilters(query, labelFor);
 
   return (
     <GlowPanel className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6 sm:p-8">
@@ -84,8 +84,17 @@ interface ActiveFilter {
   without: JobsQuery;
 }
 
-function getActiveFilters(query: JobsQuery): ActiveFilter[] {
+function getActiveFilters(
+  query: JobsQuery,
+  labelFor: (value: string) => string,
+): ActiveFilter[] {
   const filters: ActiveFilter[] = [
+    // Skills first: they are the main search criterion.
+    ...(query.skill ?? []).map((slug) => ({
+      key: `skill:${slug}`,
+      label: labelFor(slug),
+      without: removeSkill(query, slug),
+    })),
     ...(query.workplaceType ?? []).map((value) => ({
       key: `workplaceType:${value}`,
       label: WORKPLACE_TYPE_LABELS[value],
