@@ -2,6 +2,7 @@ import {
   EMPLOYMENT_TYPES,
   type JobListItem,
   type JobsListResponse,
+  type JobSort,
   type JobsQuery,
   REMOTE_PREFERENCES,
 } from '@job-scraper/shared';
@@ -36,6 +37,11 @@ const FOREIGN_KEY_VIOLATION = '23503';
 
 const POSTED_AT = 'COALESCE(job.publishedAt, job.firstSeenAt)';
 
+const SORT_DIRECTIONS: Record<JobSort, 'ASC' | 'DESC'> = {
+  newest: 'DESC',
+  oldest: 'ASC',
+};
+
 @Injectable()
 export class JobsService {
   constructor(
@@ -62,13 +68,14 @@ export class JobsService {
 
   async findAll(query: JobsQuery): Promise<JobsListResponse> {
     const { page, limit } = query;
+    const direction = SORT_DIRECTIONS[query.sort];
 
     const total = await this.filteredQuery(query).getCount();
 
     const rows = await this.filteredQuery(query)
       .select('job.id', 'id')
-      .orderBy(POSTED_AT, 'DESC')
-      .addOrderBy('job.id', 'DESC')
+      .orderBy(POSTED_AT, direction)
+      .addOrderBy('job.id', direction)
       .offset((page - 1) * limit)
       .limit(limit)
       .getRawMany<{ id: string }>();
