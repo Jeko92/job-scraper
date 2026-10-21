@@ -9,10 +9,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { searchJobSkills } from '@/lib/jobs/actions';
 import {
   EMPLOYMENT_TYPE_LABELS,
-  formatEuros,
   formatPostedWithin,
   POSTED_WITHIN_OPTIONS,
-  SALARY_FROM_OPTIONS,
   WORKPLACE_TYPE_LABELS,
 } from '@/lib/jobs/format';
 import { addSkill, removeSkill, toggleValue } from '@/lib/jobs/search-params';
@@ -121,16 +119,6 @@ export function JobFilters() {
           format={formatPostedWithin}
           onChange={(postedWithinDays) => {
             applyQuery({ ...query, postedWithinDays });
-          }}
-        />
-        <NumberSelect
-          label="Salary from"
-          anyLabel="Any salary"
-          value={query.salaryMin}
-          options={SALARY_FROM_OPTIONS}
-          format={formatEuros}
-          onChange={(salaryMin) => {
-            applyQuery({ ...query, salaryMin });
           }}
         />
       </div>

@@ -6,7 +6,6 @@ import { SlidersHorizontal } from 'lucide-react';
 import { GlowPanel } from '@/components/landing/glow-panel';
 import {
   EMPLOYMENT_TYPE_LABELS,
-  formatEuros,
   formatJobCount,
   formatPostedWithin,
   JOB_SORT_LABELS,
@@ -117,13 +116,6 @@ function getActiveFilters(
       key: 'postedWithinDays',
       label: formatPostedWithin(query.postedWithinDays),
       without: { ...query, postedWithinDays: undefined },
-    });
-  }
-  if (query.salaryMin !== undefined) {
-    filters.push({
-      key: 'salaryMin',
-      label: `From ${formatEuros(query.salaryMin)}`,
-      without: { ...query, salaryMin: undefined },
     });
   }
   return filters;

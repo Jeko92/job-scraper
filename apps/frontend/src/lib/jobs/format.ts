@@ -21,11 +21,10 @@ export const EMPLOYMENT_TYPE_LABELS: Record<EmploymentType, string> = {
 
 export const JOB_SORT_LABELS: Record<JobSort, string> = {
   newest: 'Newest',
-  salary: 'Highest salary',
+  oldest: 'Oldest',
 };
 
 export const POSTED_WITHIN_OPTIONS = [1, 7, 30] as const;
-export const SALARY_FROM_OPTIONS = [30_000, 50_000, 70_000, 90_000] as const;
 
 const MAX_CARD_SKILLS = 4;
 const MINUTE = 60;
@@ -39,10 +38,6 @@ export function formatPostedWithin(days: number): string {
 
 export function formatJobCount(count: number): string {
   return new Intl.NumberFormat('en').format(count);
-}
-
-export function formatEuros(amount: number): string {
-  return formatMoney(amount, 'EUR');
 }
 
 /** "2 minutes ago", "Yesterday", or a date for older jobs. */

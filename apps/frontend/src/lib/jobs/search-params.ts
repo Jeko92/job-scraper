@@ -31,9 +31,6 @@ export function toJobsSearchParams(query: JobsQuery): URLSearchParams {
   if (query.postedWithinDays !== undefined) {
     params.set('postedWithinDays', String(query.postedWithinDays));
   }
-  if (query.salaryMin !== undefined) {
-    params.set('salaryMin', String(query.salaryMin));
-  }
   if (query.sort !== 'newest') {
     params.set('sort', query.sort);
   }
