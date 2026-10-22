@@ -3,6 +3,7 @@
 import { JOB_SORTS, type JobsQuery } from '@job-scraper/shared';
 import { SlidersHorizontal } from 'lucide-react';
 
+import { FieldSelect } from '@/components/forms/field-select';
 import { GlowPanel } from '@/components/landing/glow-panel';
 import { FilterChip } from '@/components/lookups/filter-chip';
 import {
@@ -14,7 +15,6 @@ import {
 } from '@/lib/jobs/format';
 import { removeFilterValue } from '@/lib/jobs/query-filters';
 
-import { FieldSelect } from './field-select';
 import { useJobsSearch } from './jobs-search-provider';
 
 const SORT_ITEMS = JOB_SORTS.map((sort) => ({

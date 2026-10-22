@@ -56,7 +56,7 @@ export function FieldSelect<T>({
         </SelectTrigger>
         <SelectContent>
           {items.map((item) => (
-            <SelectItem key={item.label} value={item.value}>
+            <SelectItem key={String(item.value)} value={item.value}>
               {item.label}
             </SelectItem>
           ))}

@@ -9,6 +9,7 @@ import { ChevronDown } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { LogoMark } from '@/components/brand/logo';
+import { FieldSelect } from '@/components/forms/field-select';
 import { LookupFilter } from '@/components/lookups/lookup-filter';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -30,7 +31,6 @@ import type { LookupOption } from '@/lib/lookups/types';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
-import { FieldSelect } from './field-select';
 import { useJobsSearch } from './jobs-search-provider';
 
 export function JobFilters() {
