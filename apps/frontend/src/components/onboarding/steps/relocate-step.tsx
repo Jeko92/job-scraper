@@ -3,9 +3,12 @@
 import { MAX_PREFERENCES_LOCATIONS } from '@job-scraper/shared';
 import type { Dispatch } from 'react';
 
+import { LookupFilter } from '@/components/lookups/lookup-filter';
+import { searchLocationOptions } from '@/lib/lookups/search';
+import type { LookupOption } from '@/lib/lookups/types';
+
 import type { OnboardingAction } from '../onboarding-state';
 import { type Option, OptionList } from './common/option-list';
-import { PreferenceLocationsField } from './common/preference-locations-field';
 import { StepShell } from './common/step-shell';
 
 type Answer = 'YES' | 'NO';
@@ -18,14 +21,16 @@ const OPTIONS: Option<Answer>[] = [
 interface RelocateStepProps {
   number: number;
   value: boolean | undefined;
-  locationIds: string[] | undefined;
+  places: LookupOption[];
+  onPlacesChange: (places: LookupOption[]) => void;
   dispatch: Dispatch<OnboardingAction>;
 }
 
 export function RelocateStep({
   number,
   value,
-  locationIds = [],
+  places,
+  onPlacesChange,
   dispatch,
 }: RelocateStepProps) {
   // OptionList works with strings, the profile stores a boolean.
@@ -34,6 +39,10 @@ export function RelocateStep({
 
   function answer(willingToRelocate: boolean) {
     dispatch({ type: 'answer', patch: { preferences: { willingToRelocate } } });
+    // "No" drops the places chosen before, so their chips go too.
+    if (!willingToRelocate) {
+      onPlacesChange([]);
+    }
   }
 
   return (
@@ -65,15 +74,28 @@ export function RelocateStep({
           }}
         />
         {value === true && (
-          <PreferenceLocationsField
-            locationIds={locationIds}
-            onChange={(ids) => {
-              dispatch({
-                type: 'answer',
-                patch: { preferencesLocationIds: ids },
-              });
+          // Enter in the search must not also press "OK".
+          <div
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.stopPropagation();
+              }
             }}
-          />
+          >
+            <LookupFilter
+              legend="Locations"
+              placeholder="e.g. Munich"
+              selected={places}
+              max={MAX_PREFERENCES_LOCATIONS}
+              search={searchLocationOptions}
+              onAdd={(place) => {
+                onPlacesChange([...places, place]);
+              }}
+              onRemove={(id) => {
+                onPlacesChange(places.filter((place) => place.value !== id));
+              }}
+            />
+          </div>
         )}
       </div>
     </StepShell>

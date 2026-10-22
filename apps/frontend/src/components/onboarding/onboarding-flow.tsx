@@ -4,6 +4,8 @@ import type { Industry, UserProfile } from '@job-scraper/shared';
 import { type Dispatch, useReducer, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { toLocationOption } from '@/lib/lookups/options';
+import type { LookupOption } from '@/lib/lookups/types';
 
 import {
   createInitialState,
@@ -38,6 +40,13 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
   const [industries, setIndustries] = useState<Industry[]>(() =>
     profile.industries.map(({ id, name, slug }) => ({ id, name, slug })),
   );
+  // The answers only hold the location id; the chip needs its label.
+  const [location, setLocation] = useState<LookupOption | null>(() =>
+    profile.location ? toLocationOption(profile.location) : null,
+  );
+  const [relocationPlaces, setRelocationPlaces] = useState<LookupOption[]>(() =>
+    profile.preferencesLocations.map(toLocationOption),
+  );
   const number = getQuestionNumber(state.step);
 
   return (
@@ -69,7 +78,14 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
         return (
           <EssentialsStep
             headline={state.answers.headline}
-            locationId={state.answers.locationId}
+            location={location}
+            onLocationChange={(next) => {
+              setLocation(next);
+              dispatch({
+                type: 'answer',
+                patch: { locationId: next?.value ?? null },
+              });
+            }}
             dispatch={dispatch}
           />
         );
@@ -102,7 +118,16 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
           <RelocateStep
             number={number}
             value={state.answers.preferences?.willingToRelocate}
-            locationIds={state.answers.preferencesLocationIds}
+            places={relocationPlaces}
+            onPlacesChange={(next) => {
+              setRelocationPlaces(next);
+              dispatch({
+                type: 'answer',
+                patch: {
+                  preferencesLocationIds: next.map((place) => place.value),
+                },
+              });
+            }}
             dispatch={dispatch}
           />
         );
