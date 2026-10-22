@@ -5,7 +5,7 @@ import type {
   RemotePreference,
 } from '@job-scraper/shared';
 
-export const WORKPLACE_TYPE_LABELS: Record<RemotePreference, string> = {
+export const REMOTE_PREFERENCE_LABELS: Record<RemotePreference, string> = {
   REMOTE: 'Remote',
   HYBRID: 'Hybrid',
   ONSITE: 'On-site',
@@ -67,7 +67,7 @@ export function formatJobMeta(job: JobListItem): string {
   return [
     job.company.name ?? job.company.domain,
     job.location?.city ?? job.location?.countryName,
-    job.workplaceType && WORKPLACE_TYPE_LABELS[job.workplaceType],
+    job.workplaceType && REMOTE_PREFERENCE_LABELS[job.workplaceType],
     job.employmentType && EMPLOYMENT_TYPE_LABELS[job.employmentType],
   ]
     .filter((part) => part !== null && part !== undefined && part !== '')

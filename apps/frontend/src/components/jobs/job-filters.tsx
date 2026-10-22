@@ -15,7 +15,7 @@ import {
   EMPLOYMENT_TYPE_LABELS,
   formatPostedWithin,
   POSTED_WITHIN_OPTIONS,
-  WORKPLACE_TYPE_LABELS,
+  REMOTE_PREFERENCE_LABELS,
 } from '@/lib/jobs/format';
 import {
   addLocation,
@@ -121,7 +121,7 @@ export function JobFilters() {
           legend="Work mode"
           options={REMOTE_PREFERENCES.map((value) => ({
             value,
-            label: WORKPLACE_TYPE_LABELS[value],
+            label: REMOTE_PREFERENCE_LABELS[value],
           }))}
           selected={query.workplaceType}
           onToggle={(value) => {

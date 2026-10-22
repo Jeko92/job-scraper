@@ -10,7 +10,7 @@ import {
   formatJobCount,
   formatPostedWithin,
   JOB_SORT_LABELS,
-  WORKPLACE_TYPE_LABELS,
+  REMOTE_PREFERENCE_LABELS,
 } from '@/lib/jobs/format';
 import {
   removeLocation,
@@ -114,7 +114,7 @@ function getActiveFilters(
     })),
     ...(query.workplaceType ?? []).map((value) => ({
       key: `workplaceType:${value}`,
-      label: WORKPLACE_TYPE_LABELS[value],
+      label: REMOTE_PREFERENCE_LABELS[value],
       without: {
         ...query,
         workplaceType: toggleValue(query.workplaceType, value),
