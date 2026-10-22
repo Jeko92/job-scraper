@@ -4,10 +4,8 @@ import { redirect } from 'next/navigation';
 import { JobFilters } from '@/components/jobs/job-filters';
 import { JobsFeed } from '@/components/jobs/jobs-feed';
 import { JobsHeader } from '@/components/jobs/jobs-header';
-import {
-  JobsResults,
-  JobsSearchProvider,
-} from '@/components/jobs/jobs-search-provider';
+import { JobsSearchProvider } from '@/components/jobs/jobs-search-provider';
+import { PendingResults } from '@/components/jobs/pending-results';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
 import { jobsPageHref, parseJobsQuery } from '@/lib/jobs/query-url';
@@ -49,7 +47,7 @@ export default async function SearchPage({
       <JobsSearchProvider query={query} labels={labels}>
         <div className="grid items-start gap-4 lg:grid-cols-[18rem_minmax(0,1fr)]">
           <JobFilters />
-          <JobsResults>
+          <PendingResults>
             <section
               aria-labelledby="jobs-heading"
               className="flex flex-col gap-4"
@@ -57,7 +55,7 @@ export default async function SearchPage({
               <JobsHeader total={jobsPage.total} />
               <JobsFeed query={query} result={jobsPage} />
             </section>
-          </JobsResults>
+          </PendingResults>
         </div>
       </JobsSearchProvider>
     </main>

@@ -14,7 +14,6 @@ import {
 import { toJobsSearchParams } from '@/lib/jobs/query-url';
 import type { LookupOption } from '@/lib/lookups/types';
 import { SEARCH_HREF } from '@/lib/routes';
-import { cn } from '@/lib/utils';
 
 interface JobsSearchContextValue {
   /** Shows a new filter right away, before the page has reloaded. */
@@ -93,24 +92,4 @@ export function useJobsSearch(): JobsSearchContextValue {
     throw new Error('useJobsSearch must be used inside JobsSearchProvider');
   }
   return value;
-}
-
-interface JobsResultsProps {
-  children: ReactNode;
-}
-
-/** Dims the results while new ones load. */
-export function JobsResults({ children }: JobsResultsProps) {
-  const { isPending } = useJobsSearch();
-  return (
-    <div
-      aria-busy={isPending}
-      className={cn(
-        'flex min-w-0 flex-col gap-4 transition-opacity',
-        isPending && 'opacity-60',
-      )}
-    >
-      {children}
-    </div>
-  );
 }
