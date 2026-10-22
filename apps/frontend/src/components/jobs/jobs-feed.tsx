@@ -9,7 +9,6 @@ import { JobsPagination } from './jobs-pagination';
 
 interface JobsFeedProps {
   query: JobsQuery;
-  /** One page of results, loaded on the server. */
   result: JobsListResponse;
 }
 
@@ -40,7 +39,6 @@ export function JobsFeed({ query, result }: JobsFeedProps) {
         ))}
       </ul>
 
-      {/* Phones: only the pagination, centred. Wider: range left, pages right. */}
       <div className="flex items-center justify-center gap-3 pt-3 sm:justify-between">
         <Badge className="hidden h-7 bg-highlight px-3 text-on-highlight sm:inline-flex">
           Showing {formatJobCount(from)}–{formatJobCount(to)} of{' '}

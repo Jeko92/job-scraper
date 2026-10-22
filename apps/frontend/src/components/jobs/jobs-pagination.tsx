@@ -22,7 +22,6 @@ interface JobsPaginationProps {
   className?: string;
 }
 
-/** Previous, numbered pages and Next as links; compact on phones. */
 export function JobsPagination({
   query,
   page,

@@ -4,7 +4,7 @@ export interface LookupOption {
   label: string;
 }
 
-/** What a lookup search server action returns. */
+/** What a lookup search returns. */
 export type LookupSearchResult =
   { options: LookupOption[] } | { error: string };
 

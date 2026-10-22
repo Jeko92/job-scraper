@@ -26,7 +26,6 @@ interface FieldSelectProps<T> {
   className?: string;
 }
 
-/** Labelled shadcn select with the tall `field` trigger. */
 export function FieldSelect<T>({
   label,
   items,

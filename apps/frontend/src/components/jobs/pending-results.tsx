@@ -10,7 +10,6 @@ interface PendingResultsProps {
   children: ReactNode;
 }
 
-/** Dims the results while new ones load. */
 export function PendingResults({ children }: PendingResultsProps) {
   const { isPending } = useJobsSearch();
   return (

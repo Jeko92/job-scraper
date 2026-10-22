@@ -8,7 +8,6 @@ import {
   type LookupSearchResult,
 } from '@/lib/lookups/types';
 
-/** Search-as-you-type for skills: `GET /api/lookups/skills?search=rea`. */
 export async function GET(request: NextRequest): Promise<Response> {
   const parsed = skillsQuerySchema.safeParse({
     search: request.nextUrl.searchParams.get('search') ?? undefined,

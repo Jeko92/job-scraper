@@ -8,7 +8,6 @@ import {
   type LookupSearchResult,
 } from '@/lib/lookups/types';
 
-/** Search-as-you-type for locations: `GET /api/lookups/locations?search=ber`. */
 export async function GET(request: NextRequest): Promise<Response> {
   const parsed = locationsQuerySchema.safeParse({
     search: request.nextUrl.searchParams.get('search') ?? undefined,

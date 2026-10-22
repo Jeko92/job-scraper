@@ -16,7 +16,6 @@ interface LookupFilterProps {
   legend: string;
   /** Example inside the search box, e.g. "e.g. React". */
   placeholder: string;
-  /** Selected values (skill slugs, location ids) with their labels. */
   selected: LookupOption[];
   /** "+ Add" disappears once this many values are selected. */
   max: number;

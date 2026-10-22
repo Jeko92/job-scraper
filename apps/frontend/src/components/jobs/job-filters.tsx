@@ -55,7 +55,6 @@ export function JobFilters() {
       className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6"
     >
       <div className="flex items-center justify-between gap-4">
-        {/* Phones: the whole header opens and closes the filters. */}
         <button
           type="button"
           aria-expanded={open}
