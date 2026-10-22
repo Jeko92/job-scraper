@@ -13,6 +13,7 @@ import {
   type OnboardingState,
   STEPS,
 } from './onboarding-state';
+import { OnboardingStepper } from './onboarding-stepper';
 import { EmploymentStep } from './steps/employment-step';
 import { EssentialsStep } from './steps/essentials-step';
 import { ExperienceYearsStep } from './steps/experience-years-step';
@@ -39,100 +40,116 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
   );
   const number = getQuestionNumber(state.step);
 
-  switch (state.step) {
-    case 'welcome':
-      return (
-        <WelcomeStep
-          firstName={profile.firstName}
-          onStart={() => {
-            dispatch({ type: 'next' });
+  return (
+    <div className="w-full max-w-2xl space-y-6">
+      {state.step !== 'welcome' && (
+        <OnboardingStepper
+          step={state.step}
+          onJump={(step) => {
+            dispatch({ type: 'jumpTo', step });
           }}
         />
-      );
-    case 'essentials':
-      return (
-        <EssentialsStep
-          headline={state.answers.headline}
-          locationId={state.answers.locationId}
-          dispatch={dispatch}
-        />
-      );
-    case 'seniority':
-      return (
-        <SeniorityStep
-          number={number}
-          value={state.answers.seniority}
-          dispatch={dispatch}
-        />
-      );
-    case 'employment':
-      return (
-        <EmploymentStep
-          number={number}
-          value={state.answers.preferences?.employmentType}
-          dispatch={dispatch}
-        />
-      );
-    case 'workSetup':
-      return (
-        <WorkSetupStep
-          number={number}
-          value={state.answers.preferences?.remotePreference}
-          dispatch={dispatch}
-        />
-      );
-    case 'relocate':
-      return (
-        <RelocateStep
-          number={number}
-          value={state.answers.preferences?.willingToRelocate}
-          locationIds={state.answers.preferencesLocationIds}
-          dispatch={dispatch}
-        />
-      );
-    case 'experienceYears':
-      return (
-        <ExperienceYearsStep
-          number={number}
-          value={state.answers.yearsExperience}
-          dispatch={dispatch}
-        />
-      );
-    case 'industries':
-      return (
-        <IndustriesStep
-          number={number}
-          selected={industries}
-          onChange={(next) => {
-            setIndustries(next);
-            dispatch({
-              type: 'answer',
-              patch: { industries: next.map((industry) => industry.slug) },
-            });
-          }}
-          onNext={() => {
-            dispatch({ type: 'next' });
-          }}
-          onBack={() => {
-            dispatch({ type: 'back' });
-          }}
-        />
-      );
-    case 'review':
-      return (
-        <ReviewStep
-          answers={state.answers}
-          industries={industries}
-          onEdit={(step) => {
-            dispatch({ type: 'goTo', step });
-          }}
-          onBack={() => {
-            dispatch({ type: 'back' });
-          }}
-        />
-      );
-    default:
-      return <DebugView state={state} dispatch={dispatch} />;
+      )}
+      {renderStep()}
+    </div>
+  );
+
+  function renderStep() {
+    switch (state.step) {
+      case 'welcome':
+        return (
+          <WelcomeStep
+            firstName={profile.firstName}
+            onStart={() => {
+              dispatch({ type: 'next' });
+            }}
+          />
+        );
+      case 'essentials':
+        return (
+          <EssentialsStep
+            headline={state.answers.headline}
+            locationId={state.answers.locationId}
+            dispatch={dispatch}
+          />
+        );
+      case 'seniority':
+        return (
+          <SeniorityStep
+            number={number}
+            value={state.answers.seniority}
+            dispatch={dispatch}
+          />
+        );
+      case 'employment':
+        return (
+          <EmploymentStep
+            number={number}
+            value={state.answers.preferences?.employmentType}
+            dispatch={dispatch}
+          />
+        );
+      case 'workSetup':
+        return (
+          <WorkSetupStep
+            number={number}
+            value={state.answers.preferences?.remotePreference}
+            dispatch={dispatch}
+          />
+        );
+      case 'relocate':
+        return (
+          <RelocateStep
+            number={number}
+            value={state.answers.preferences?.willingToRelocate}
+            locationIds={state.answers.preferencesLocationIds}
+            dispatch={dispatch}
+          />
+        );
+      case 'experienceYears':
+        return (
+          <ExperienceYearsStep
+            number={number}
+            value={state.answers.yearsExperience}
+            dispatch={dispatch}
+          />
+        );
+      case 'industries':
+        return (
+          <IndustriesStep
+            number={number}
+            selected={industries}
+            onChange={(next) => {
+              setIndustries(next);
+              dispatch({
+                type: 'answer',
+                patch: { industries: next.map((industry) => industry.slug) },
+              });
+            }}
+            onNext={() => {
+              dispatch({ type: 'next' });
+            }}
+            onBack={() => {
+              dispatch({ type: 'back' });
+            }}
+          />
+        );
+      case 'review':
+        return (
+          <ReviewStep
+            answers={state.answers}
+            industries={industries}
+            onEdit={(step) => {
+              dispatch({ type: 'goTo', step });
+            }}
+            onBack={() => {
+              dispatch({ type: 'back' });
+            }}
+          />
+        );
+      default:
+        return <DebugView state={state} dispatch={dispatch} />;
+    }
   }
 }
 

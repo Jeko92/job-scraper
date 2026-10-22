@@ -41,7 +41,8 @@ export type OnboardingAction =
   | { type: 'answer'; patch: Answers }
   | { type: 'next' }
   | { type: 'back' }
-  | { type: 'goTo'; step: Step };
+  | { type: 'goTo'; step: Step }
+  | { type: 'jumpTo'; step: Step };
 
 // Question number shown before the title ("3 →"). Welcome is no question but
 // Essentials holds two (Q1 and Q2), so the position + 1 matches the wireframe.
@@ -94,6 +95,10 @@ export function onboardingReducer(
         step: action.step,
         returnToReview: action.step !== 'review',
       };
+
+    // Stepper: continue the flow from there, no detour back to Review.
+    case 'jumpTo':
+      return { ...state, step: action.step, returnToReview: false };
   }
 }
 
