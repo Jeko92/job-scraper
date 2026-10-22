@@ -2,7 +2,7 @@
 
 # Objective
 
-Database contains information about companies. Goal of to crawl company pages and retrieve currently open job listings from Germany.
+The database contains information about companies. The goal is to crawl company pages and retrieve currently open job listings in Germany.
 
 ## Prompting
 

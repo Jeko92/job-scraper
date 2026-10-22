@@ -4,7 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
-import { AiProvider } from './providers/ai-provider.js';
+import { AiProvider } from '../common/ai/ai-provider.js';
 import type {
   SupplementRequest,
   SupplementResponse,

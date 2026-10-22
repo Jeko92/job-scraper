@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { AiTokenUsage } from './providers/ai-provider.js';
+import type { AiTokenUsage } from '../common/ai/ai-provider.js';
 
 const jsonObjectSchema = z.record(z.string(), z.unknown());
 

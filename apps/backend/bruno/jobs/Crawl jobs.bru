@@ -1,0 +1,26 @@
+meta {
+  name: Crawl jobs
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/jobs/crawl/{{companyId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Crawl the company's website for open jobs with the AI provider (OpenAI) and create them. Set `companyId` to an id from **List companies**.
+
+  Starts at the company's `websiteUrl`, finds the careers page through `/sitemap.xml`, navigation and footer, then extracts each job listing from its own page in a strict output format. Only pages on the company's domain (and subdomains) are followed; job boards are ignored.
+
+  Jobs that already exist (same `sourceUrl` or `externalId`), job pages that fail to load and invalid AI results are skipped. `locationId` and `skills` stay empty.
+
+  - 201: Created - the new jobs, shaped like job list items
+  - 400: the company has no `websiteUrl`
+  - 404: unknown company
+  - 422: AI response hit the output token limit
+  - 502: the website or the AI request failed
+  - 401: run Login
+}
