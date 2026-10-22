@@ -14,6 +14,7 @@ import {
 } from './onboarding-state';
 import { EmploymentStep } from './steps/employment-step';
 import { EssentialsStep } from './steps/essentials-step';
+import { ExperienceYearsStep } from './steps/experience-years-step';
 import { PreferenceLocationsStep } from './steps/preference-locations-step';
 import { RelocateStep } from './steps/relocate-step';
 import { SeniorityStep } from './steps/seniority-step';
@@ -78,6 +79,13 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
       return (
         <PreferenceLocationsStep
           locationIds={state.answers.preferencesLocationIds}
+          dispatch={dispatch}
+        />
+      );
+    case 'experienceYears':
+      return (
+        <ExperienceYearsStep
+          value={state.answers.yearsExperience}
           dispatch={dispatch}
         />
       );

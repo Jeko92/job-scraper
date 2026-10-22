@@ -11,7 +11,7 @@ export type Step =
   | 'workSetup'
   | 'relocate'
   | 'preferenceLocations'
-  | 'years'
+  | 'experienceYears'
   | 'skills'
   | 'industries'
   | 'review';
@@ -24,7 +24,7 @@ const ALL_STEPS: Step[] = [
   'workSetup',
   'relocate',
   'preferenceLocations',
-  'years',
+  'experienceYears',
   'skills',
   'industries',
   'review',
