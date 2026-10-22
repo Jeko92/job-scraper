@@ -18,6 +18,9 @@ const NOT_SET = 'Not set';
 
 interface ReviewStepProps {
   answers: Answers;
+  location: LookupOption | null;
+  relocationPlaces: LookupOption[];
+  skills: LookupOption[];
   industries: LookupOption[];
   onEdit: (step: Step) => void;
   onBack: () => void;
@@ -25,6 +28,9 @@ interface ReviewStepProps {
 
 export function ReviewStep({
   answers,
+  location,
+  relocationPlaces,
+  skills,
   industries,
   onEdit,
   onBack,
@@ -70,7 +76,7 @@ export function ReviewStep({
         />
         <ReviewRow
           label="Based in"
-          value={answers.locationId}
+          value={location?.label}
           onEdit={() => {
             onEdit('essentials');
           }}
@@ -112,7 +118,11 @@ export function ReviewStep({
         {relocate === true && (
           <ReviewRow
             label="Relocation places"
-            value={answers.preferencesLocationIds?.join(', ')}
+            value={
+              relocationPlaces.length > 0 && (
+                <ReviewChips options={relocationPlaces} />
+              )
+            }
             onEdit={() => {
               onEdit('relocate');
             }}
@@ -130,19 +140,17 @@ export function ReviewStep({
           }}
         />
         <ReviewRow
+          label="Skills"
+          value={skills.length > 0 && <ReviewChips options={skills} />}
+          onEdit={() => {
+            onEdit('skills');
+          }}
+        />
+        <ReviewRow
           label="Industries"
           value={
             industries.length > 0 && (
-              <span className="flex flex-wrap gap-2">
-                {industries.map((industry, index) => (
-                  <span
-                    key={industry.value}
-                    className="rounded-chip bg-ink px-3 py-1 text-sm font-medium text-surface"
-                  >
-                    {index + 1}. {industry.label}
-                  </span>
-                ))}
-              </span>
+              <ReviewChips options={industries} numbered />
             )
           }
           onEdit={() => {
@@ -158,6 +166,28 @@ export function ReviewStep({
         <SubmitOnboardingButton answers={answers} />
       </div>
     </OnboardingCard>
+  );
+}
+
+interface ReviewChipsProps {
+  options: LookupOption[];
+  /** "1. …", "2. …" when the order is a priority. */
+  numbered?: boolean;
+}
+
+// Read-only chips for the list answers.
+function ReviewChips({ options, numbered = false }: ReviewChipsProps) {
+  return (
+    <span className="flex flex-wrap gap-2">
+      {options.map((option, index) => (
+        <span
+          key={option.value}
+          className="rounded-chip bg-ink px-3 py-1 text-sm font-medium text-surface"
+        >
+          {numbered ? `${String(index + 1)}. ${option.label}` : option.label}
+        </span>
+      ))}
+    </span>
   );
 }
 

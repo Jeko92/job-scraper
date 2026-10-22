@@ -187,6 +187,9 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
         return (
           <ReviewStep
             answers={state.answers}
+            location={location}
+            relocationPlaces={relocationPlaces}
+            skills={skills}
             industries={industries}
             onEdit={(step) => {
               dispatch({ type: 'goTo', step });
