@@ -26,7 +26,7 @@ import {
 import {
   searchLocationOptions,
   searchSkillOptions,
-} from '@/lib/lookups/actions';
+} from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';

@@ -20,7 +20,7 @@ interface LookupFilterProps {
   selected: LookupOption[];
   /** "+ Add" disappears once this many values are selected. */
   max: number;
-  /** Server action that finds values by name, e.g. `searchSkillOptions`. */
+  /** Finds values by name, e.g. `searchSkillOptions` from `lib/lookups/search`. */
   search: (text: string) => Promise<LookupSearchResult>;
   onAdd: (option: LookupOption) => void;
   onRemove: (value: string) => void;
