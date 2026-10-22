@@ -1,5 +1,6 @@
 import {
   EMPLOYMENT_TYPES,
+  type JobDetail,
   type JobListItem,
   REMOTE_PREFERENCES,
 } from '@job-scraper/shared';
@@ -7,7 +8,9 @@ import {
 import { toLocationDto } from '../../locations/locations.service.js';
 import type { Job } from '../entities/job.entity.js';
 
-export function toJobListItem(job: Job): JobListItem {
+export function toJobListItem(
+  job: Job,
+): JobListItem & Pick<JobDetail, 'sourceUrl'> {
   const company = job.company;
   if (!company) {
     throw new Error(`Job "${job.id}" was loaded without its company`);
@@ -15,6 +18,7 @@ export function toJobListItem(job: Job): JobListItem {
   return {
     id: job.id,
     title: job.title,
+    sourceUrl: job.sourceUrl,
     company: { id: company.id, name: company.name, domain: company.domain },
     location: job.location ? toLocationDto(job.location) : null,
     workplaceType: oneOf(REMOTE_PREFERENCES, job.workplaceType),
