@@ -1,19 +1,19 @@
 'use client';
 
-import type { Industry, UserProfile } from '@job-scraper/shared';
-import { type Dispatch, useReducer, useState } from 'react';
+import type { UserProfile } from '@job-scraper/shared';
+import { useReducer, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { toLocationOption } from '@/lib/lookups/options';
+import {
+  toIndustryOption,
+  toLocationOption,
+  toSkillOption,
+} from '@/lib/lookups/options';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import {
   createInitialState,
   getQuestionNumber,
-  type OnboardingAction,
   onboardingReducer,
-  type OnboardingState,
-  STEPS,
 } from './onboarding-state';
 import { OnboardingStepper } from './onboarding-stepper';
 import { EmploymentStep } from './steps/employment-step';
@@ -23,6 +23,7 @@ import { IndustriesStep } from './steps/industries-step';
 import { RelocateStep } from './steps/relocate-step';
 import { ReviewStep } from './steps/review-step';
 import { SeniorityStep } from './steps/seniority-step';
+import { SkillsStep } from './steps/skills-step';
 import { WelcomeStep } from './steps/welcome-step';
 import { WorkSetupStep } from './steps/work-setup-step';
 
@@ -36,16 +37,19 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     profile,
     createInitialState,
   );
-  // The answers only hold slugs; and chips  need the names to display.
-  const [industries, setIndustries] = useState<Industry[]>(() =>
-    profile.industries.map(({ id, name, slug }) => ({ id, name, slug })),
+  // The answers only hold slugs and ids; the chips need the names.
+  const [industries, setIndustries] = useState<LookupOption[]>(() =>
+    profile.industries.map(toIndustryOption),
   );
-  // The answers only hold the location id; the chip needs its label.
   const [location, setLocation] = useState<LookupOption | null>(() =>
     profile.location ? toLocationOption(profile.location) : null,
   );
   const [relocationPlaces, setRelocationPlaces] = useState<LookupOption[]>(() =>
     profile.preferencesLocations.map(toLocationOption),
+  );
+  // Levels are skipped for now; only the slugs are saved.
+  const [skills, setSkills] = useState<LookupOption[]>(() =>
+    profile.skills.map(toSkillOption),
   );
   const number = getQuestionNumber(state.step);
 
@@ -139,6 +143,26 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
             dispatch={dispatch}
           />
         );
+      case 'skills':
+        return (
+          <SkillsStep
+            number={number}
+            selected={skills}
+            onChange={(next) => {
+              setSkills(next);
+              dispatch({
+                type: 'answer',
+                patch: { skills: next.map((skill) => ({ slug: skill.value })) },
+              });
+            }}
+            onNext={() => {
+              dispatch({ type: 'next' });
+            }}
+            onBack={() => {
+              dispatch({ type: 'back' });
+            }}
+          />
+        );
       case 'industries':
         return (
           <IndustriesStep
@@ -148,7 +172,7 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
               setIndustries(next);
               dispatch({
                 type: 'answer',
-                patch: { industries: next.map((industry) => industry.slug) },
+                patch: { industries: next.map((industry) => industry.value) },
               });
             }}
             onNext={() => {
@@ -172,67 +196,6 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
             }}
           />
         );
-      default:
-        return <DebugView state={state} dispatch={dispatch} />;
     }
   }
-}
-
-// Temporary: shown DebugView.
-interface DebugViewProps {
-  state: OnboardingState;
-  dispatch: Dispatch<OnboardingAction>;
-}
-
-function DebugView({ state, dispatch }: DebugViewProps) {
-  const position = STEPS.indexOf(state.step) + 1;
-
-  return (
-    <div className="w-full max-w-2xl space-y-4">
-      <p>
-        Step {position} of {STEPS.length}: <strong>{state.step}</strong>
-      </p>
-
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          onClick={() => {
-            dispatch({ type: 'back' });
-          }}
-        >
-          Back
-        </Button>
-        <Button
-          onClick={() => {
-            dispatch({ type: 'next' });
-          }}
-        >
-          Next
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => {
-            dispatch({
-              type: 'answer',
-              patch: { preferences: { willingToRelocate: true } },
-            });
-          }}
-        >
-          Relocate: yes
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => {
-            dispatch({ type: 'goTo', step: 'seniority' });
-          }}
-        >
-          Edit seniority
-        </Button>
-      </div>
-
-      <pre className="rounded-card bg-surface p-4 text-xs">
-        {JSON.stringify(state, null, 2)}
-      </pre>
-    </div>
-  );
 }

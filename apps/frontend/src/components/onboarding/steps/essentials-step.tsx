@@ -2,7 +2,6 @@
 
 import type { Dispatch } from 'react';
 
-import { LookupFilter } from '@/components/lookups/lookup-filter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +9,7 @@ import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import type { OnboardingAction } from '../onboarding-state';
+import { LookupField } from './common/lookup-field';
 import { StepShell } from './common/step-shell';
 
 const FIELD_CLASS = 'h-12 rounded-card px-4 text-base';
@@ -81,26 +81,17 @@ export function EssentialsStep({
             <span className="text-highlight">2 →</span>
             Where are you based?
           </p>
-          {/* Enter in the search must not also press "Continue". */}
-          <div
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.stopPropagation();
-              }
+          <LookupField
+            label="Search your city or region"
+            placeholder="e.g. Berlin"
+            selected={location ? [location] : []}
+            max={1}
+            search={searchLocationOptions}
+            autoFocus={false}
+            onChange={(next) => {
+              onLocationChange(next[0] ?? null);
             }}
-          >
-            <LookupFilter
-              legend="Location"
-              placeholder="e.g. Berlin"
-              selected={location ? [location] : []}
-              max={1}
-              search={searchLocationOptions}
-              onAdd={onLocationChange}
-              onRemove={() => {
-                onLocationChange(null);
-              }}
-            />
-          </div>
+          />
         </div>
       </div>
     </StepShell>

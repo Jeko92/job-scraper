@@ -3,11 +3,11 @@
 import { MAX_PREFERENCES_LOCATIONS } from '@job-scraper/shared';
 import type { Dispatch } from 'react';
 
-import { LookupFilter } from '@/components/lookups/lookup-filter';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import type { OnboardingAction } from '../onboarding-state';
+import { LookupField } from './common/lookup-field';
 import { type Option, OptionList } from './common/option-list';
 import { StepShell } from './common/step-shell';
 
@@ -74,28 +74,14 @@ export function RelocateStep({
           }}
         />
         {value === true && (
-          // Enter in the search must not also press "OK".
-          <div
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.stopPropagation();
-              }
-            }}
-          >
-            <LookupFilter
-              legend="Locations"
-              placeholder="e.g. Munich"
-              selected={places}
-              max={MAX_PREFERENCES_LOCATIONS}
-              search={searchLocationOptions}
-              onAdd={(place) => {
-                onPlacesChange([...places, place]);
-              }}
-              onRemove={(id) => {
-                onPlacesChange(places.filter((place) => place.value !== id));
-              }}
-            />
-          </div>
+          <LookupField
+            label="Which places would you move to?"
+            placeholder="e.g. Munich"
+            selected={places}
+            max={MAX_PREFERENCES_LOCATIONS}
+            search={searchLocationOptions}
+            onChange={onPlacesChange}
+          />
         )}
       </div>
     </StepShell>

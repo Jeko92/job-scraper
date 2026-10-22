@@ -1,11 +1,11 @@
 'use client';
 
-import type { Industry } from '@job-scraper/shared';
 import { type ReactNode, useEffect, useRef } from 'react';
 
 import { LogoMark } from '@/components/brand/logo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import type { LookupOption } from '@/lib/lookups/types';
 
 import { OnboardingCard } from '../onboarding-card';
 import type { Answers, Step } from '../onboarding-state';
@@ -18,7 +18,7 @@ const NOT_SET = 'Not set';
 
 interface ReviewStepProps {
   answers: Answers;
-  industries: Industry[];
+  industries: LookupOption[];
   onEdit: (step: Step) => void;
   onBack: () => void;
 }
@@ -136,10 +136,10 @@ export function ReviewStep({
               <span className="flex flex-wrap gap-2">
                 {industries.map((industry, index) => (
                   <span
-                    key={industry.slug}
+                    key={industry.value}
                     className="rounded-chip bg-ink px-3 py-1 text-sm font-medium text-surface"
                   >
-                    {index + 1}. {industry.name}
+                    {index + 1}. {industry.label}
                   </span>
                 ))}
               </span>

@@ -1,4 +1,6 @@
 import {
+  type Industry,
+  industryListSchema,
   type Location,
   locationListSchema,
   locationSchema,
@@ -101,4 +103,24 @@ export async function searchLocations(search: string): Promise<Location[]> {
     );
   }
   return locationListSchema.parse(await response.json());
+}
+
+/** Without a search, the first industries serve as suggestions. Throws when
+ * not logged in, or when the backend fails. */
+export async function searchIndustries(search?: string): Promise<Industry[]> {
+  const token = await requireAuthToken();
+  const params = new URLSearchParams({ limit: String(LOOKUP_SEARCH_LIMIT) });
+  if (search !== undefined) {
+    params.set('search', search);
+  }
+  const response = await getFromBackend(
+    `/industries?${params.toString()}`,
+    token,
+  );
+  if (!response.ok) {
+    throw new Error(
+      `GET /industries failed with status ${String(response.status)}`,
+    );
+  }
+  return industryListSchema.parse(await response.json());
 }
