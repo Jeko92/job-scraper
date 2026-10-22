@@ -23,8 +23,7 @@ const SORT_ITEMS = JOB_SORTS.map((sort) => ({
 }));
 
 interface JobsHeaderProps {
-  /** null when the jobs could not be loaded. */
-  total: number | null;
+  total: number;
 }
 
 export function JobsHeader({ total }: JobsHeaderProps) {
@@ -37,9 +36,7 @@ export function JobsHeader({ total }: JobsHeaderProps) {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 id="jobs-heading" className="font-heading text-4xl text-ink">
-            {total === null
-              ? 'Search'
-              : `${formatJobCount(total)} ${total === 1 ? 'match' : 'matches'}`}
+            {formatJobCount(total)} {total === 1 ? 'match' : 'matches'}
           </h1>
           {locationCount > 0 && (
             <p className="text-ink-muted">

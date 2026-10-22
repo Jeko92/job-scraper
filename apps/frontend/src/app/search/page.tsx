@@ -8,7 +8,6 @@ import {
   JobsResults,
   JobsSearchProvider,
 } from '@/components/jobs/jobs-search-provider';
-import { Card } from '@/components/ui/card';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
 import { jobsPageHref, parseJobsQuery } from '@/lib/jobs/query-url';
@@ -29,14 +28,16 @@ export default async function SearchPage({
   }
 
   const query = parseJobsQuery(await searchParams);
-  const [result, skills, locations] = await Promise.all([
-    fetchJobsPage(query).catch(() => null),
+  // A failing jobs request reaches error.tsx; missing chip labels only fall
+  // back to the raw value.
+  const [jobsPage, skills, locations] = await Promise.all([
+    fetchJobsPage(query),
     fetchSkillsBySlugs(query.skill).catch(() => []),
     fetchLocationsByIds(query.locationId).catch(() => []),
   ]);
   // A page past the end, e.g. from an old link: show the last page instead.
-  if (result && result.totalPages > 0 && query.page > result.totalPages) {
-    redirect(jobsPageHref(query, result.totalPages));
+  if (jobsPage.totalPages > 0 && query.page > jobsPage.totalPages) {
+    redirect(jobsPageHref(query, jobsPage.totalPages));
   }
   const labels = [
     ...skills.map((skill) => ({ value: skill.slug, label: skill.name })),
@@ -53,19 +54,8 @@ export default async function SearchPage({
               aria-labelledby="jobs-heading"
               className="flex flex-col gap-4"
             >
-              <JobsHeader total={result?.total ?? null} />
-              {result ? (
-                <JobsFeed query={query} result={result} />
-              ) : (
-                <Card className="gap-2 rounded-card p-10 text-center ring-line">
-                  <p className="font-heading text-2xl text-ink">
-                    Jobs are not available right now
-                  </p>
-                  <p className="text-sm text-ink-muted">
-                    We could not load jobs. Please try again in a moment.
-                  </p>
-                </Card>
-              )}
+              <JobsHeader total={jobsPage.total} />
+              <JobsFeed query={query} result={jobsPage} />
             </section>
           </JobsResults>
         </div>
