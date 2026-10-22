@@ -1,7 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import type { CompanyDto } from './dto/company.dto.js';
+import type { CompanyProvider } from './dto/fetch-companies.dto.js';
 import { Company } from './entities/company.entity.js';
 import type {
   CompanySearchParams,
@@ -9,47 +11,14 @@ import type {
 } from './providers/company-data-provider.js';
 import { CompanyEnrichProvider } from './providers/company-enrich.provider.js';
 import { WikidataProvider } from './providers/wikidata.provider.js';
-
-/**
- * DTO for creating/updating a company.
- */
-export interface CreateCompanyDto {
-  name?: string | null;
-  legalName?: string | null;
-  domain?: string | null;
-  websiteUrl?: string | null;
-  companyType?: string | null;
-  description?: string | null;
-  numberOfEmployees?: number | null;
-  employeeRange?: string | null;
-  foundingYear?: number | null;
-}
-
-/**
- * DTO for company search results.
- */
-export interface CompanyDto {
-  id: string;
-  name: string | null;
-  legalName: string | null;
-  domain: string | null;
-  websiteUrl: string | null;
-  companyType: string | null;
-  description: string | null;
-  numberOfEmployees: number | null;
-  employeeRange: string | null;
-  foundingYear: number | null;
-  source: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { mergeAndDeduplicate } from './utils/merge-companies.js';
 
 /**
  * Options for fetching companies from external APIs.
  */
 export interface FetchCompaniesOptions {
   /** Which providers to use. Defaults to all available. */
-  providers?: ('wikidata' | 'company-enrich')[];
+  providers?: CompanyProvider[];
   /** Search parameters passed to each provider. */
   params: CompanySearchParams;
   /** Whether to merge results and deduplicate. Default: true. */
@@ -102,7 +71,7 @@ export class CompaniesService {
 
     // Merge and deduplicate if requested
     if (mergeResults && results.length > 0) {
-      return this.mergeAndDeduplicate(results);
+      return mergeAndDeduplicate(results);
     }
 
     return results;
@@ -178,8 +147,7 @@ export class CompaniesService {
         foundingYear: company.foundingYear ?? existingCompany.foundingYear,
         updatedAt: new Date(),
       });
-      const saved = await this.companiesRepository.save(existingCompany);
-      return this.toDto(saved, company.source);
+      return this.companiesRepository.save(existingCompany);
     }
 
     // Create new company
@@ -197,8 +165,7 @@ export class CompaniesService {
       updatedAt: new Date(),
     });
 
-    const saved = await this.companiesRepository.save(newCompany);
-    return this.toDto(saved, company.source);
+    return this.companiesRepository.save(newCompany);
   }
 
   /**
@@ -228,30 +195,29 @@ export class CompaniesService {
    * Get all companies from database.
    */
   async findAll(): Promise<CompanyDto[]> {
-    const companies = await this.companiesRepository.find();
-    return companies.map((c) => this.toDto(c, ''));
+    return this.companiesRepository.find();
   }
 
   /**
    * Get a company by ID.
    */
-  async findById(id: string): Promise<CompanyDto | null> {
+  async findById(id: string): Promise<CompanyDto> {
     const company = await this.companiesRepository.findOneBy({ id });
     if (!company) {
-      return null;
+      throw new NotFoundException(`Company "${id}" not found`);
     }
-    return this.toDto(company, '');
+    return company;
   }
 
   /**
    * Get a company by domain.
    */
-  async findByDomain(domain: string): Promise<CompanyDto | null> {
+  async findByDomain(domain: string): Promise<CompanyDto> {
     const company = await this.companiesRepository.findOneBy({ domain });
     if (!company) {
-      return null;
+      throw new NotFoundException(`Company with domain "${domain}" not found`);
     }
-    return this.toDto(company, '');
+    return company;
   }
 
   /**
@@ -313,74 +279,6 @@ export class CompaniesService {
       query.offset(params.offset);
     }
 
-    const companies = await query.getMany();
-    return companies.map((c) => this.toDto(c, ''));
-  }
-
-  /**
-   * Merge results from multiple providers and deduplicate by domain/website.
-   */
-  private mergeAndDeduplicate(
-    companies: NormalizedCompany[],
-  ): NormalizedCompany[] {
-    const seen = new Map<string, NormalizedCompany>();
-
-    for (const company of companies) {
-      // Use domain as the primary key for deduplication
-      const key = company.domain ?? company.websiteUrl ?? company.name;
-
-      if (!key) {
-        continue;
-      }
-
-      const existing = seen.get(key.toLowerCase());
-
-      if (!existing) {
-        // First time seeing this company
-        seen.set(key.toLowerCase(), company);
-      } else {
-        // Merge: prefer non-null values from the new company
-        const merged: NormalizedCompany = {
-          ...existing,
-          name: company.name ?? existing.name,
-          legalName: company.legalName ?? existing.legalName,
-          websiteUrl: company.websiteUrl ?? existing.websiteUrl,
-          companyType: company.companyType ?? existing.companyType,
-          description: company.description ?? existing.description,
-          numberOfEmployees:
-            company.numberOfEmployees ?? existing.numberOfEmployees,
-          employeeRange: company.employeeRange ?? existing.employeeRange,
-          foundingYear: company.foundingYear ?? existing.foundingYear,
-          // Prefer the first source for tracking
-          source: existing.source,
-          externalId: existing.externalId,
-          rawData: company.rawData,
-        };
-        seen.set(key.toLowerCase(), merged);
-      }
-    }
-
-    return Array.from(seen.values());
-  }
-
-  /**
-   * Convert Company entity to DTO.
-   */
-  private toDto(company: Company, source: string): CompanyDto {
-    return {
-      id: company.id,
-      name: company.name,
-      legalName: company.legalName,
-      domain: company.domain,
-      websiteUrl: company.websiteUrl,
-      companyType: company.companyType,
-      description: company.description,
-      numberOfEmployees: company.numberOfEmployees,
-      employeeRange: company.employeeRange,
-      foundingYear: company.foundingYear,
-      source,
-      createdAt: company.createdAt,
-      updatedAt: company.updatedAt,
-    };
+    return query.getMany();
   }
 }
