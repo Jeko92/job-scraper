@@ -1,4 +1,6 @@
 import {
+  type JobDetail,
+  jobDetailSchema,
   type JobsListResponse,
   jobsListResponseSchema,
   type JobsQuery,
@@ -20,4 +22,25 @@ export async function fetchJobsPage(
     throw new Error(`GET /jobs failed with status ${String(response.status)}`);
   }
   return jobsListResponseSchema.parse(await response.json());
+}
+
+/**
+ * Null when the job doesn't exist or the id is no UUID. Throws when not
+ * logged in, or when the backend fails or answers unexpectedly.
+ */
+export async function fetchJobDetail(id: string): Promise<JobDetail | null> {
+  const token = await requireAuthToken();
+  const response = await getFromBackend(
+    `/jobs/${encodeURIComponent(id)}`,
+    token,
+  );
+  if (response.status === 404 || response.status === 400) {
+    return null;
+  }
+  if (!response.ok) {
+    throw new Error(
+      `GET /jobs/:id failed with status ${String(response.status)}`,
+    );
+  }
+  return jobDetailSchema.parse(await response.json());
 }
