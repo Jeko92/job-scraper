@@ -53,17 +53,6 @@ export class JobsController {
     return this.jobsService.create(input);
   }
 
-  @Post('crawl/:companyId')
-  @ApiOperation({
-    summary:
-      "Crawl the company's website with AI and create the jobs found there",
-  })
-  crawl(
-    @Param('companyId', ParseUUIDPipe) companyId: string,
-  ): Promise<JobListItem[]> {
-    return this.jobsService.crawl(companyId);
-  }
-
   @Get()
   @ApiOperation({
     summary: 'List active jobs, newest first, filtered and paginated',
