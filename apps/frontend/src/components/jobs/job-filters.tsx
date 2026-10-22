@@ -89,7 +89,7 @@ export function JobFilters() {
       >
         <LookupFilter
           legend="Skills"
-          placeholder="Search a skill, e.g. React"
+          placeholder="e.g. React"
           selected={toOptions(query.skill)}
           max={MAX_FILTER_VALUES}
           search={searchSkillOptions}
@@ -103,7 +103,7 @@ export function JobFilters() {
         />
         <LookupFilter
           legend="Locations"
-          placeholder="Search a city or region"
+          placeholder="e.g. Berlin"
           selected={toOptions(query.locationId)}
           max={MAX_FILTER_VALUES}
           search={searchLocationOptions}

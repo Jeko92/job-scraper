@@ -49,6 +49,7 @@ export function JobCard({ job }: JobCardProps) {
         <p className="text-sm text-ink-muted">{skills}</p>
         <Link
           href={jobHref(job.id)}
+          aria-label={`View details for ${job.title}`}
           className={cn(
             buttonVariants({ size: 'lg' }),
             'ml-auto rounded-pill px-4 font-semibold',

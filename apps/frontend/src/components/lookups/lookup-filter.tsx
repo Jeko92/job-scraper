@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 import type { LookupOption, LookupSearchResult } from '@/lib/lookups/types';
-import { field, overline } from '@/lib/styles';
+import { field, fieldLabel, overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { FilterChip } from './filter-chip';
@@ -12,7 +12,9 @@ import { FilterChip } from './filter-chip';
 const SEARCH_DELAY_MS = 250;
 
 interface LookupFilterProps {
+  /** Group title, also used for the search label: "Skills" → "Search skills". */
   legend: string;
+  /** Example inside the search box, e.g. "e.g. React". */
   placeholder: string;
   /** Selected values (skill slugs, location ids) with their labels. */
   selected: LookupOption[];
@@ -42,6 +44,7 @@ export function LookupFilter({
   const [results, setResults] = useState<LookupOption[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [searchedFor, setSearchedFor] = useState('');
+  const inputId = useId();
 
   const term = text.trim();
 
@@ -77,6 +80,13 @@ export function LookupFilter({
       : results.filter(
           (option) => !selected.some((item) => item.value === option.value),
         );
+  const searched = term !== '' && searchedFor === term && error === null;
+  // Read out by screen readers whenever a search finishes.
+  const status = !searched
+    ? ''
+    : suggestions.length === 0
+      ? 'No matches'
+      : `${String(suggestions.length)} ${suggestions.length === 1 ? 'suggestion' : 'suggestions'}`;
 
   function close() {
     setOpen(false);
@@ -110,11 +120,14 @@ export function LookupFilter({
         </p>
       ) : open ? (
         <div className="flex flex-col gap-3">
+          <label htmlFor={inputId} className={fieldLabel}>
+            Search {legend.toLowerCase()}
+          </label>
           <Input
+            id={inputId}
             autoFocus
             value={text}
             placeholder={placeholder}
-            aria-label={placeholder}
             onChange={(event) => {
               setText(event.target.value);
             }}
@@ -140,12 +153,14 @@ export function LookupFilter({
               ))}
             </div>
           )}
-          {term !== '' &&
-            searchedFor === term &&
-            error === null &&
-            suggestions.length === 0 && (
-              <p className="text-sm text-ink-muted">No matches.</p>
-            )}
+          <p aria-live="polite" className="sr-only">
+            {status}
+          </p>
+          {searched && suggestions.length === 0 && (
+            <p aria-hidden="true" className="text-sm text-ink-muted">
+              No matches.
+            </p>
+          )}
           {error && (
             <p role="alert" className="text-sm text-destructive">
               {error}
