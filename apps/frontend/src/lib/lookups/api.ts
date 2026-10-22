@@ -7,7 +7,7 @@ import {
   skillSchema,
 } from '@job-scraper/shared';
 
-import { readAuthToken } from '@/lib/auth/auth-token';
+import { requireAuthToken } from '@/lib/auth/auth-token';
 import { getFromBackend } from '@/lib/backend';
 
 import { LOOKUP_SEARCH_LIMIT } from './types';
@@ -19,7 +19,7 @@ export async function fetchSkillsBySlugs(
   if (slugs === undefined || slugs.length === 0) {
     return [];
   }
-  const token = await requireToken();
+  const token = await requireAuthToken();
   const skills = await Promise.all(
     slugs.map(async (slug) => {
       try {
@@ -42,7 +42,7 @@ export async function fetchSkillsBySlugs(
 
 /** Throws when not logged in, or when the backend fails. */
 export async function searchSkills(search: string): Promise<Skill[]> {
-  const token = await requireToken();
+  const token = await requireAuthToken();
   const params = new URLSearchParams({
     search,
     limit: String(LOOKUP_SEARCH_LIMIT),
@@ -63,7 +63,7 @@ export async function fetchLocationsByIds(
   if (ids === undefined || ids.length === 0) {
     return [];
   }
-  const token = await requireToken();
+  const token = await requireAuthToken();
   const locations = await Promise.all(
     ids.map(async (id) => {
       try {
@@ -86,7 +86,7 @@ export async function fetchLocationsByIds(
 
 /** Throws when not logged in, or when the backend fails. */
 export async function searchLocations(search: string): Promise<Location[]> {
-  const token = await requireToken();
+  const token = await requireAuthToken();
   const params = new URLSearchParams({
     search,
     limit: String(LOOKUP_SEARCH_LIMIT),
@@ -101,12 +101,4 @@ export async function searchLocations(search: string): Promise<Location[]> {
     );
   }
   return locationListSchema.parse(await response.json());
-}
-
-async function requireToken(): Promise<string> {
-  const token = await readAuthToken();
-  if (token === undefined) {
-    throw new Error('Not logged in');
-  }
-  return token;
 }

@@ -4,7 +4,7 @@ import {
   type JobsQuery,
 } from '@job-scraper/shared';
 
-import { readAuthToken } from '@/lib/auth/auth-token';
+import { requireAuthToken } from '@/lib/auth/auth-token';
 import { getFromBackend } from '@/lib/backend';
 
 import { toJobsSearchParams } from './query-url';
@@ -13,11 +13,7 @@ import { toJobsSearchParams } from './query-url';
 export async function fetchJobsPage(
   query: JobsQuery,
 ): Promise<JobsListResponse> {
-  const token = await readAuthToken();
-  if (token === undefined) {
-    throw new Error('Not logged in');
-  }
-
+  const token = await requireAuthToken();
   const qs = toJobsSearchParams(query).toString();
   const response = await getFromBackend(`/jobs?${qs}`, token);
   if (!response.ok) {
