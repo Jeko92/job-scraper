@@ -26,14 +26,13 @@ import {
 } from '../dto/create-job.dto.js';
 import { Job } from '../entities/job.entity.js';
 import { JobsService } from '../jobs.service.js';
+import { nullable, strictFormat } from '../utils/json-schema.js';
+import { fetchPageText, fetchSitemapUrls } from '../utils/page-fetch.js';
+import { absoluteUrl, sameSite } from '../utils/url.js';
 
 /** Upper limit of generated tokens, including reasoning tokens. */
 const CRAWL_MAX_OUTPUT_TOKENS = 16_000;
-/** Page text sent to the model is cut off here to bound input tokens. */
-const CRAWL_MAX_PAGE_LENGTH = 60_000;
 const CRAWL_MAX_JOBS = 50;
-const CRAWL_MAX_SITEMAP_URLS = 500;
-const CRAWL_FETCH_TIMEOUT_MS = 15_000;
 /** Job listing pages fetched and extracted at the same time. */
 const CRAWL_CONCURRENCY = 5;
 
@@ -51,25 +50,6 @@ const CRAWL_INSTRUCTIONS = [
   'salaryMin, salaryMax: yearly gross amounts as numbers; salaryCurrency: ISO 4217 code.',
   'publishedAt: ISO 8601 date-time with offset.',
 ].join('\n');
-
-const nullable = (type: string, extra: Record<string, unknown> = {}) => ({
-  type: [type, 'null'],
-  ...extra,
-});
-
-const strictFormat = (
-  name: string,
-  properties: Record<string, unknown>,
-): AiOutputFormat => ({
-  name,
-  strict: true,
-  schema: {
-    type: 'object',
-    additionalProperties: false,
-    required: Object.keys(properties),
-    properties,
-  },
-});
 
 const CAREERS_PAGE_FORMAT = strictFormat('careers_page', {
   careersUrl: nullable('string'),
@@ -273,79 +253,5 @@ export class JobCrawlerService {
     }
     // The strict output format guarantees this shape.
     return JSON.parse(result.text) as T;
-  }
-}
-
-async function fetchPage(url: string): Promise<string> {
-  try {
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(CRAWL_FETCH_TIMEOUT_MS),
-    });
-    if (!response.ok) {
-      throw new Error(`${String(response.status)} ${response.statusText}`);
-    }
-    return await response.text();
-  } catch (error) {
-    throw new BadGatewayException(`Could not load "${url}"`, {
-      cause: error,
-    });
-  }
-}
-
-/** Loads a page as plain text; links stay visible as `label [url]`. */
-async function fetchPageText(url: string): Promise<string> {
-  const html = await fetchPage(url);
-  return html
-    .replace(/<(script|style|noscript|svg)\b[\s\S]*?<\/\1>/gi, ' ')
-    .replace(
-      /<a\b[^>]*?\bhref=["']([^"']*)["'][^>]*>([\s\S]*?)<\/a>/gi,
-      (_, href: string, label: string) => {
-        const link = absoluteUrl(href, url);
-        return link ? ` ${label} [${link}] ` : ` ${label} `;
-      },
-    )
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, CRAWL_MAX_PAGE_LENGTH);
-}
-
-/** URLs from `/sitemap.xml`; empty when the website has none. */
-async function fetchSitemapUrls(websiteUrl: string): Promise<string[]> {
-  const xml = await fetchPage(new URL('/sitemap.xml', websiteUrl).href).catch(
-    () => '',
-  );
-  return [...xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)]
-    .flatMap((match) => (match[1] ? [match[1]] : []))
-    .slice(0, CRAWL_MAX_SITEMAP_URLS);
-}
-
-/** Resolves `href` against `baseUrl`; only http(s) URLs, without `#hash`. */
-function absoluteUrl(href: string, baseUrl: string): string | null {
-  try {
-    const url = new URL(href, baseUrl);
-    url.hash = '';
-    return url.protocol === 'http:' || url.protocol === 'https:'
-      ? url.href
-      : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Matches URLs on the website's domain or its subdomains. */
-function sameSite(websiteUrl: string): (url: string) => boolean {
-  const site = hostOf(websiteUrl);
-  return (url) => {
-    const host = hostOf(url);
-    return host !== '' && (host === site || host.endsWith(`.${site}`));
-  };
-}
-
-function hostOf(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return '';
   }
 }
