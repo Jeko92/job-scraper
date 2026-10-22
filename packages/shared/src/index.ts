@@ -22,6 +22,8 @@ export {
   DEFAULT_JOBS_LIMIT,
   JOB_SORTS,
   type JobCompany,
+  type JobDetail,
+  jobDetailSchema,
   type JobListItem,
   jobListItemSchema,
   type JobSkill,

@@ -48,7 +48,7 @@ export interface JobListItem {
   skills: JobSkill[];
 }
 
-export const jobListItemSchema: z.ZodType<JobListItem> = z.object({
+const jobListItemObject = z.object({
   id: z.uuid(),
   title: z.string(),
   company: z.object({
@@ -73,7 +73,20 @@ export const jobListItemSchema: z.ZodType<JobListItem> = z.object({
   ),
 });
 
-// Job detail (#39) goes here.
+export const jobListItemSchema: z.ZodType<JobListItem> = jobListItemObject;
+
+// --- Detail ---------------------------------------------------------------
+
+export interface JobDetail extends JobListItem {
+  description: string | null;
+  /** Link to the original posting. */
+  sourceUrl: string;
+}
+
+export const jobDetailSchema: z.ZodType<JobDetail> = jobListItemObject.extend({
+  description: z.string().nullable(),
+  sourceUrl: z.url(),
+});
 
 // --- List response --------------------------------------------------------
 
