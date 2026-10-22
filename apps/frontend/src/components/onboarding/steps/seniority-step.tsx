@@ -7,7 +7,7 @@ import type { OnboardingAction } from '../onboarding-state';
 import { type Option, OptionList } from './common/option-list';
 import { StepShell } from './common/step-shell';
 
-const SENIORITY_LABELS: Record<SeniorityLevel, string> = {
+export const SENIORITY_LABELS: Record<SeniorityLevel, string> = {
   INTERN: 'Intern',
   JUNIOR: 'Junior',
   MID: 'Mid',

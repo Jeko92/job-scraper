@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 
 import { AUTH_COOKIE } from '@/lib/auth/cookie';
 import { patchToBackend, readErrorMessages } from '@/lib/backend';
-import { LOGIN_HREF, PROFILE_HREF } from '@/lib/routes';
+import { HOME_HREF, LOGIN_HREF } from '@/lib/routes';
 
 const SAVE_FAILED = "Couldn't save, try again";
 
@@ -52,5 +52,5 @@ export async function submitOnboarding(
     return { errors: [SAVE_FAILED] };
   }
 
-  redirect(PROFILE_HREF);
+  redirect(HOME_HREF);
 }

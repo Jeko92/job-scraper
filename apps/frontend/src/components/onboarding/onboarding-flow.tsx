@@ -18,6 +18,7 @@ import { ExperienceYearsStep } from './steps/experience-years-step';
 import { IndustriesStep } from './steps/industries-step';
 import { PreferenceLocationsStep } from './steps/preference-locations-step';
 import { RelocateStep } from './steps/relocate-step';
+import { ReviewStep } from './steps/review-step';
 import { SeniorityStep } from './steps/seniority-step';
 import { WelcomeStep } from './steps/welcome-step';
 import { WorkSetupStep } from './steps/work-setup-step';
@@ -107,6 +108,19 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
           }}
           onNext={() => {
             dispatch({ type: 'next' });
+          }}
+          onBack={() => {
+            dispatch({ type: 'back' });
+          }}
+        />
+      );
+    case 'review':
+      return (
+        <ReviewStep
+          answers={state.answers}
+          industries={industries}
+          onEdit={(step) => {
+            dispatch({ type: 'goTo', step });
           }}
           onBack={() => {
             dispatch({ type: 'back' });

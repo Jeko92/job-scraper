@@ -7,7 +7,7 @@ import type { OnboardingAction } from '../onboarding-state';
 import { type Option, OptionList } from './common/option-list';
 import { StepShell } from './common/step-shell';
 
-const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
+export const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
   FULL_TIME: 'Full-time',
   PART_TIME: 'Part-time',
   CONTRACT: 'Contract',
