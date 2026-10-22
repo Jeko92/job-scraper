@@ -1,7 +1,7 @@
 'use client';
 
-import type { UserProfile } from '@job-scraper/shared';
-import { type Dispatch, useReducer } from 'react';
+import type { Industry, UserProfile } from '@job-scraper/shared';
+import { type Dispatch, useReducer, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 
@@ -15,6 +15,7 @@ import {
 import { EmploymentStep } from './steps/employment-step';
 import { EssentialsStep } from './steps/essentials-step';
 import { ExperienceYearsStep } from './steps/experience-years-step';
+import { IndustriesStep } from './steps/industries-step';
 import { PreferenceLocationsStep } from './steps/preference-locations-step';
 import { RelocateStep } from './steps/relocate-step';
 import { SeniorityStep } from './steps/seniority-step';
@@ -30,6 +31,10 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     onboardingReducer,
     profile,
     createInitialState,
+  );
+  // The answers only hold slugs; and chips  need the names to display.
+  const [industries, setIndustries] = useState<Industry[]>(() =>
+    profile.industries.map(({ id, name, slug }) => ({ id, name, slug })),
   );
 
   switch (state.step) {
@@ -87,6 +92,25 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
         <ExperienceYearsStep
           value={state.answers.yearsExperience}
           dispatch={dispatch}
+        />
+      );
+    case 'industries':
+      return (
+        <IndustriesStep
+          selected={industries}
+          onChange={(next) => {
+            setIndustries(next);
+            dispatch({
+              type: 'answer',
+              patch: { industries: next.map((industry) => industry.slug) },
+            });
+          }}
+          onNext={() => {
+            dispatch({ type: 'next' });
+          }}
+          onBack={() => {
+            dispatch({ type: 'back' });
+          }}
         />
       );
     default:
