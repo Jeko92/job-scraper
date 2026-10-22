@@ -14,11 +14,13 @@ const MAX_YEARS = 30;
 const STEP = 0.5;
 
 interface ExperienceYearsStepProps {
+  number: number;
   value: number | null | undefined;
   dispatch: Dispatch<OnboardingAction>;
 }
 
 export function ExperienceYearsStep({
+  number,
   value,
   dispatch,
 }: ExperienceYearsStepProps) {
@@ -38,7 +40,7 @@ export function ExperienceYearsStep({
   return (
     <StepShell
       tag="Experience"
-      number={8}
+      number={number}
       title="How many years of experience do you have?"
       subtitle="Use − and + to set it. Half years are fine."
       onNext={next}

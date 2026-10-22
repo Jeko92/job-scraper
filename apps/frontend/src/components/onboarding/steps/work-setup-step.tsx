@@ -19,11 +19,12 @@ const OPTIONS: Option<RemotePreference>[] = REMOTE_PREFERENCES.map((setup) => ({
 }));
 
 interface WorkSetupStepProps {
+  number: number;
   value: RemotePreference | null | undefined;
   dispatch: Dispatch<OnboardingAction>;
 }
 
-export function WorkSetupStep({ value, dispatch }: WorkSetupStepProps) {
+export function WorkSetupStep({ number, value, dispatch }: WorkSetupStepProps) {
   function next() {
     dispatch({ type: 'next' });
   }
@@ -31,7 +32,7 @@ export function WorkSetupStep({ value, dispatch }: WorkSetupStepProps) {
   return (
     <StepShell
       tag="Work setup"
-      number={5}
+      number={number}
       title="How do you want to work?"
       subtitle="Pick one. You can change it later."
       nextDisabled={!value}

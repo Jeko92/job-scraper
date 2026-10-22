@@ -114,7 +114,7 @@ export function ReviewStep({
             label="Relocation places"
             value={answers.preferencesLocationIds?.join(', ')}
             onEdit={() => {
-              onEdit('preferenceLocations');
+              onEdit('relocate');
             }}
           />
         )}

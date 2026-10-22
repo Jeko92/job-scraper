@@ -7,16 +7,16 @@ import { Button } from '@/components/ui/button';
 
 import {
   createInitialState,
-  getSteps,
+  getQuestionNumber,
   type OnboardingAction,
   onboardingReducer,
   type OnboardingState,
+  STEPS,
 } from './onboarding-state';
 import { EmploymentStep } from './steps/employment-step';
 import { EssentialsStep } from './steps/essentials-step';
 import { ExperienceYearsStep } from './steps/experience-years-step';
 import { IndustriesStep } from './steps/industries-step';
-import { PreferenceLocationsStep } from './steps/preference-locations-step';
 import { RelocateStep } from './steps/relocate-step';
 import { ReviewStep } from './steps/review-step';
 import { SeniorityStep } from './steps/seniority-step';
@@ -37,6 +37,7 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
   const [industries, setIndustries] = useState<Industry[]>(() =>
     profile.industries.map(({ id, name, slug }) => ({ id, name, slug })),
   );
+  const number = getQuestionNumber(state.step);
 
   switch (state.step) {
     case 'welcome':
@@ -58,11 +59,16 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
       );
     case 'seniority':
       return (
-        <SeniorityStep value={state.answers.seniority} dispatch={dispatch} />
+        <SeniorityStep
+          number={number}
+          value={state.answers.seniority}
+          dispatch={dispatch}
+        />
       );
     case 'employment':
       return (
         <EmploymentStep
+          number={number}
           value={state.answers.preferences?.employmentType}
           dispatch={dispatch}
         />
@@ -70,6 +76,7 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     case 'workSetup':
       return (
         <WorkSetupStep
+          number={number}
           value={state.answers.preferences?.remotePreference}
           dispatch={dispatch}
         />
@@ -77,13 +84,8 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     case 'relocate':
       return (
         <RelocateStep
+          number={number}
           value={state.answers.preferences?.willingToRelocate}
-          dispatch={dispatch}
-        />
-      );
-    case 'preferenceLocations':
-      return (
-        <PreferenceLocationsStep
           locationIds={state.answers.preferencesLocationIds}
           dispatch={dispatch}
         />
@@ -91,6 +93,7 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     case 'experienceYears':
       return (
         <ExperienceYearsStep
+          number={number}
           value={state.answers.yearsExperience}
           dispatch={dispatch}
         />
@@ -98,6 +101,7 @@ export function OnboardingFlow({ profile }: OnboardingFlowProps) {
     case 'industries':
       return (
         <IndustriesStep
+          number={number}
           selected={industries}
           onChange={(next) => {
             setIndustries(next);
@@ -139,13 +143,12 @@ interface DebugViewProps {
 }
 
 function DebugView({ state, dispatch }: DebugViewProps) {
-  const steps = getSteps(state.answers);
-  const position = steps.indexOf(state.step) + 1;
+  const position = STEPS.indexOf(state.step) + 1;
 
   return (
     <div className="w-full max-w-2xl space-y-4">
       <p>
-        Step {position} of {steps.length}: <strong>{state.step}</strong>
+        Step {position} of {STEPS.length}: <strong>{state.step}</strong>
       </p>
 
       <div className="flex gap-2">

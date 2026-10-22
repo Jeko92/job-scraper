@@ -21,11 +21,12 @@ const OPTIONS: Option<SeniorityLevel>[] = SENIORITY_LEVELS.map((level) => ({
 }));
 
 interface SeniorityStepProps {
+  number: number;
   value: SeniorityLevel | null | undefined;
   dispatch: Dispatch<OnboardingAction>;
 }
 
-export function SeniorityStep({ value, dispatch }: SeniorityStepProps) {
+export function SeniorityStep({ number, value, dispatch }: SeniorityStepProps) {
   function next() {
     dispatch({ type: 'next' });
   }
@@ -33,7 +34,7 @@ export function SeniorityStep({ value, dispatch }: SeniorityStepProps) {
   return (
     <StepShell
       tag="Seniority"
-      number={3}
+      number={number}
       title="What's your seniority?"
       subtitle="Pick one. You can change it later."
       nextDisabled={!value}

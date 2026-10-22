@@ -10,20 +10,18 @@ export type Step =
   | 'employment'
   | 'workSetup'
   | 'relocate'
-  | 'preferenceLocations'
   | 'experienceYears'
   | 'skills'
   | 'industries'
   | 'review';
 
-const ALL_STEPS: Step[] = [
+export const STEPS: Step[] = [
   'welcome',
   'essentials',
   'seniority',
   'employment',
   'workSetup',
   'relocate',
-  'preferenceLocations',
   'experienceYears',
   'skills',
   'industries',
@@ -45,13 +43,10 @@ export type OnboardingAction =
   | { type: 'back' }
   | { type: 'goTo'; step: Step };
 
-//the user actually sees (Q6b only if they want to relocate)
-export function getSteps(answers: Answers): Step[] {
-  return ALL_STEPS.filter(
-    (step) =>
-      step !== 'preferenceLocations' ||
-      answers.preferences?.willingToRelocate === true,
-  );
+// Question number shown before the title ("3 →"). Welcome is no question but
+// Essentials holds two (Q1 and Q2), so the position + 1 matches the wireframe.
+export function getQuestionNumber(step: Step): number {
+  return STEPS.indexOf(step) + 1;
 }
 
 // Starting state, pre-filled from the saved profile
@@ -81,8 +76,7 @@ export function onboardingReducer(
       if (state.returnToReview) {
         return { ...state, step: 'review', returnToReview: false };
       }
-      const steps = getSteps(state.answers);
-      const next = steps[steps.indexOf(state.step) + 1];
+      const next = STEPS[STEPS.indexOf(state.step) + 1];
       return { ...state, step: next ?? 'review' };
     }
 
@@ -90,8 +84,7 @@ export function onboardingReducer(
       if (state.returnToReview) {
         return { ...state, step: 'review', returnToReview: false };
       }
-      const steps = getSteps(state.answers);
-      const previous = steps[steps.indexOf(state.step) - 1];
+      const previous = STEPS[STEPS.indexOf(state.step) - 1];
       return { ...state, step: previous ?? 'welcome' };
     }
 

@@ -21,11 +21,16 @@ const OPTIONS: Option<EmploymentType>[] = EMPLOYMENT_TYPES.map((type) => ({
 }));
 
 interface EmploymentStepProps {
+  number: number;
   value: EmploymentType | null | undefined;
   dispatch: Dispatch<OnboardingAction>;
 }
 
-export function EmploymentStep({ value, dispatch }: EmploymentStepProps) {
+export function EmploymentStep({
+  number,
+  value,
+  dispatch,
+}: EmploymentStepProps) {
   function next() {
     dispatch({ type: 'next' });
   }
@@ -33,7 +38,7 @@ export function EmploymentStep({ value, dispatch }: EmploymentStepProps) {
   return (
     <StepShell
       tag="Employment"
-      number={4}
+      number={number}
       title="What type of employment are you looking for?"
       subtitle="Pick one. You can change it later."
       nextDisabled={!value}

@@ -14,6 +14,7 @@ import { StepShell } from './common/step-shell';
 const SEARCH_DELAY_MS = 250;
 
 interface IndustriesStepProps {
+  number: number;
   selected: Industry[];
   onChange: (industries: Industry[]) => void;
   onNext: () => void;
@@ -21,6 +22,7 @@ interface IndustriesStepProps {
 }
 
 export function IndustriesStep({
+  number,
   selected,
   onChange,
   onNext,
@@ -62,7 +64,7 @@ export function IndustriesStep({
   return (
     <StepShell
       tag="Industries"
-      number={10}
+      number={number}
       title="Which industries interest you?"
       subtitle={`Pick up to ${String(MAX_PROFILE_INDUSTRIES)}. The first one is the most important.`}
       onNext={onNext}
