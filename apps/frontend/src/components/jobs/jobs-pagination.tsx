@@ -12,7 +12,8 @@ import {
   PaginationEllipsis,
   PaginationItem,
 } from '@/components/ui/pagination';
-import { getPageWindow, jobsPageHref } from '@/lib/jobs/search-params';
+import { getPageWindow } from '@/lib/jobs/pagination';
+import { jobsPageHref } from '@/lib/jobs/query-url';
 
 interface JobsPaginationProps {
   query: JobsQuery;

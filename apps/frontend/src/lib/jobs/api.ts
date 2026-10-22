@@ -7,7 +7,7 @@ import {
 import { readAuthToken } from '@/lib/auth/auth-token';
 import { getFromBackend } from '@/lib/backend';
 
-import { toJobsSearchParams } from './search-params';
+import { toJobsSearchParams } from './query-url';
 
 /** Throws when not logged in, or when the backend fails or answers unexpectedly. */
 export async function fetchJobsPage(

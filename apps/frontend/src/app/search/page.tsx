@@ -11,7 +11,7 @@ import {
 import { Card } from '@/components/ui/card';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
-import { jobsPageHref, parseJobsQuery } from '@/lib/jobs/search-params';
+import { jobsPageHref, parseJobsQuery } from '@/lib/jobs/query-url';
 import {
   fetchLocationsByIds,
   fetchSkillsBySlugs,

@@ -18,12 +18,10 @@ import {
   REMOTE_PREFERENCE_LABELS,
 } from '@/lib/jobs/format';
 import {
-  addLocation,
-  addSkill,
-  removeLocation,
-  removeSkill,
-  toggleValue,
-} from '@/lib/jobs/search-params';
+  addFilterValue,
+  removeFilterValue,
+  toggleFilterValue,
+} from '@/lib/jobs/query-filters';
 import {
   searchLocationOptions,
   searchSkillOptions,
@@ -97,10 +95,10 @@ export function JobFilters() {
           search={searchSkillOptions}
           onAdd={(option) => {
             rememberLabel(option);
-            applyQuery(addSkill(query, option.value));
+            applyQuery(addFilterValue(query, 'skill', option.value));
           }}
           onRemove={(slug) => {
-            applyQuery(removeSkill(query, slug));
+            applyQuery(removeFilterValue(query, 'skill', slug));
           }}
         />
         <LookupFilter
@@ -111,10 +109,10 @@ export function JobFilters() {
           search={searchLocationOptions}
           onAdd={(option) => {
             rememberLabel(option);
-            applyQuery(addLocation(query, option.value));
+            applyQuery(addFilterValue(query, 'locationId', option.value));
           }}
           onRemove={(id) => {
-            applyQuery(removeLocation(query, id));
+            applyQuery(removeFilterValue(query, 'locationId', id));
           }}
         />
         <CheckboxGroup
@@ -125,10 +123,7 @@ export function JobFilters() {
           }))}
           selected={query.workplaceType}
           onToggle={(value) => {
-            applyQuery({
-              ...query,
-              workplaceType: toggleValue(query.workplaceType, value),
-            });
+            applyQuery(toggleFilterValue(query, 'workplaceType', value));
           }}
         />
         <CheckboxGroup
@@ -139,10 +134,7 @@ export function JobFilters() {
           }))}
           selected={query.employmentType}
           onToggle={(value) => {
-            applyQuery({
-              ...query,
-              employmentType: toggleValue(query.employmentType, value),
-            });
+            applyQuery(toggleFilterValue(query, 'employmentType', value));
           }}
         />
         <NumberSelect

@@ -12,11 +12,7 @@ import {
   JOB_SORT_LABELS,
   REMOTE_PREFERENCE_LABELS,
 } from '@/lib/jobs/format';
-import {
-  removeLocation,
-  removeSkill,
-  toggleValue,
-} from '@/lib/jobs/search-params';
+import { removeFilterValue } from '@/lib/jobs/query-filters';
 
 import { FieldSelect } from './field-select';
 import { useJobsSearch } from './jobs-search-provider';
@@ -105,28 +101,22 @@ function getActiveFilters(
     ...(query.skill ?? []).map((slug) => ({
       key: `skill:${slug}`,
       label: labelFor(slug),
-      without: removeSkill(query, slug),
+      without: removeFilterValue(query, 'skill', slug),
     })),
     ...(query.locationId ?? []).map((id) => ({
       key: `locationId:${id}`,
       label: labelFor(id),
-      without: removeLocation(query, id),
+      without: removeFilterValue(query, 'locationId', id),
     })),
     ...(query.workplaceType ?? []).map((value) => ({
       key: `workplaceType:${value}`,
       label: REMOTE_PREFERENCE_LABELS[value],
-      without: {
-        ...query,
-        workplaceType: toggleValue(query.workplaceType, value),
-      },
+      without: removeFilterValue(query, 'workplaceType', value),
     })),
     ...(query.employmentType ?? []).map((value) => ({
       key: `employmentType:${value}`,
       label: EMPLOYMENT_TYPE_LABELS[value],
-      without: {
-        ...query,
-        employmentType: toggleValue(query.employmentType, value),
-      },
+      without: removeFilterValue(query, 'employmentType', value),
     })),
   ];
   if (query.postedWithinDays !== undefined) {

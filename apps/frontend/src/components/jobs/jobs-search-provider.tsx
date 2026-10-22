@@ -11,7 +11,7 @@ import {
   useTransition,
 } from 'react';
 
-import { toJobsSearchParams } from '@/lib/jobs/search-params';
+import { toJobsSearchParams } from '@/lib/jobs/query-url';
 import type { LookupOption } from '@/lib/lookups/types';
 import { SEARCH_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
