@@ -42,45 +42,45 @@ export function JobFilters() {
     return (values ?? []).map((value) => ({ value, label: labelFor(value) }));
   }
 
+  const filtersPill = (
+    <span className="inline-flex items-center gap-2 rounded-chip border border-line px-3 py-1.5 text-sm text-ink shadow-sm">
+      <LogoMark className="size-4" />
+      Filters
+    </span>
+  );
+
   return (
     <aside
       aria-label="Job filters"
       className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6"
     >
-      <div className="flex items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-2 rounded-chip border border-line px-3 py-1.5 text-sm text-ink shadow-sm">
-          <LogoMark className="size-4" />
-          Filters
-        </span>
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => {
-              applyQuery({ sort: query.sort, page: 1, limit: query.limit });
-            }}
-            className="text-sm text-ink-muted transition-colors hover:text-ink"
-          >
-            Reset
-          </button>
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls={bodyId}
-            aria-label={open ? 'Hide filters' : 'Show filters'}
-            onClick={() => {
-              setOpen((current) => !current);
-            }}
-            className="text-ink lg:hidden"
-          >
-            <ChevronDown
-              className={cn(
-                'size-5 transition-transform',
-                open && 'rotate-180',
-              )}
-              aria-hidden="true"
-            />
-          </button>
-        </div>
+      <div className="flex items-center justify-between gap-4">
+        {/* Phones: the whole header opens and closes the filters. */}
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={bodyId}
+          onClick={() => {
+            setOpen((current) => !current);
+          }}
+          className="flex flex-1 items-center justify-between gap-3 text-ink lg:hidden"
+        >
+          {filtersPill}
+          <ChevronDown
+            className={cn('size-5 transition-transform', open && 'rotate-180')}
+            aria-hidden="true"
+          />
+        </button>
+        <div className="hidden lg:block">{filtersPill}</div>
+        <button
+          type="button"
+          onClick={() => {
+            applyQuery({ sort: query.sort, page: 1, limit: query.limit });
+          }}
+          className="text-sm text-ink-muted transition-colors hover:text-ink"
+        >
+          Reset
+        </button>
       </div>
 
       <div
@@ -137,12 +137,8 @@ export function JobFilters() {
             applyQuery(toggleFilterValue(query, 'employmentType', value));
           }}
         />
-        <NumberSelect
-          label="Posted"
-          anyLabel="Any time"
+        <PostedWithinSelect
           value={query.postedWithinDays}
-          options={POSTED_WITHIN_OPTIONS}
-          format={formatPostedWithin}
           onChange={(postedWithinDays) => {
             applyQuery({ ...query, postedWithinDays });
           }}
@@ -187,36 +183,26 @@ function CheckboxGroup<T extends string>({
   );
 }
 
-interface NumberSelectProps {
-  label: string;
-  anyLabel: string;
+interface PostedWithinSelectProps {
+  /** Days; undefined means any time. */
   value: number | undefined;
-  options: readonly number[];
-  format: (value: number) => string;
   onChange: (value: number | undefined) => void;
 }
 
-function NumberSelect({
-  label,
-  anyLabel,
-  value,
-  options,
-  format,
-  onChange,
-}: NumberSelectProps) {
+function PostedWithinSelect({ value, onChange }: PostedWithinSelectProps) {
   // Keep a value from the URL selectable even when it is not a preset.
-  const values =
-    value === undefined || options.includes(value)
-      ? options
-      : [...options, value].sort((a, b) => a - b);
+  const days: readonly number[] =
+    value === undefined || POSTED_WITHIN_OPTIONS.some((day) => day === value)
+      ? POSTED_WITHIN_OPTIONS
+      : [...POSTED_WITHIN_OPTIONS, value].sort((a, b) => a - b);
   const items = [
-    { value: null, label: anyLabel },
-    ...values.map((option) => ({ value: option, label: format(option) })),
+    { value: null, label: 'Any time' },
+    ...days.map((day) => ({ value: day, label: formatPostedWithin(day) })),
   ];
 
   return (
     <FieldSelect
-      label={label}
+      label="Posted"
       items={items}
       value={value ?? null}
       onChange={(next) => {
