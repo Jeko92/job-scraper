@@ -1,4 +1,4 @@
-import type { Location, Skill } from '@job-scraper/shared';
+import type { Industry, Location, Skill } from '@job-scraper/shared';
 
 import type { LookupOption } from './types';
 
@@ -13,4 +13,8 @@ export function toLocationOption(location: Location): LookupOption {
       ? [location.city, location.countryCode].filter(Boolean).join(', ')
       : (location.stateName ?? location.countryName ?? 'Unknown location');
   return { value: location.id, label };
+}
+
+export function toIndustryOption(industry: Industry): LookupOption {
+  return { value: industry.slug, label: industry.name };
 }
