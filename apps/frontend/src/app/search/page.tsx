@@ -9,11 +9,8 @@ import { PendingResults } from '@/components/jobs/pending-results';
 import { getSession } from '@/lib/auth/session';
 import { fetchJobsPage } from '@/lib/jobs/api';
 import { jobsPageHref, parseJobsQuery } from '@/lib/jobs/query-url';
-import {
-  fetchLocationsByIds,
-  fetchSkillsBySlugs,
-  toLocationOption,
-} from '@/lib/lookups/api';
+import { fetchLocationsByIds, fetchSkillsBySlugs } from '@/lib/lookups/api';
+import { toLocationOption, toSkillOption } from '@/lib/lookups/options';
 import { LOGIN_HREF } from '@/lib/routes';
 
 export const metadata: Metadata = { title: 'Search' };
@@ -38,7 +35,7 @@ export default async function SearchPage({
     redirect(jobsPageHref(query, jobsPage.totalPages));
   }
   const labels = [
-    ...skills.map((skill) => ({ value: skill.slug, label: skill.name })),
+    ...skills.map(toSkillOption),
     ...locations.map(toLocationOption),
   ];
 

@@ -2,7 +2,8 @@
 
 import { locationsQuerySchema, skillsQuerySchema } from '@job-scraper/shared';
 
-import { searchLocations, searchSkills, toLocationOption } from './api';
+import { searchLocations, searchSkills } from './api';
+import { toLocationOption, toSkillOption } from './options';
 import { LOOKUP_SEARCH_LIMIT, type LookupSearchResult } from './types';
 
 export async function searchSkillOptions(
@@ -18,12 +19,7 @@ export async function searchSkillOptions(
 
   try {
     const skills = await searchSkills(parsed.data.search);
-    return {
-      options: skills.map((skill) => ({
-        value: skill.slug,
-        label: skill.name,
-      })),
-    };
+    return { options: skills.map(toSkillOption) };
   } catch {
     return { error: 'Could not search skills. Please try again.' };
   }

@@ -10,7 +10,7 @@ import {
 import { readAuthToken } from '@/lib/auth/auth-token';
 import { getFromBackend } from '@/lib/backend';
 
-import { LOOKUP_SEARCH_LIMIT, type LookupOption } from './types';
+import { LOOKUP_SEARCH_LIMIT } from './types';
 
 /** Skills by slug, e.g. for chip labels; unknown slugs are left out. */
 export async function fetchSkillsBySlugs(
@@ -101,15 +101,6 @@ export async function searchLocations(search: string): Promise<Location[]> {
     );
   }
   return locationListSchema.parse(await response.json());
-}
-
-/** "Berlin, DE"; a region or country when there is no city. */
-export function toLocationOption(location: Location): LookupOption {
-  const label =
-    location.city !== null
-      ? [location.city, location.countryCode].filter(Boolean).join(', ')
-      : (location.stateName ?? location.countryName ?? 'Unknown location');
-  return { value: location.id, label };
 }
 
 async function requireToken(): Promise<string> {
