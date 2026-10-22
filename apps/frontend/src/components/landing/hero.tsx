@@ -2,16 +2,10 @@ import { ChevronDown, Circle } from 'lucide-react';
 
 import { AnimatedLogoMark } from '@/components/brand/animated-logo-mark';
 import { Logo } from '@/components/brand/logo';
+import { field, fieldLabel, overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { GlowPanel } from './glow-panel';
-
-const overline = 'text-xs leading-4 font-semibold tracking-widest uppercase';
-
-const fieldLabel = 'text-sm text-ink-muted';
-
-const field =
-  'flex h-12 items-center rounded-card border border-line bg-surface px-4 text-ink';
 
 export function Hero() {
   return (
