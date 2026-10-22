@@ -1,6 +1,10 @@
 'use client';
 
-import { EMPLOYMENT_TYPES, REMOTE_PREFERENCES } from '@job-scraper/shared';
+import {
+  EMPLOYMENT_TYPES,
+  MAX_FILTER_VALUES,
+  REMOTE_PREFERENCES,
+} from '@job-scraper/shared';
 import { ChevronDown } from 'lucide-react';
 import { useId, useState } from 'react';
 
@@ -16,8 +20,6 @@ import {
 import {
   addLocation,
   addSkill,
-  MAX_LOCATIONS,
-  MAX_SKILLS,
   removeLocation,
   removeSkill,
   toggleValue,
@@ -91,7 +93,7 @@ export function JobFilters() {
           legend="Skills"
           placeholder="Search a skill, e.g. React"
           selected={toOptions(query.skill)}
-          max={MAX_SKILLS}
+          max={MAX_FILTER_VALUES}
           search={searchSkillOptions}
           onAdd={(option) => {
             rememberLabel(option);
@@ -105,7 +107,7 @@ export function JobFilters() {
           legend="Locations"
           placeholder="Search a city or region"
           selected={toOptions(query.locationId)}
-          max={MAX_LOCATIONS}
+          max={MAX_FILTER_VALUES}
           search={searchLocationOptions}
           onAdd={(option) => {
             rememberLabel(option);

@@ -2,6 +2,7 @@ import {
   DEFAULT_JOBS_LIMIT,
   type JobsQuery,
   jobsQuerySchema,
+  MAX_FILTER_VALUES,
 } from '@job-scraper/shared';
 
 import { SEARCH_HREF } from '@/lib/routes';
@@ -15,10 +16,23 @@ const ARRAY_KEYS = [
   'skill',
 ] as const satisfies readonly (keyof JobsQuery)[];
 
-/** Invalid search params fall back to the default query. */
+/**
+ * Invalid search params are dropped one by one, so e.g. too many skills in a
+ * shared link only removes the skill filter and keeps the others.
+ */
 export function parseJobsQuery(params: RawSearchParams): JobsQuery {
   const parsed = jobsQuerySchema.safeParse(params);
-  return parsed.success ? parsed.data : jobsQuerySchema.parse({});
+  if (parsed.success) {
+    return parsed.data;
+  }
+  const invalidKeys = new Set(
+    parsed.error.issues.map((issue) => issue.path[0]),
+  );
+  const validParams = Object.fromEntries(
+    Object.entries(params).filter(([key]) => !invalidKeys.has(key)),
+  );
+  const retried = jobsQuerySchema.safeParse(validParams);
+  return retried.success ? retried.data : jobsQuerySchema.parse({});
 }
 
 /** Repeats keys for arrays and leaves out defaults. */
@@ -89,12 +103,10 @@ export function getPageWindow(
   return items;
 }
 
-export const MAX_SKILLS = 10;
-
 /** Appends the skill slug, unless it is already there or the list is full. */
 export function addSkill(query: JobsQuery, slug: string): JobsQuery {
   const skills = query.skill ?? [];
-  if (skills.includes(slug) || skills.length >= MAX_SKILLS) {
+  if (skills.includes(slug) || skills.length >= MAX_FILTER_VALUES) {
     return query;
   }
   return { ...query, skill: [...skills, slug] };
@@ -106,12 +118,10 @@ export function removeSkill(query: JobsQuery, slug: string): JobsQuery {
   return { ...query, skill: skills.length > 0 ? skills : undefined };
 }
 
-export const MAX_LOCATIONS = 5;
-
 /** Appends the location id, unless it is already there or the list is full. */
 export function addLocation(query: JobsQuery, id: string): JobsQuery {
   const locations = query.locationId ?? [];
-  if (locations.includes(id) || locations.length >= MAX_LOCATIONS) {
+  if (locations.includes(id) || locations.length >= MAX_FILTER_VALUES) {
     return query;
   }
   return { ...query, locationId: [...locations, id] };

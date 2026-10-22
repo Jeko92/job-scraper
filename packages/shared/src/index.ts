@@ -31,6 +31,7 @@ export {
   jobSortSchema,
   type JobsQuery,
   jobsQuerySchema,
+  MAX_FILTER_VALUES,
   MAX_JOBS_LIMIT,
 } from './jobs';
 export {

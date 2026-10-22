@@ -10,7 +10,8 @@ import {
 
 export const DEFAULT_JOBS_LIMIT = 20;
 export const MAX_JOBS_LIMIT = 100;
-const MAX_FILTER_VALUES = 20;
+/** Most values per list filter, e.g. skills or locations. */
+export const MAX_FILTER_VALUES = 10;
 
 export const JOB_SORTS = ['newest', 'oldest'] as const;
 export type JobSort = (typeof JOB_SORTS)[number];
