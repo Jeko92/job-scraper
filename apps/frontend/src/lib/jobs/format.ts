@@ -62,15 +62,20 @@ export function formatPostedAt(iso: string, now: number = Date.now()): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+/** City, or the country when the city is unknown. */
+export function formatJobLocation(job: JobListItem): string | null {
+  return job.location?.city ?? job.location?.countryName ?? null;
+}
+
 /** "Company · City · Work mode · Contract" */
 export function formatJobMeta(job: JobListItem): string {
   return [
     job.company.name ?? job.company.domain,
-    job.location?.city ?? job.location?.countryName,
+    formatJobLocation(job),
     job.workplaceType && REMOTE_PREFERENCE_LABELS[job.workplaceType],
     job.employmentType && EMPLOYMENT_TYPE_LABELS[job.employmentType],
   ]
-    .filter((part) => part !== null && part !== undefined && part !== '')
+    .filter((part) => part !== null && part !== '')
     .join(' · ');
 }
 

@@ -42,5 +42,7 @@ export async function fetchJobDetail(id: string): Promise<JobDetail | null> {
       `GET /jobs/:id failed with status ${String(response.status)}`,
     );
   }
-  return jobDetailSchema.parse(await response.json());
+  // The backend doesn't send `description` yet (#39); its value wins once it does.
+  const json = (await response.json()) as object;
+  return jobDetailSchema.parse({ description: null, ...json });
 }
