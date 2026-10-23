@@ -5,71 +5,31 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Query,
   StandardSchemaValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 
-import type { CompanyDto } from './companies.service.js';
 import { CompaniesService } from './companies.service.js';
+import type { CompanyDto } from './dto/company.dto.js';
+import {
+  type CreateCompanyRequest,
+  createCompanySchema,
+} from './dto/create-company.dto.js';
+import {
+  type FetchCompaniesQuery,
+  fetchCompaniesQuerySchema,
+} from './dto/fetch-companies.dto.js';
+import {
+  companySearchBodySchema,
+  companySearchQuerySchema,
+} from './dto/search-companies.dto.js';
 import type {
   CompanySearchParams,
   NormalizedCompany,
 } from './providers/company-data-provider.js';
-
-// Zod schemas for request validation
-export const companySearchParamsSchema = z.object({
-  query: z.string().optional().nullable(),
-  location: z.string().optional().nullable(),
-  industry: z.string().optional().nullable(),
-  minEmployees: z.number().int().positive().optional().nullable(),
-  maxEmployees: z.number().int().positive().optional().nullable(),
-  foundedAfter: z.number().int().positive().optional().nullable(),
-  foundedBefore: z.number().int().positive().optional().nullable(),
-  limit: z.number().int().positive().max(100).default(20),
-  offset: z.number().int().nonnegative().default(0),
-});
-
-export const fetchCompaniesOptionsSchema = z.object({
-  providers: z
-    .array(z.enum(['wikidata', 'company-enrich'] as const))
-    .default(['wikidata', 'company-enrich']),
-  mergeResults: z.boolean().default(true),
-  saveToDatabase: z.boolean().default(false),
-});
-
-export const createCompanySchema = z.object({
-  name: z.string().nullable().optional(),
-  legalName: z.string().nullable().optional(),
-  domain: z.string().nullable().optional(),
-  websiteUrl: z.string().nullable().optional(),
-  companyType: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
-  numberOfEmployees: z.number().int().positive().nullable().optional(),
-  employeeRange: z.string().nullable().optional(),
-  foundingYear: z.number().int().positive().nullable().optional(),
-});
-
-/**
- * Map the validated request body to CompanySearchParams, dropping null values.
- */
-function toSearchParams(
-  params: z.infer<typeof companySearchParamsSchema>,
-): CompanySearchParams {
-  return {
-    query: params.query ?? undefined,
-    location: params.location ?? undefined,
-    industry: params.industry ?? undefined,
-    minEmployees: params.minEmployees ?? undefined,
-    maxEmployees: params.maxEmployees ?? undefined,
-    foundedAfter: params.foundedAfter ?? undefined,
-    foundedBefore: params.foundedBefore ?? undefined,
-    limit: params.limit,
-    offset: params.offset,
-  };
-}
 
 @ApiTags('companies')
 @ApiBearerAuth()
@@ -89,7 +49,7 @@ export class CompaniesController {
   @HttpCode(HttpStatus.OK)
   async search(
     @Query({
-      schema: companySearchParamsSchema,
+      schema: companySearchQuerySchema,
       pipes: [StandardSchemaValidationPipe],
     })
     params: CompanySearchParams,
@@ -100,16 +60,14 @@ export class CompaniesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a company by its ID' })
   @HttpCode(HttpStatus.OK)
-  async findById(@Param('id') id: string): Promise<CompanyDto | null> {
+  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<CompanyDto> {
     return this.companiesService.findById(id);
   }
 
   @Get('domain/:domain')
   @ApiOperation({ summary: 'Get a company by its domain' })
   @HttpCode(HttpStatus.OK)
-  async findByDomain(
-    @Param('domain') domain: string,
-  ): Promise<CompanyDto | null> {
+  async findByDomain(@Param('domain') domain: string): Promise<CompanyDto> {
     return this.companiesService.findByDomain(domain);
   }
 
@@ -123,19 +81,19 @@ export class CompaniesController {
   @HttpCode(HttpStatus.OK)
   async fetchFromApis(
     @Query({
-      schema: fetchCompaniesOptionsSchema,
+      schema: fetchCompaniesQuerySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    options: z.infer<typeof fetchCompaniesOptionsSchema>,
+    options: FetchCompaniesQuery,
     @Body({
-      schema: companySearchParamsSchema,
+      schema: companySearchBodySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    params: z.infer<typeof companySearchParamsSchema>,
+    params: CompanySearchParams,
   ): Promise<NormalizedCompany[]> {
     return this.companiesService.fetchFromApis({
       ...options,
-      params: toSearchParams(params),
+      params: params,
     });
   }
 
@@ -147,12 +105,12 @@ export class CompaniesController {
   @HttpCode(HttpStatus.OK)
   async fetchFromWikidata(
     @Body({
-      schema: companySearchParamsSchema,
+      schema: companySearchBodySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    params: z.infer<typeof companySearchParamsSchema>,
+    params: CompanySearchParams,
   ): Promise<NormalizedCompany[]> {
-    return this.companiesService.fetchFromWikidata(toSearchParams(params));
+    return this.companiesService.fetchFromWikidata(params);
   }
 
   @Post('fetch/company-enrich')
@@ -163,12 +121,12 @@ export class CompaniesController {
   @HttpCode(HttpStatus.OK)
   async fetchFromCompanyEnrich(
     @Body({
-      schema: companySearchParamsSchema,
+      schema: companySearchBodySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    params: z.infer<typeof companySearchParamsSchema>,
+    params: CompanySearchParams,
   ): Promise<NormalizedCompany[]> {
-    return this.companiesService.fetchFromCompanyEnrich(toSearchParams(params));
+    return this.companiesService.fetchFromCompanyEnrich(params);
   }
 
   @Post()
@@ -179,7 +137,7 @@ export class CompaniesController {
       schema: createCompanySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    dto: z.infer<typeof createCompanySchema>,
+    dto: CreateCompanyRequest,
   ): Promise<CompanyDto> {
     // For direct creation, we create a normalized company manually
     const normalized = {
@@ -208,19 +166,19 @@ export class CompaniesController {
   @HttpCode(HttpStatus.OK)
   async refresh(
     @Query({
-      schema: fetchCompaniesOptionsSchema,
+      schema: fetchCompaniesQuerySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    options: z.infer<typeof fetchCompaniesOptionsSchema>,
+    options: FetchCompaniesQuery,
     @Body({
-      schema: companySearchParamsSchema,
+      schema: companySearchBodySchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    params: z.infer<typeof companySearchParamsSchema>,
+    params: CompanySearchParams,
   ): Promise<CompanyDto[]> {
     const companies = await this.companiesService.fetchFromApis({
       ...options,
-      params: toSearchParams(params),
+      params: params,
       saveToDatabase: true, // Always save when using refresh endpoint
     });
 
