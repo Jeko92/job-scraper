@@ -37,12 +37,19 @@ The form fields reuse the onboarding step components where they fit.
 
 ## Rationale
 
-* Platform guidelines (Material, Apple HIG, Fluent) apply changes instantly
-  for single settings. Forms with several related fields use an explicit
-  Save/Done.
-* WCAG 2.2 SC 3.3.4 (Error Prevention) asks that changes to user data are
-  reversible, checked or confirmed. Save/Cancel meets this without an extra
-  undo feature.
+* Material Design 3 uses a confirm action (Save) and a dismiss action
+  (Cancel) for edits that need several fields, like a calendar entry. Each
+  profile section is that kind of edit.
+* Microsoft's settings guidelines say a single setting (a toggle, a
+  dropdown) should apply at once, without a confirm button. That is why
+  instant save for toggles was considered; it was rejected to keep one save
+  model on the page.
+* Apple HIG asks to warn before closing a view when user input could be
+  lost. This is the unsaved-changes warning in Consequences.
+* WCAG 2.2 SC 3.3.4 (Error Prevention) does not require Save/Cancel for
+  simple edits of user data; it targets bigger loss, like deleting a
+  record. Save/Cancel still lets users check an edit before it is stored,
+  which fits the intent of the rule.
 * The backend PATCH already accepts partial updates, so a per-section save
   needs no backend change.
 * One request per section keeps list updates in order and validation in one
@@ -52,8 +59,27 @@ The form fields reuse the onboarding step components where they fit.
 
 ## Consequences
 
-* Leaving the page with an open card loses the draft. Warn the user with
-  `beforeunload` while a card has unsaved changes.
+* Leaving the page with an open card loses the draft. To prevent this, the
+  page listens to the browser's `beforeunload` event while a card has
+  unsaved changes.
+  * What it is: a built-in browser event that fires just before the page
+    is unloaded (tab closed, page reloaded, new URL typed, leaving the
+    site). If the handler calls `event.preventDefault()`, the browser shows
+    its own "Leave site? Changes you made may not be saved." dialog. The
+    text cannot be changed.
+  * Why: it is the standard way to stop users from losing an edit by
+    accident, and it needs no dependency.
+  * MVP: yes. It is easy to implement: one `useEffect` that adds the
+    listener while a card is dirty and removes it on Save or Cancel.
+  * Reference: <https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event>
+* `beforeunload` only fires when the tab closes or reloads. Clicking an
+  in-app link (Next.js client navigation) does not trigger it, so the draft
+  is lost without a warning unless the app checks for an open card first.
+  Not in the MVP: the App Router has no built-in way to block navigation,
+  so this needs a custom guard on the nav links. Add it later if users
+  lose edits this way.
+* Changing a single toggle takes three clicks (Edit, toggle, Save) instead
+  of one. Accepted to keep one save model on the page.
 * Save must not clear the headline or location, otherwise
   `onboardingCompleted` becomes false.
 * Save and error status messages use `aria-live` (WCAG 4.1.3).
@@ -64,4 +90,15 @@ The form fields reuse the onboarding step components where they fit.
 * Wireframe: `doc/wireframes/profile-wireframe.md`.
 * Endpoint: `PATCH /users/me/profile` in
   `apps/backend/src/users/user-profile.controller.ts`.
+* Sources:
+  * Material Design 3, Dialogs:
+    <https://m3.material.io/components/dialogs/guidelines>
+  * Microsoft, Guidelines for app settings:
+    <https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings>
+  * Apple HIG, Modality:
+    <https://developer.apple.com/design/human-interface-guidelines/modality>
+  * WCAG 2.2, SC 3.3.4 Error Prevention:
+    <https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html>
+  * WCAG 2.2, SC 4.1.3 Status Messages:
+    <https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html>
 
