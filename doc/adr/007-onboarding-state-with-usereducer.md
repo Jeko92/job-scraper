@@ -49,6 +49,6 @@ dependency.
 
 ## Notes
 
-* Flow: `doc/onboarding-wireframe.md`.
+* Flow: `doc/wireframes/onboarding-wireframe.md`.
 * After login, users go to `/onboarding`; finished users are redirected to
   `/profile`.
