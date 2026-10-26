@@ -3,6 +3,8 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import { SEARCH_HREF } from '@/lib/routes';
+import { sectionHeading, textLink } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 
 import { JobsSlider } from './jobs-slider';
 
@@ -18,10 +20,7 @@ export function LatestJobsSection({ jobs }: LatestJobsSectionProps) {
     >
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <h2
-            id="latest-jobs"
-            className="font-heading text-[2rem] leading-[2.375rem] tracking-tight text-ink"
-          >
+          <h2 id="latest-jobs" className={sectionHeading}>
             Latest jobs
           </h2>
           <p className="text-sm text-ink-muted">
@@ -31,7 +30,10 @@ export function LatestJobsSection({ jobs }: LatestJobsSectionProps) {
         </div>
         <Link
           href={SEARCH_HREF}
-          className="inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-ink underline-offset-4 outline-none hover:underline focus-visible:underline focus-visible:ring-3 focus-visible:ring-ring/50"
+          className={cn(
+            textLink,
+            'inline-flex items-center gap-1.5 text-sm font-semibold text-ink',
+          )}
         >
           See all in Search
           <ArrowRight className="size-4" aria-hidden="true" />

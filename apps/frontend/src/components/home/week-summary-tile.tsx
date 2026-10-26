@@ -1,6 +1,7 @@
 import type { UserStats } from '@job-scraper/shared';
 
 import { formatJobCount } from '@/lib/jobs/format';
+import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 interface WeekSummaryTileProps {
@@ -25,10 +26,7 @@ export function WeekSummaryTile({ stats, className }: WeekSummaryTileProps) {
         className,
       )}
     >
-      <h2
-        id="at-a-glance"
-        className="text-xs leading-4 font-semibold tracking-widest uppercase"
-      >
+      <h2 id="at-a-glance" className={overline}>
         At a glance
       </h2>
       <dl className="grid grid-cols-2 gap-x-4 gap-y-6">

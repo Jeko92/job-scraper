@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 interface HomeCardProps {
@@ -38,7 +39,7 @@ export function HomeCard({
           <CardAction className="self-center">
             <Link
               href={action.href}
-              className="rounded-sm text-[13px] font-semibold text-ink underline-offset-4 outline-none hover:underline focus-visible:underline focus-visible:ring-3 focus-visible:ring-ring/50"
+              className={cn(textLink, 'text-[13px] font-semibold text-ink')}
             >
               {action.label}
               <span className="sr-only"> {title}</span>

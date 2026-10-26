@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import { formatJobMeta, formatPostedAt } from '@/lib/jobs/format';
 import { jobHref, SAVED_HREF } from '@/lib/routes';
+import { textLink } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 
 import { HomeCard } from './home-card';
 
@@ -26,7 +28,10 @@ export function SavedJobsCard({ savedJobs }: SavedJobsCardProps) {
               <div className="flex min-w-0 flex-1 flex-col">
                 <Link
                   href={jobHref(job.id)}
-                  className="truncate rounded-sm text-[15px] leading-5 text-ink underline-offset-4 outline-none hover:underline focus-visible:underline focus-visible:ring-3 focus-visible:ring-ring/50"
+                  className={cn(
+                    textLink,
+                    'truncate text-[15px] leading-5 text-ink',
+                  )}
                 >
                   {job.title}
                 </Link>

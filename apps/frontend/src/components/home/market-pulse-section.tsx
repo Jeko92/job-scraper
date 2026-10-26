@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { formatCompanyName, formatJobCount } from '@/lib/jobs/format';
 import { PROFILE_HREF } from '@/lib/routes';
-import { overline } from '@/lib/styles';
+import { overline, sectionHeading, textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 const INITIALS_LENGTH = 2;
@@ -42,10 +42,7 @@ export function MarketPulseSection({
       className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6 sm:p-8"
     >
       <div className="flex flex-col gap-1">
-        <h2
-          id="market-pulse"
-          className="font-heading text-[2rem] leading-[2.375rem] tracking-tight text-ink"
-        >
+        <h2 id="market-pulse" className={sectionHeading}>
           {fields.length > 0 ? 'Market pulse in your fields' : 'Market pulse'}
         </h2>
         <p className="text-sm text-ink-muted">
@@ -109,7 +106,7 @@ export function MarketPulseSection({
               in your profile yet.{' '}
               <Link
                 href={PROFILE_HREF}
-                className="rounded-sm font-semibold text-ink underline-offset-4 outline-none hover:underline focus-visible:underline focus-visible:ring-3 focus-visible:ring-ring/50"
+                className={cn(textLink, 'font-semibold text-ink')}
               >
                 Add {missingSkill.name} to your profile
               </Link>
