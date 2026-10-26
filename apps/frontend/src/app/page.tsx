@@ -3,8 +3,9 @@ import { Hero } from '@/components/landing/hero';
 import { getSession } from '@/lib/auth/session';
 
 export default async function HomePage() {
-  if (await getSession()) {
-    return <HomeOverview />;
+  const user = await getSession();
+  if (user) {
+    return <HomeOverview user={user} />;
   }
 
   return (
