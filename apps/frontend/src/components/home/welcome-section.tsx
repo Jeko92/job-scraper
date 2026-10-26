@@ -13,14 +13,12 @@ const pill = 'h-11 rounded-pill px-5 text-[0.95rem] font-semibold';
 interface WelcomeSectionProps {
   firstName: string;
   stats: UserStats | null;
-  hasFields: boolean;
   className?: string;
 }
 
 export function WelcomeSection({
   firstName,
   stats,
-  hasFields,
   className,
 }: WelcomeSectionProps) {
   return (
@@ -41,7 +39,7 @@ export function WelcomeSection({
           <span className="text-ink">
             {stats.newJobs} new {stats.newJobs === 1 ? 'role' : 'roles'}
           </span>{' '}
-          {hasFields ? 'in your fields' : 'posted'} in the last{' '}
+          {stats.fields.length > 0 ? 'in your fields' : 'posted'} in the last{' '}
           {stats.periodDays} days.
         </p>
       )}

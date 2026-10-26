@@ -29,7 +29,6 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
         <WelcomeSection
           firstName={profile?.firstName ?? user.username}
           stats={stats}
-          hasFields={(profile?.industries.length ?? 0) > 0}
           className="flex-[2_1_34rem]"
         />
         {stats && (

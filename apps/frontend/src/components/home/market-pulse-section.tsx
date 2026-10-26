@@ -27,7 +27,7 @@ export function MarketPulseSection({
   stats,
   profile,
 }: MarketPulseSectionProps) {
-  const fields = profile?.industries.map((industry) => industry.name) ?? [];
+  const { fields } = stats;
   const profileSkills = new Set(profile?.skills.map((skill) => skill.slug));
   const skills = stats.topSkills.map((skill) => ({
     ...skill,
