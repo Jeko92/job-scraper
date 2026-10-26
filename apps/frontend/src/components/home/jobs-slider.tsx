@@ -56,11 +56,11 @@ export function JobsSlider({ jobs }: JobsSliderProps) {
           updateEdges(instance);
         }}
         onProgress={updateEdges}
-        className="w-full motion-reduce:[&_.swiper-wrapper]:transition-none!"
+        className="-m-6! p-6! motion-reduce:[&_.swiper-wrapper]:transition-none!"
       >
         {jobs.map((job) => (
           <SwiperSlide key={job.id} className="h-auto!">
-            <JobCard job={job} headingLevel="h3" />
+            <JobCard job={job} headingLevel="h3" className="h-full" />
           </SwiperSlide>
         ))}
       </Swiper>

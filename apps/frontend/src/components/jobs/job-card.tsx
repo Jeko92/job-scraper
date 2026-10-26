@@ -15,14 +15,24 @@ import { cn } from '@/lib/utils';
 interface JobCardProps {
   job: JobListItem;
   headingLevel?: 'h2' | 'h3';
+  className?: string;
 }
 
-export function JobCard({ job, headingLevel: Heading = 'h2' }: JobCardProps) {
+export function JobCard({
+  job,
+  headingLevel: Heading = 'h2',
+  className,
+}: JobCardProps) {
   const salary = formatJobSalary(job);
   const skills = formatJobSkills(job);
 
   return (
-    <Card className="gap-6 rounded-card p-6 ring-line transition-shadow duration-200 focus-within:shadow-lg hover:shadow-lg hover:ring-ink/20">
+    <Card
+      className={cn(
+        'gap-6 rounded-card p-6 ring-line transition-shadow duration-200 focus-within:shadow-lg hover:shadow-lg hover:ring-ink/20',
+        className,
+      )}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
           <Heading className="text-xl font-medium text-ink">
@@ -46,7 +56,7 @@ export function JobCard({ job, headingLevel: Heading = 'h2' }: JobCardProps) {
         </time>
       </div>
 
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
         <p className="text-sm text-ink-muted">{skills}</p>
         <Link
           href={jobHref(job.id)}
