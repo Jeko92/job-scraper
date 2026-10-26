@@ -67,11 +67,19 @@ export async function getParsedFromBackend<T>(
   try {
     const response = await getFromBackend(path, token);
     if (!response.ok) {
+      console.error(
+        `GET ${path} failed with status ${String(response.status)}`,
+      );
       return null;
     }
     const parsed = schema.safeParse(await response.json());
-    return parsed.success ? parsed.data : null;
-  } catch {
+    if (!parsed.success) {
+      console.error(`GET ${path} returned an unexpected response`);
+      return null;
+    }
+    return parsed.data;
+  } catch (error) {
+    console.error(`GET ${path} failed`, error);
     return null;
   }
 }

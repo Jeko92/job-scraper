@@ -27,7 +27,8 @@ export async function getLatestJobs(): Promise<JobListItem[] | null> {
       ),
     });
     return page.items;
-  } catch {
+  } catch (error) {
+    console.error('Loading the latest jobs failed', error);
     return null;
   }
 }
