@@ -18,8 +18,9 @@ const HOME_OFFSET = 4;
 const ORBIT_RADIUS = 4.5;
 // Vertical offset of each shape while it slides in from its side.
 const APPROACH_LIFT = 3;
-// Where the horizontal approach meets the orbit circle.
-const APPROACH_ANGLE = Math.asin(-APPROACH_LIFT / ORBIT_RADIUS);
+// Where the horizontal approach meets the orbit circle. The ring comes in
+// low and the disc high, so their momentum carries into the clockwise orbit.
+const APPROACH_ANGLE = Math.asin(APPROACH_LIFT / ORBIT_RADIUS);
 const APPROACH_X = Math.cos(APPROACH_ANGLE) * ORBIT_RADIUS;
 const ORBIT_TURNS = 2;
 const ENTER_DURATION = 1.8;
@@ -81,21 +82,21 @@ export function AnimatedLogoMark({ className }: AnimatedLogoMarkProps) {
           // 1. Get-together
           .fromTo(
             ring,
-            { x: offscreenOffset, y: -APPROACH_LIFT },
+            { x: offscreenOffset, y: APPROACH_LIFT },
             {
               x: APPROACH_X - HOME_OFFSET,
               // Repeated in the to-vars so every loop resets the height.
-              y: -APPROACH_LIFT,
+              y: APPROACH_LIFT,
               duration: ENTER_DURATION,
               ease: 'power2.in',
             },
           )
           .fromTo(
             disc,
-            { x: () => -offscreenOffset(), y: APPROACH_LIFT },
+            { x: () => -offscreenOffset(), y: -APPROACH_LIFT },
             {
               x: HOME_OFFSET - APPROACH_X,
-              y: APPROACH_LIFT,
+              y: -APPROACH_LIFT,
               duration: ENTER_DURATION,
               ease: 'power2.in',
             },
