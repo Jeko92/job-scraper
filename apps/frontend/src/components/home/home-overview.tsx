@@ -1,6 +1,6 @@
 import type { AuthUser } from '@job-scraper/shared';
 
-import { getLatestJobs, getSavedJobs } from '@/lib/home/data';
+import { getLatestJobs, getSavedJobs, getUserStats } from '@/lib/home/data';
 import { getProfile } from '@/lib/profile/profile';
 
 import { LatestJobsSection } from './latest-jobs-section';
@@ -14,8 +14,9 @@ interface HomeOverviewProps {
 }
 
 export async function HomeOverview({ user }: HomeOverviewProps) {
-  const [profile, latestJobs, savedJobs] = await Promise.all([
+  const [profile, stats, latestJobs, savedJobs] = await Promise.all([
     getProfile(),
+    getUserStats(),
     getLatestJobs(),
     getSavedJobs(),
   ]);
@@ -25,6 +26,8 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
       <section className="flex flex-wrap gap-2">
         <WelcomeSection
           firstName={profile?.firstName ?? user.username}
+          stats={stats}
+          hasFields={(profile?.industries.length ?? 0) > 0}
           className="flex-[2_1_34rem]"
         />
       </section>

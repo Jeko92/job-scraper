@@ -1,3 +1,4 @@
+import type { UserStats } from '@job-scraper/shared';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,10 +12,17 @@ const pill = 'h-11 rounded-pill px-5 text-[0.95rem] font-semibold';
 
 interface WelcomeSectionProps {
   firstName: string;
+  stats: UserStats | null;
+  hasFields: boolean;
   className?: string;
 }
 
-export function WelcomeSection({ firstName, className }: WelcomeSectionProps) {
+export function WelcomeSection({
+  firstName,
+  stats,
+  hasFields,
+  className,
+}: WelcomeSectionProps) {
   return (
     <GlowPanel
       className={cn(
@@ -27,6 +35,16 @@ export function WelcomeSection({ firstName, className }: WelcomeSectionProps) {
       <h1 className="font-heading text-[2.5rem] leading-[1.1] font-normal text-ink sm:text-[3.25rem]">
         Welcome back, {firstName}.
       </h1>
+
+      {stats && (
+        <p className="max-w-2xl text-ink-muted">
+          <span className="text-ink">
+            {stats.newJobs} new {stats.newJobs === 1 ? 'role' : 'roles'}
+          </span>{' '}
+          {hasFields ? 'in your fields' : 'posted'} in the last{' '}
+          {stats.periodDays} days.
+        </p>
+      )}
 
       <div className="mt-auto flex flex-wrap gap-3">
         <Link href={SEARCH_HREF} className={cn(buttonVariants(), pill)}>
