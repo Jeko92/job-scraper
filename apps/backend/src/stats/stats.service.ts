@@ -49,7 +49,8 @@ export class StatsService {
   async getForUser(userId: string): Promise<UserStats> {
     const periodDays = this.config.get('STATS_PERIOD_DAYS', { infer: true });
     const topLimit = this.config.get('STATS_TOP_LIMIT', { infer: true });
-    const industryIds = await this.findIndustryIds(userId);
+    const industries = await this.findIndustries(userId);
+    const industryIds = industries.map((industry) => industry.id);
 
     const [counts, newCompanies, skills, companies] = await Promise.all([
       this.activeJobsInFields(industryIds)
@@ -96,6 +97,7 @@ export class StatsService {
 
     return {
       periodDays,
+      fields: industries.map((industry) => industry.name),
       newJobs: Number(counts?.newJobs ?? 0),
       activeJobs,
       hiringCompanies: Number(counts?.hiringCompanies ?? 0),
@@ -114,14 +116,19 @@ export class StatsService {
     };
   }
 
-  private async findIndustryIds(userId: string): Promise<string[]> {
-    const rows = await this.userIndustriesRepository
+  private findIndustries(
+    userId: string,
+  ): Promise<{ id: string; name: string }[]> {
+    return this.userIndustriesRepository
       .createQueryBuilder('userIndustry')
       .innerJoin('userIndustry.userProfile', 'profile')
-      .select('userIndustry.industryId', 'industryId')
+      .innerJoin('userIndustry.industry', 'industry')
+      .select('industry.id', 'id')
+      .addSelect('industry.name', 'name')
       .where('profile.userId = :userId', { userId })
-      .getRawMany<{ industryId: string }>();
-    return rows.map((row) => row.industryId);
+      .orderBy('userIndustry.priority', 'ASC', 'NULLS LAST')
+      .addOrderBy('industry.name', 'ASC')
+      .getRawMany<{ id: string; name: string }>();
   }
 
   private activeJobsInFields(industryIds: string[]): SelectQueryBuilder<Job> {

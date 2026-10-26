@@ -13,6 +13,7 @@ export interface StatsCompany extends JobCompany {
 
 export interface UserStats {
   periodDays: number;
+  fields: string[];
   newJobs: number;
   activeJobs: number;
   hiringCompanies: number;
@@ -25,6 +26,7 @@ const countSchema = z.number().int().min(0);
 
 export const userStatsSchema: z.ZodType<UserStats> = z.object({
   periodDays: z.number().int().min(1),
+  fields: z.array(z.string()),
   newJobs: countSchema,
   activeJobs: countSchema,
   hiringCompanies: countSchema,
