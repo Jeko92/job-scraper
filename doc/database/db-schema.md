@@ -146,6 +146,12 @@ erDiagram
         boolean required "default true, false = nice-to-have"
     }
 
+    user_saved_jobs {
+        uuid user_id PK, FK
+        uuid job_id PK, FK
+        timestamptz created_at "when the job was saved"
+    }
+
     crawl_targets {
         uuid id PK
         uuid company_id FK
@@ -192,6 +198,9 @@ erDiagram
     crawl_runs |o--o{ jobs : "last seen by"
     jobs ||--o{ job_skills : ""
     skills ||--o{ job_skills : ""
+
+    users ||--o{ user_saved_jobs : "saves"
+    jobs ||--o{ user_saved_jobs : ""
 
     companies ||--o{ crawl_targets : "career pages"
     crawl_targets ||--o{ crawl_runs : "crawled in"
