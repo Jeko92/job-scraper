@@ -2,10 +2,21 @@ import type { UserProfile, UserStats } from '@job-scraper/shared';
 import { Check } from 'lucide-react';
 import Link from 'next/link';
 
-import { formatJobCount } from '@/lib/jobs/format';
+import { formatCompanyName, formatJobCount } from '@/lib/jobs/format';
 import { PROFILE_HREF } from '@/lib/routes';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+
+const INITIALS_LENGTH = 2;
+
+function initials(name: string): string {
+  return name
+    .split(/[\s.]+/)
+    .filter((word) => word !== '')
+    .slice(0, INITIALS_LENGTH)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join('');
+}
 
 interface MarketPulseSectionProps {
   stats: UserStats;
@@ -103,6 +114,49 @@ export function MarketPulseSection({
                 Add {missingSkill.name} to your profile
               </Link>
             </p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-3.5">
+          <h3 className={cn(overline, 'text-ink-muted')}>
+            Companies hiring most
+          </h3>
+          {stats.topCompanies.length > 0 ? (
+            <ol>
+              {stats.topCompanies.map((company) => {
+                const name =
+                  formatCompanyName({ company }) ?? 'Unknown company';
+                return (
+                  <li
+                    key={company.id}
+                    className="flex items-center gap-3.5 border-b border-line py-2.5"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="flex size-9 shrink-0 items-center justify-center rounded-chip border border-line bg-bg text-[13px] font-semibold text-ink"
+                    >
+                      {initials(name)}
+                    </span>
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate text-[15px] leading-5 text-ink">
+                        {name}
+                      </span>
+                      {company.name !== null && company.domain !== null && (
+                        <span className="truncate text-[13px] leading-[18px] text-ink-muted">
+                          {company.domain}
+                        </span>
+                      )}
+                    </span>
+                    <span className="shrink-0 text-[13px] font-semibold text-ink">
+                      {formatJobCount(company.openJobs)}{' '}
+                      {company.openJobs === 1 ? 'role' : 'roles'}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p className="text-sm text-ink-muted">No open roles yet.</p>
           )}
         </div>
       </div>
