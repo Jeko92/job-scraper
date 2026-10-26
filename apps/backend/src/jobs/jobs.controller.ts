@@ -19,6 +19,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   StandardSchemaValidationPipe,
 } from '@nestjs/common';
 import {
@@ -28,6 +29,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import type { RequestWithUser } from '../auth/request-with-user.js';
 import {
   type CreateJobRequest,
   createJobSchema,
@@ -86,16 +88,20 @@ export class JobsController {
   })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   findAll(
+    @Req() request: RequestWithUser,
     @Query({ schema: jobsQuerySchema, pipes: [StandardSchemaValidationPipe] })
     query: JobsQuery,
   ): Promise<JobsListResponse> {
-    return this.jobsService.findAll(query);
+    return this.jobsService.findAll(query, request.user.id);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a job by its id' })
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<JobListItem> {
-    return this.jobsService.findOne(id);
+  findOne(
+    @Req() request: RequestWithUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<JobListItem> {
+    return this.jobsService.findOne(id, request.user.id);
   }
 
   @Patch(':id')

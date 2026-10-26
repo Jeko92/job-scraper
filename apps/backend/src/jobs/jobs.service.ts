@@ -12,6 +12,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   type EntityManager,
+  In,
   Repository,
   type SelectQueryBuilder,
 } from 'typeorm';
@@ -22,6 +23,7 @@ import {
 } from './dto/create-job.dto.js';
 import type { UpdateJobRequest } from './dto/update-job.dto.js';
 import { Job } from './entities/job.entity.js';
+import { UserSavedJob } from './entities/user-saved-job.entity.js';
 import { hasPgCode, jobNotFound } from './utils/db-errors.js';
 import { definedOnly, toDate, toJobListItem } from './utils/job-list-item.js';
 import { replaceSkills } from './utils/job-skills.js';
@@ -40,6 +42,8 @@ export class JobsService {
   constructor(
     @InjectRepository(Job)
     private readonly jobsRepository: Repository<Job>,
+    @InjectRepository(UserSavedJob)
+    private readonly savedJobsRepository: Repository<UserSavedJob>,
   ) {}
 
   async create(input: CreateJobRequest): Promise<JobListItem> {
@@ -59,7 +63,7 @@ export class JobsService {
     return this.findOne(id);
   }
 
-  async findAll(query: JobsQuery): Promise<JobsListResponse> {
+  async findAll(query: JobsQuery, userId: string): Promise<JobsListResponse> {
     const { page, limit } = query;
     const direction = SORT_DIRECTIONS[query.sort];
 
@@ -73,12 +77,16 @@ export class JobsService {
       .limit(limit)
       .getRawMany<{ id: string }>();
 
-    const items = await this.loadItems(rows.map((row) => row.id));
+    const items = await this.loadItems(
+      rows.map((row) => row.id),
+      userId,
+    );
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async findOne(id: string): Promise<JobListItem> {
-    const [item] = await this.loadItems([id]);
+  /** Without `userId` (e.g. after create/update), `isSaved` is false. */
+  async findOne(id: string, userId?: string): Promise<JobListItem> {
+    const [item] = await this.loadItems([id], userId);
     if (!item) {
       throw jobNotFound(id);
     }
@@ -170,23 +178,44 @@ export class JobsService {
     return builder;
   }
 
-  private async loadItems(ids: string[]): Promise<JobListItem[]> {
+  private async loadItems(
+    ids: string[],
+    userId?: string,
+  ): Promise<JobListItem[]> {
     if (ids.length === 0) {
       return [];
     }
-    const jobs = await this.jobsRepository
-      .createQueryBuilder('job')
-      .innerJoinAndSelect('job.company', 'company')
-      .leftJoinAndSelect('job.location', 'location')
-      .leftJoinAndSelect('job.skills', 'jobSkill')
-      .leftJoinAndSelect('jobSkill.skill', 'skill')
-      .where('job.id IN (:...ids)', { ids })
-      .orderBy('skill.name', 'ASC')
-      .getMany();
+    const [jobs, savedIds] = await Promise.all([
+      this.jobsRepository
+        .createQueryBuilder('job')
+        .innerJoinAndSelect('job.company', 'company')
+        .leftJoinAndSelect('job.location', 'location')
+        .leftJoinAndSelect('job.skills', 'jobSkill')
+        .leftJoinAndSelect('jobSkill.skill', 'skill')
+        .where('job.id IN (:...ids)', { ids })
+        .orderBy('skill.name', 'ASC')
+        .getMany(),
+      this.findSavedIds(ids, userId),
+    ]);
     const byId = new Map(jobs.map((job) => [job.id, job]));
     return ids.flatMap((id) => {
       const job = byId.get(id);
-      return job ? [toJobListItem(job)] : [];
+      return job ? [toJobListItem(job, savedIds.has(id))] : [];
     });
+  }
+
+  /** Which of `jobIds` the user has saved. */
+  private async findSavedIds(
+    jobIds: string[],
+    userId: string | undefined,
+  ): Promise<Set<string>> {
+    if (!userId) {
+      return new Set();
+    }
+    const saved = await this.savedJobsRepository.find({
+      select: { jobId: true },
+      where: { userId, jobId: In(jobIds) },
+    });
+    return new Set(saved.map(({ jobId }) => jobId));
   }
 }

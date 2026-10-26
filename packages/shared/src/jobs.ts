@@ -46,6 +46,8 @@ export interface JobListItem {
   postedAt: string;
   /** Ordered by name. */
   skills: JobSkill[];
+  /** Whether the current user has saved this job. */
+  isSaved: boolean;
 }
 
 export const jobCompanySchema: z.ZodType<JobCompany> = z.object({
@@ -73,6 +75,7 @@ const jobListItemObject = z.object({
       required: z.boolean(),
     }),
   ),
+  isSaved: z.boolean(),
 });
 
 export const jobListItemSchema: z.ZodType<JobListItem> = jobListItemObject;

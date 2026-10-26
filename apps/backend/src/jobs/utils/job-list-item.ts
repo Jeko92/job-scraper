@@ -10,6 +10,7 @@ import type { Job } from '../entities/job.entity.js';
 
 export function toJobListItem(
   job: Job,
+  isSaved: boolean,
 ): JobListItem & Pick<JobDetail, 'sourceUrl'> {
   const company = job.company;
   if (!company) {
@@ -32,6 +33,7 @@ export function toJobListItem(
         ? [{ id: skill.id, name: skill.name, slug: skill.slug, required }]
         : [],
     ),
+    isSaved,
   };
 }
 
