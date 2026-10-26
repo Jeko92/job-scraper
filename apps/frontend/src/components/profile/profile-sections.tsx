@@ -3,8 +3,9 @@
 import type { UserProfile } from '@job-scraper/shared';
 import { useEffect, useState } from 'react';
 
-import type { RowControl } from './editable-row';
+import type { RowControl } from './common/editable-row';
 import { BasicInfoSection } from './sections/basic-info-section';
+import { PreferencesSection } from './sections/preferences-section';
 
 interface ProfileSectionsProps {
   profile: UserProfile;
@@ -48,6 +49,7 @@ export function ProfileSections({
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6">
       <BasicInfoSection profile={profile} row={row} />
+      <PreferencesSection profile={profile} row={row} />
     </div>
   );
 }

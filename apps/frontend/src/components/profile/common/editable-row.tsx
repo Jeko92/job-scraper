@@ -17,7 +17,6 @@ const SAVED_MS = 3000;
 
 export interface RowControl {
   isOpen: boolean;
-  /** Another row is open; only one row is edited at a time. */
   editDisabled: boolean;
   onEdit: () => void;
   onClose: () => void;
@@ -102,7 +101,6 @@ export function EditableRow<T>({
             </Button>
           </div>
         )}
-        {/* Stays mounted so screen readers announce the change (WCAG 4.1.3). */}
         <span role="status" className="sr-only">
           {justSaved ? `${label} saved` : ''}
         </span>

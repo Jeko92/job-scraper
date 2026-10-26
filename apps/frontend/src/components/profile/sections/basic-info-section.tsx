@@ -1,39 +1,23 @@
 'use client';
 
-import {
-  SENIORITY_LEVELS,
-  type SeniorityLevel,
-  type UserProfile,
-} from '@job-scraper/shared';
+import { SENIORITY_LEVELS, type UserProfile } from '@job-scraper/shared';
 
 import { LookupField } from '@/components/lookups/lookup-field';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { toLocationOption } from '@/lib/lookups/options';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 import { SENIORITY_LABELS } from '@/lib/profile/enum-labels';
 
-import { EditableRow, type RowControl } from '../editable-row';
-import { ProfileSectionCard } from '../profileSection-card';
+import { EditableRow, type RowControl } from '../common/editable-row';
+import { enumItems, RowSelect } from '../common/row-select';
+import { ProfileSectionCard } from '../common/section-card';
 
 const FIELD_CLASS = 'h-10 rounded-card px-3 text-base';
 // The backend allows up to 99.9;
 const MAX_YEARS = 30;
 
-const SENIORITY_ITEMS: { value: SeniorityLevel | null; label: string }[] = [
-  { value: null, label: 'Not set' },
-  ...SENIORITY_LEVELS.map((level) => ({
-    value: level,
-    label: SENIORITY_LABELS[level],
-  })),
-];
+const SENIORITY_ITEMS = enumItems(SENIORITY_LEVELS, SENIORITY_LABELS);
 
 interface BasicInfoSectionProps {
   profile: UserProfile;
@@ -120,24 +104,12 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
           value={profile.seniority && SENIORITY_LABELS[profile.seniority]}
           initialDraft={profile.seniority}
           renderEditor={(draft, setDraft) => (
-            <Select
+            <RowSelect
+              label="Seniority"
               items={SENIORITY_ITEMS}
               value={draft}
-              onValueChange={(next) => {
-                setDraft(next);
-              }}
-            >
-              <SelectTrigger aria-label="Seniority" className="h-10 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SENIORITY_ITEMS.map((item) => (
-                  <SelectItem key={String(item.value)} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={setDraft}
+            />
           )}
           buildRequest={(draft) => ({ seniority: draft })}
         />
