@@ -17,7 +17,7 @@ export function getProfileChecks(profile: UserProfile): ProfileCheck[] {
     {
       section: 'basic-info',
       label: 'Headline',
-      done: profile.headline !== null,
+      done: (profile.headline?.trim() ?? '') !== '',
     },
     {
       section: 'basic-info',
