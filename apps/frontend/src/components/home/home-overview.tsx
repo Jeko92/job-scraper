@@ -5,6 +5,7 @@ import { getProfile } from '@/lib/profile/profile';
 
 import { LatestJobsSection } from './latest-jobs-section';
 import { ProfileStrengthCard } from './profile-strength-card';
+import { PromoTiles } from './promo-tiles';
 import { SavedJobsCard } from './saved-jobs-card';
 import { WelcomeSection } from './welcome-section';
 
@@ -32,6 +33,7 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
         <SavedJobsCard savedJobs={savedJobs} />
         <ProfileStrengthCard profile={profile} />
       </div>
+      <PromoTiles />
     </main>
   );
 }
