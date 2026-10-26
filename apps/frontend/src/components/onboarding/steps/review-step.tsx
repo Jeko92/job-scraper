@@ -6,13 +6,15 @@ import { LogoMark } from '@/components/brand/logo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { LookupOption } from '@/lib/lookups/types';
+import {
+  EMPLOYMENT_LABELS,
+  SENIORITY_LABELS,
+  WORK_SETUP_LABELS,
+} from '@/lib/profile/enum-labels';
 
 import { OnboardingCard } from '../onboarding-card';
 import type { Answers, Step } from '../onboarding-state';
 import { SubmitOnboardingButton } from '../submit-onboarding-button';
-import { EMPLOYMENT_LABELS } from './employment-step';
-import { SENIORITY_LABELS } from './seniority-step';
-import { WORK_SETUP_LABELS } from './work-setup-step';
 
 const NOT_SET = 'Not set';
 
