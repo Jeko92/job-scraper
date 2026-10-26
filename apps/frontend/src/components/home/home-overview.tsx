@@ -2,6 +2,7 @@ import type { AuthUser } from '@job-scraper/shared';
 
 import { getProfile } from '@/lib/profile/profile';
 
+import { ProfileStrengthCard } from './profile-strength-card';
 import { WelcomeSection } from './welcome-section';
 
 interface HomeOverviewProps {
@@ -19,6 +20,9 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
           className="flex-[2_1_34rem]"
         />
       </section>
+      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        <ProfileStrengthCard profile={profile} />
+      </div>
     </main>
   );
 }
