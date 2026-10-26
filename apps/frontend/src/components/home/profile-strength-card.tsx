@@ -53,7 +53,7 @@ export function ProfileStrengthCard({ profile }: ProfileStrengthCardProps) {
         </p>
       </div>
 
-      <ul className="flex flex-col gap-2.5 text-sm">
+      <ul className="my-5 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
         {checks.map((check) => (
           <li
             key={check.label}
