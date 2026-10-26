@@ -4,9 +4,9 @@ import {
   type UserStats,
   userStatsSchema,
 } from '@job-scraper/shared';
+import { cache } from 'react';
 
-import { readAuthToken } from '@/lib/auth/auth-token';
-import { getFromBackend } from '@/lib/backend';
+import { getParsedFromBackend } from '@/lib/backend';
 import { getHomeJobsLimit } from '@/lib/env';
 import { fetchJobsPage } from '@/lib/jobs/api';
 
@@ -32,20 +32,6 @@ export async function getLatestJobs(): Promise<JobListItem[] | null> {
   }
 }
 
-export async function getUserStats(): Promise<UserStats | null> {
-  const token = await readAuthToken();
-  if (token === undefined) {
-    return null;
-  }
-
-  try {
-    const response = await getFromBackend('/users/me/stats', token);
-    if (!response.ok) {
-      return null;
-    }
-    const stats = userStatsSchema.safeParse(await response.json());
-    return stats.success ? stats.data : null;
-  } catch {
-    return null;
-  }
-}
+export const getUserStats = cache((): Promise<UserStats | null> =>
+  getParsedFromBackend('/users/me/stats', userStatsSchema),
+);

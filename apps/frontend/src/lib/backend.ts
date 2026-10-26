@@ -1,5 +1,6 @@
 import { isHelloResponse } from '@job-scraper/shared';
 
+import { readAuthToken } from './auth/auth-token';
 import { getBackendUrl } from './env';
 
 export const BACKEND_TIMEOUT_MS = 3000;
@@ -48,6 +49,31 @@ export function getFromBackend(path: string, token: string): Promise<Response> {
     cache: 'no-store',
     signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
   });
+}
+
+interface ResponseSchema<T> {
+  safeParse(data: unknown): { success: true; data: T } | { success: false };
+}
+
+export async function getParsedFromBackend<T>(
+  path: string,
+  schema: ResponseSchema<T>,
+): Promise<T | null> {
+  const token = await readAuthToken();
+  if (token === undefined) {
+    return null;
+  }
+
+  try {
+    const response = await getFromBackend(path, token);
+    if (!response.ok) {
+      return null;
+    }
+    const parsed = schema.safeParse(await response.json());
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
 }
 
 export function postToBackend(path: string, body: unknown): Promise<Response> {
