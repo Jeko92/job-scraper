@@ -2,135 +2,112 @@ Flow (Mermaid)
 
 ```mermaid
 flowchart TD
-    Load["/profile<br/>GET /users/me/profile"] --> View["View mode<br/>all cards read-only"]
-    View -->|"Edit on a card"| Edit["Edit mode<br/>only that card"]
-    Edit -->|Cancel| View
-    Edit -->|"Save (valid)"| Saving["PATCH /users/me/profile<br/>only that card's fields"]
-    Edit -->|"Save (invalid)"| Edit
-    Saving -->|OK| Saved["View mode<br/>card shows new values + 'Saved'"]
+    Load["/profile<br/>GET /users/me/profile"] --> View["View mode<br/>all rows read-only"]
+    View -->|"✎ on a row"| Edit["Edit mode<br/>only that row"]
+    Edit -->|"✕ / Escape"| View
+    Edit -->|"✓ / Enter (no change)"| View
+    Edit -->|"✓ / Enter (invalid)"| Edit
+    Edit -->|"✓ / Enter (valid)"| Saving["PATCH /users/me/profile<br/>only that row's field"]
+    Saving -->|OK| Saved["View mode<br/>row shows the new value"]
     Saving -->|Error| Edit
 ```
 
-Edit opens one card at a time. The other cards' Edit buttons are disabled
-until Save or Cancel.
-Save on error: the card stays in edit mode, the draft is kept, and an error
-message is shown.
+✎ opens one row at a time. The other ✎ buttons are disabled until ✓ or ✕.
+On error the row stays in edit mode, the draft is kept, and an error message
+is shown under the field.
 
 Flow (ASCII backup)
 
 /profile:
 
-  View ──[ Edit ]──► Edit (one card) ──[ Cancel ]──► View
-                          │
-                          └──[ Save ]──► valid? ── no ──► Edit (field errors)
-                                           │
-                                          yes
-                                           ▼
-                                   PATCH (one section) ── error ──► Edit
-                                           │                      (draft kept)
-                                          OK
-                                           ▼
-                                   View ("Saved ✓")
+  View ──[ ✎ ]──► Edit (one row) ──[ ✕ / Esc ]──► View
+                       │
+                       └──[ ✓ / Enter ]──► changed? ── no ──► View
+                                              │
+                                             yes
+                                              ▼
+                                           valid? ── no ──► Edit (error)
+                                              │
+                                             yes
+                                              ▼
+                                   PATCH (one field) ── error ──► Edit
+                                              │                  (draft kept)
+                                             OK
+                                              ▼
+                                   View (row shows the new value)
 
-Required on Save: role (headline) and based in (location), so the profile
-stays complete (onboardingCompleted).
-Leaving the page with an open card shows "You have unsaved changes".
+Required: role (headline) and based in (location), so the profile stays
+complete (onboardingCompleted).
+Closing or reloading the tab with an open row shows the browser's
+"Leave site?" dialog.
 See ADR-008.
 
 
 0  VIEW MODE
-   ┌───────────────────────────────────────────┐
-   │ Profile                                   │
-   │ Last updated 23 Oct 2026                  │
-   │                                           │
-   │ ┌ Basic info ───────────────── [ Edit ] ┐ │
-   │ │ Test User                          │ │
-   │ │ Frontend Developer · Mid · 1.5 yrs    │ │
-   │ │ Based in Berlin, Germany              │ │
-   │ └───────────────────────────────────────┘ │
-   │ ┌ Job preferences ──────────── [ Edit ] ┐ │
-   │ │ Full-time · Remote                    │ │
-   │ │ Min salary 50,000 EUR                 │ │
-   │ │ Open to relocate: Hamburg, Vienna     │ │
-   │ └───────────────────────────────────────┘ │
-   │ ┌ Skills ───────────────────── [ Edit ] ┐ │
-   │ │ TypeScript · Advanced                 │ │
-   │ │ React · Intermediate                  │ │
-   │ └───────────────────────────────────────┘ │
-   │ ┌ Industries ───────────────── [ Add ]  ┐ │ ← empty section: "Add"
-   │ │ Not set                               │ │   and "Not set"
-   │ └───────────────────────────────────────┘ │
-   └───────────────────────────────────────────┘
+   ┌──────────────────────────────────────────────┐
+   │ ┌ Basic info ──────────────────────────────┐ │
+   │ │ NAME          Test User                ✎ │ │
+   │ │ ROLE          Frontend Developer       ✎ │ │
+   │ │ SENIORITY     Mid                      ✎ │ │
+   │ │ EXPERIENCE    1.5 years                ✎ │ │
+   │ │ BASED IN      Berlin, DE               ✎ │ │
+   │ └──────────────────────────────────────────┘ │
+   │ ┌ Job preferences ─────────────────────────┐ │
+   │ │ EMPLOYMENT    Full-time                ✎ │ │
+   │ │ WORK SETUP    Remote                   ✎ │ │
+   │ │ MIN SALARY    50,000 EUR               ✎ │ │
+   │ │ RELOCATE      Yes                      ✎ │ │
+   │ │ PLACES        Hamburg · Vienna         ✎ │ │ ← only if relocate = Yes
+   │ └──────────────────────────────────────────┘ │
+   │ ┌ Skills ──────────────────────────────────┐ │
+   │ │ SKILLS        TypeScript · React       ✎ │ │
+   │ └──────────────────────────────────────────┘ │
+   │ ┌ Industries ──────────────────────────────┐ │
+   │ │ INDUSTRIES    Not set                  ✎ │ │ ← empty value: "Not set"
+   │ └──────────────────────────────────────────┘ │
+   └──────────────────────────────────────────────┘
 
-── EDIT MODE (one card open) ────────────────────
+── EDIT MODE (one row open, in place) ───────────
 
-1  BASIC INFO
-   ┌ Basic info ───────────────────────────────┐
-   │ First name        Last name               │
-   │ [ Test       ]  [ User              ]  │
-   │ Role *                                    │
-   │ [ Frontend Developer                   ]  │
-   │ Seniority                                 │
-   │ ( Intern )( Junior )(● Mid )( Senior )( Lead ) │
-   │ Years of experience                       │
-   │ [ − ]   1.5   [ + ]                       │
-   │ Based in *                                │
-   │ [ Berlin, Germany                   ▾ ]   │
-   │                                           │
-   │                    [ Cancel ]  ( Save )   │
-   └───────────────────────────────────────────┘
-   * required. Empty role → "Role is required" under the field.
+1  TEXT (name, role)
+   │ ROLE          [ Frontend Developer    ]  ✓ ✕ │
+   Name has two boxes: [ First name ][ Last name ].
+   Empty role → "Role is required." under the field.
 
-2  JOB PREFERENCES
-   ┌ Job preferences ──────────────────────────┐
-   │ Employment type                           │
-   │ (● Full-time )( Part-time )( Contract )   │
-   │ ( Internship )( Freelance )               │
-   │ Work setup                                │
-   │ ( On-site )( Hybrid )(● Remote )          │
-   │ Minimum salary          Currency          │
-   │ [ 50000          ]      [ EUR ▾ ]         │
-   │ Open to relocating?     [●] Yes  [ ] No   │
-   │ Locations (0–4, shown if Yes)             │
-   │ [ mun…                              ]     │
-   │ [ Hamburg, Germany ✕ ][ Vienna, Austria ✕ ] │
-   │                                           │
-   │                    [ Cancel ]  ( Save )   │
-   └───────────────────────────────────────────┘
+2  DROPDOWN (seniority, employment type, work setup, relocate)
+   │ SENIORITY     [ Mid                 ▾ ]  ✓ ✕ │
+   │                 Not set                      │
+   │                 Intern                       │
+   │                 Junior                       │
+   │                 Mid  ✓                       │
+   │                 Senior                       │
+   │                 Lead                         │
 
-3  SKILLS
-   ┌ Skills ───────────────────────────────────┐
-   │ [ ty…                               ▾ ]   │
-   │ TypeScript ○ Beg ○ Int ● Adv ○ Exp   ✕   │
-   │ React      ○ Beg ● Int ○ Adv ○ Exp   ✕   │
-   │                                           │
-   │                    [ Cancel ]  ( Save )   │
-   └───────────────────────────────────────────┘
-   Same component as onboarding Q8 (max 50).
+3  NUMBER (experience, min salary)
+   │ EXPERIENCE    [ 1.5 ] years              ✓ ✕ │
+   │ MIN SALARY    [ 50000   ] [ EUR ▾ ]      ✓ ✕ │
+   Experience: 0–30, empty clears it.
 
-4  INDUSTRIES
-   ┌ Industries ───────────────────────────────┐
-   │ Order = priority (first is most important)│
-   │ [ fin…                              ]     │
-   │ [ Software ✕ ][ Healthcare ✕ ]            │
-   │                                           │
-   │                    [ Cancel ]  ( Save )   │
-   └───────────────────────────────────────────┘
-   Same component as onboarding Q9 (max 10).
+4  SEARCH (based in, places, skills, industries)
+   │ BASED IN      SELECTED · 1/1             ✓ ✕ │
+   │               [ Berlin ✕ ]                   │
+   │               [ Limit reached     ] [ + Add ] │
+   Remove the chip (✕) to pick another location.
+   Places: 0–4. Skills: max 50. Industries: max 10, order = priority.
+   Same component as onboarding (LookupField).
 
 ── STATES ───────────────────────────────────────
 
 5  SAVING
-   │                  [ Cancel ]  ( Saving… ) │ ← both buttons disabled
+   │ ROLE          [ Frontend Developer    ]  ✓ ✕ │ ← ✓ and ✕ disabled
 
 6  SAVED
-   ┌ Skills ─────────────── Saved ✓ ─ [ Edit ] ┐ ← "Saved ✓" fades after 3s
-   │ TypeScript                      │   (aria-live)
-   └───────────────────────────────────────────┘
+   │ ROLE          Frontend Developer         ✎   │ ← row closes, shows new value
 
 7  ERROR
-   │ ⚠ Couldn't save, try again                │ ← card stays in edit mode,
-   │                    [ Cancel ]  ( Save )   │   draft is kept (aria-live)
+   │ ROLE          [                       ]  ✓ ✕ │
+   │               ⚠ Role is required.            │ ← row stays open, draft kept
+                                                    (role="alert")
 
-8  LEAVE WITH UNSAVED CHANGES
-   Browser prompt: "You have unsaved changes. Leave anyway?"
+8  LEAVE WITH AN OPEN ROW
+   Browser prompt: "Leave site? Changes you made may not be saved."
