@@ -1,3 +1,4 @@
+import { jobIdSchema } from '@job-scraper/shared';
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -8,7 +9,10 @@ import { fetchJobDetail } from '@/lib/jobs/api';
 import { LOGIN_HREF } from '@/lib/routes';
 
 // generateMetadata and the page share one backend request per render.
-const loadJob = cache(fetchJobDetail);
+// An id that is no UUID can't be a job, so it never reaches the backend.
+const loadJob = cache(async (id: string) =>
+  jobIdSchema.safeParse(id).success ? fetchJobDetail(id) : null,
+);
 
 export async function generateMetadata({
   params,

@@ -24,6 +24,7 @@ export {
   type JobCompany,
   type JobDetail,
   jobDetailSchema,
+  jobIdSchema,
   type JobListItem,
   jobListItemSchema,
   type JobSkill,

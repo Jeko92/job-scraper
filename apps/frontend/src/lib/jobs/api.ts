@@ -25,8 +25,8 @@ export async function fetchJobsPage(
 }
 
 /**
- * Null when the job doesn't exist or the id is no UUID. Throws when not
- * logged in, or when the backend fails or answers unexpectedly.
+ * Null when the job doesn't exist. Throws when not logged in, or when the
+ * backend fails or answers unexpectedly.
  */
 export async function fetchJobDetail(id: string): Promise<JobDetail | null> {
   const token = await requireAuthToken();
@@ -34,7 +34,7 @@ export async function fetchJobDetail(id: string): Promise<JobDetail | null> {
     `/jobs/${encodeURIComponent(id)}`,
     token,
   );
-  if (response.status === 404 || response.status === 400) {
+  if (response.status === 404) {
     return null;
   }
   if (!response.ok) {

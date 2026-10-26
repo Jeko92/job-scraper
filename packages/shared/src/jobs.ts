@@ -77,6 +77,9 @@ export const jobListItemSchema: z.ZodType<JobListItem> = jobListItemObject;
 
 // --- Detail ---------------------------------------------------------------
 
+/** Job ids are UUIDs; anything else can't be a job. */
+export const jobIdSchema: z.ZodType<string> = z.uuid();
+
 export interface JobDetail extends JobListItem {
   description: string | null;
   /** Link to the original posting. */
