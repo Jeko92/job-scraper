@@ -4,6 +4,7 @@ import { getLatestJobs, getSavedJobs, getUserStats } from '@/lib/home/data';
 import { getProfile } from '@/lib/profile/profile';
 
 import { LatestJobsSection } from './latest-jobs-section';
+import { MarketPulseSection } from './market-pulse-section';
 import { ProfileStrengthCard } from './profile-strength-card';
 import { PromoTiles } from './promo-tiles';
 import { SavedJobsCard } from './saved-jobs-card';
@@ -40,6 +41,7 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
         <SavedJobsCard savedJobs={savedJobs} />
         <ProfileStrengthCard profile={profile} />
       </div>
+      {stats && <MarketPulseSection stats={stats} profile={profile} />}
       <PromoTiles />
     </main>
   );
