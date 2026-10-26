@@ -8,10 +8,9 @@ import { Repository } from 'typeorm';
 import { Company } from '../companies/entities/company.entity.js';
 import type { Env } from '../config/env.js';
 import { Job } from '../jobs/entities/job.entity.js';
-import { POSTED_AT } from '../jobs/jobs.service.js';
+import { POSTED_AT, withinDays } from '../jobs/utils/posted-at.js';
 import { UserIndustry } from '../users/entities/user-industry.entity.js';
 
-const SINCE = 'NOW() - make_interval(days => :periodDays)';
 const PERCENT = 100;
 
 interface JobCountsRow {
@@ -56,7 +55,7 @@ export class StatsService {
       this.activeJobsInFields(industryIds)
         .select('COUNT(*)', 'activeJobs')
         .addSelect(
-          `COUNT(*) FILTER (WHERE ${POSTED_AT} >= ${SINCE})`,
+          `COUNT(*) FILTER (WHERE ${withinDays(POSTED_AT, 'periodDays')})`,
           'newJobs',
         )
         .addSelect('COUNT(DISTINCT job.companyId)', 'hiringCompanies')
@@ -65,7 +64,7 @@ export class StatsService {
       this.inFields(
         this.companiesRepository
           .createQueryBuilder('company')
-          .where(`company.createdAt >= ${SINCE}`, { periodDays }),
+          .where(withinDays('company.createdAt', 'periodDays'), { periodDays }),
         'company.id',
         industryIds,
       ).getCount(),
