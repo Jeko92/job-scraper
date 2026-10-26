@@ -1,5 +1,6 @@
 import {
   type JobListItem,
+  MAX_JOBS_LIMIT,
   type UserStats,
   userStatsSchema,
 } from '@job-scraper/shared';
@@ -20,7 +21,10 @@ export async function getLatestJobs(): Promise<JobListItem[] | null> {
     const page = await fetchJobsPage({
       sort: 'newest',
       page: 1,
-      limit: getHomeJobsLimit() ?? DEFAULT_HOME_JOBS_LIMIT,
+      limit: Math.min(
+        getHomeJobsLimit() ?? DEFAULT_HOME_JOBS_LIMIT,
+        MAX_JOBS_LIMIT,
+      ),
     });
     return page.items;
   } catch {
