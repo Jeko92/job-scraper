@@ -14,9 +14,10 @@ import { cn } from '@/lib/utils';
 
 interface JobCardProps {
   job: JobListItem;
+  headingLevel?: 'h2' | 'h3';
 }
 
-export function JobCard({ job }: JobCardProps) {
+export function JobCard({ job, headingLevel: Heading = 'h2' }: JobCardProps) {
   const salary = formatJobSalary(job);
   const skills = formatJobSkills(job);
 
@@ -24,14 +25,14 @@ export function JobCard({ job }: JobCardProps) {
     <Card className="gap-6 rounded-card p-6 ring-line transition-shadow duration-200 focus-within:shadow-lg hover:shadow-lg hover:ring-ink/20">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
-          <h2 className="text-xl font-medium text-ink">
+          <Heading className="text-xl font-medium text-ink">
             <Link
               href={jobHref(job.id)}
               className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:underline focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {job.title}
             </Link>
-          </h2>
+          </Heading>
           <p className="text-sm text-ink-muted">{formatJobMeta(job)}</p>
           {salary && <p className="text-sm text-ink">{salary}</p>}
         </div>
