@@ -3,6 +3,7 @@
 import {
   type UpdateUserProfileRequest,
   updateUserProfileSchema,
+  type UserProfile,
   userProfileSchema,
 } from '@job-scraper/shared';
 import { cookies } from 'next/headers';
@@ -18,15 +19,21 @@ export interface SubmitOnboardingState {
   errors: string[];
 }
 
-export async function submitOnboarding(
+export interface SubmitProfileResult {
+  errors: string[];
+  profile: UserProfile | null;
+}
+
+async function patchProfile(
   input: UpdateUserProfileRequest,
-): Promise<SubmitOnboardingState> {
+): Promise<SubmitProfileResult> {
   const parsed = updateUserProfileSchema.safeParse(input);
   if (!parsed.success) {
     return {
       errors: parsed.error.issues.map(
         (issue) => `${issue.path.join('.')}: ${issue.message}`,
       ),
+      profile: null,
     };
   }
 
@@ -42,15 +49,35 @@ export async function submitOnboarding(
       parsed.data,
     );
     if (!response.ok) {
-      return { errors: await readErrorMessages(response) };
+      return { errors: await readErrorMessages(response), profile: null };
     }
     const profile = userProfileSchema.safeParse(await response.json());
-    if (!profile.success || !profile.data.onboardingCompleted) {
-      return { errors: ['Please add your role and where you are based.'] };
+    if (!profile.success) {
+      return { errors: [SAVE_FAILED], profile: null };
     }
+    return { errors: [], profile: profile.data };
   } catch {
-    return { errors: [SAVE_FAILED] };
+    return { errors: [SAVE_FAILED], profile: null };
+  }
+}
+
+export async function submitOnboarding(
+  input: UpdateUserProfileRequest,
+): Promise<SubmitOnboardingState> {
+  const { errors, profile } = await patchProfile(input);
+  if (errors.length > 0) {
+    return { errors };
+  }
+  if (!profile?.onboardingCompleted) {
+    return { errors: ['Please add your role and where you are based.'] };
   }
 
   redirect(HOME_HREF);
+}
+
+// Profile page: one section per call
+export async function submitProfile(
+  input: UpdateUserProfileRequest,
+): Promise<SubmitProfileResult> {
+  return patchProfile(input);
 }
