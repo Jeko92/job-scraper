@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import type { RowControl } from './common/editable-row';
 import { BasicInfoSection } from './sections/basic-info-section';
 import { PreferencesSection } from './sections/preferences-section';
+import { SkillsSection } from './sections/skills-section';
 
 interface ProfileSectionsProps {
   profile: UserProfile;
@@ -50,6 +51,7 @@ export function ProfileSections({
     <div className="mx-auto w-full max-w-2xl space-y-6">
       <BasicInfoSection profile={profile} row={row} />
       <PreferencesSection profile={profile} row={row} />
+      <SkillsSection profile={profile} row={row} />
     </div>
   );
 }
