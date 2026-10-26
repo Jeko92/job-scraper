@@ -22,7 +22,7 @@ export function WeekSummaryTile({ stats, className }: WeekSummaryTileProps) {
     <section
       aria-labelledby="at-a-glance"
       className={cn(
-        'flex flex-col gap-6 rounded-tile border border-transparent bg-bg p-8 text-ink shadow-[inset_8px_8px_20px_color-mix(in_oklch,var(--highlight)_55%,transparent),inset_-8px_-8px_20px_var(--surface)]',
+        'flex flex-col gap-6 rounded-tile border border-transparent bg-highlight p-8 text-on-highlight shadow-[inset_0_14px_24px_color-mix(in_oklch,var(--highlight),var(--navy)_45%),inset_0_-10px_20px_color-mix(in_oklch,var(--highlight),white_55%)]',
         className,
       )}
     >
@@ -35,7 +35,7 @@ export function WeekSummaryTile({ stats, className }: WeekSummaryTileProps) {
             key={item.label}
             className="flex flex-col-reverse justify-end gap-0.5"
           >
-            <dt className="text-sm text-ink-muted">{item.label}</dt>
+            <dt className="text-sm">{item.label}</dt>
             <dd className="font-heading text-[2.75rem] leading-12 tracking-tight">
               {formatJobCount(item.value)}
             </dd>
