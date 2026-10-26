@@ -7,6 +7,7 @@ import { LatestJobsSection } from './latest-jobs-section';
 import { ProfileStrengthCard } from './profile-strength-card';
 import { PromoTiles } from './promo-tiles';
 import { SavedJobsCard } from './saved-jobs-card';
+import { WeekSummaryTile } from './week-summary-tile';
 import { WelcomeSection } from './welcome-section';
 
 interface HomeOverviewProps {
@@ -30,6 +31,9 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
           hasFields={(profile?.industries.length ?? 0) > 0}
           className="flex-[2_1_34rem]"
         />
+        {stats && (
+          <WeekSummaryTile stats={stats} className="flex-[1_1_20rem]" />
+        )}
       </section>
       <LatestJobsSection jobs={latestJobs} />
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
