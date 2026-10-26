@@ -98,7 +98,7 @@ Three pricing stages:
 2. The actual price you want people to click on.
 3. Way above useful to make the previous price look cheap. 
 
-All prices appear as discounts, but only until the end of the week (programmatically).
+All prices appear as discounts.
 
 ### Extra: Newsletter
 
