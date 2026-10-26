@@ -12,11 +12,19 @@ import { POSTED_AT } from '../jobs/jobs.service.js';
 import { UserIndustry } from '../users/entities/user-industry.entity.js';
 
 const SINCE = 'NOW() - make_interval(days => :periodDays)';
+const PERCENT = 100;
 
 interface JobCountsRow {
   activeJobs: string;
   newJobs: string;
   hiringCompanies: string;
+}
+
+interface SkillRow {
+  id: string;
+  name: string;
+  slug: string;
+  jobs: string;
 }
 
 @Injectable()
@@ -33,23 +41,19 @@ export class StatsService {
 
   async getForUser(userId: string): Promise<UserStats> {
     const periodDays = this.config.get('STATS_PERIOD_DAYS', { infer: true });
+    const topLimit = this.config.get('STATS_TOP_LIMIT', { infer: true });
     const industryIds = await this.findIndustryIds(userId);
 
-    const [counts, newCompanies] = await Promise.all([
-      this.inFields(
-        this.jobsRepository
-          .createQueryBuilder('job')
-          .select('COUNT(*)', 'activeJobs')
-          .addSelect(
-            `COUNT(*) FILTER (WHERE ${POSTED_AT} >= ${SINCE})`,
-            'newJobs',
-          )
-          .addSelect('COUNT(DISTINCT job.companyId)', 'hiringCompanies')
-          .where('job.isActive = true')
-          .setParameters({ periodDays }),
-        'job.companyId',
-        industryIds,
-      ).getRawOne<JobCountsRow>(),
+    const [counts, newCompanies, skills] = await Promise.all([
+      this.activeJobsInFields(industryIds)
+        .select('COUNT(*)', 'activeJobs')
+        .addSelect(
+          `COUNT(*) FILTER (WHERE ${POSTED_AT} >= ${SINCE})`,
+          'newJobs',
+        )
+        .addSelect('COUNT(DISTINCT job.companyId)', 'hiringCompanies')
+        .setParameters({ periodDays })
+        .getRawOne<JobCountsRow>(),
       this.inFields(
         this.companiesRepository
           .createQueryBuilder('company')
@@ -57,15 +61,34 @@ export class StatsService {
         'company.id',
         industryIds,
       ).getCount(),
+      this.activeJobsInFields(industryIds)
+        .innerJoin('job.skills', 'jobSkill')
+        .innerJoin('jobSkill.skill', 'skill')
+        .select('skill.id', 'id')
+        .addSelect('skill.name', 'name')
+        .addSelect('skill.slug', 'slug')
+        .addSelect('COUNT(DISTINCT job.id)', 'jobs')
+        .groupBy('skill.id')
+        .orderBy('COUNT(DISTINCT job.id)', 'DESC')
+        .addOrderBy('skill.name', 'ASC')
+        .limit(topLimit)
+        .getRawMany<SkillRow>(),
     ]);
+    const activeJobs = Number(counts?.activeJobs ?? 0);
 
     return {
       periodDays,
       newJobs: Number(counts?.newJobs ?? 0),
-      activeJobs: Number(counts?.activeJobs ?? 0),
+      activeJobs,
       hiringCompanies: Number(counts?.hiringCompanies ?? 0),
       newCompanies,
-      topSkills: [],
+      topSkills: skills.map(({ jobs, ...skill }) => ({
+        ...skill,
+        share:
+          activeJobs === 0
+            ? 0
+            : Math.round((Number(jobs) / activeJobs) * PERCENT),
+      })),
       topCompanies: [],
     };
   }
@@ -78,6 +101,16 @@ export class StatsService {
       .where('profile.userId = :userId', { userId })
       .getRawMany<{ industryId: string }>();
     return rows.map((row) => row.industryId);
+  }
+
+  private activeJobsInFields(industryIds: string[]): SelectQueryBuilder<Job> {
+    return this.inFields(
+      this.jobsRepository
+        .createQueryBuilder('job')
+        .where('job.isActive = true'),
+      'job.companyId',
+      industryIds,
+    );
   }
 
   private inFields<T extends ObjectLiteral>(
