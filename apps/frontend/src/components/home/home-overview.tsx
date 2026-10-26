@@ -1,8 +1,9 @@
 import type { AuthUser } from '@job-scraper/shared';
 
-import { getSavedJobs } from '@/lib/home/data';
+import { getLatestJobs, getSavedJobs } from '@/lib/home/data';
 import { getProfile } from '@/lib/profile/profile';
 
+import { LatestJobsSection } from './latest-jobs-section';
 import { ProfileStrengthCard } from './profile-strength-card';
 import { SavedJobsCard } from './saved-jobs-card';
 import { WelcomeSection } from './welcome-section';
@@ -12,8 +13,9 @@ interface HomeOverviewProps {
 }
 
 export async function HomeOverview({ user }: HomeOverviewProps) {
-  const [profile, savedJobs] = await Promise.all([
+  const [profile, latestJobs, savedJobs] = await Promise.all([
     getProfile(),
+    getLatestJobs(),
     getSavedJobs(),
   ]);
 
@@ -25,6 +27,7 @@ export async function HomeOverview({ user }: HomeOverviewProps) {
           className="flex-[2_1_34rem]"
         />
       </section>
+      <LatestJobsSection jobs={latestJobs} />
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
         <SavedJobsCard savedJobs={savedJobs} />
         <ProfileStrengthCard profile={profile} />
