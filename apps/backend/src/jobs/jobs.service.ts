@@ -29,7 +29,7 @@ import { replaceSkills } from './utils/job-skills.js';
 const UNIQUE_VIOLATION = '23505';
 const FOREIGN_KEY_VIOLATION = '23503';
 
-const POSTED_AT = 'COALESCE(job.publishedAt, job.firstSeenAt)';
+export const POSTED_AT = 'COALESCE(job.publishedAt, job.firstSeenAt)';
 
 const SORT_DIRECTIONS: Record<JobSort, 'ASC' | 'DESC'> = {
   newest: 'DESC',
