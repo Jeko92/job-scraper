@@ -30,8 +30,9 @@ interface LookupFieldProps {
 }
 
 /**
- * The onboarding take on `LookupFilter`: the input stays open, and "Add"
- * (or Enter) takes the best match, so the next value can be typed right away.
+ * A form field version of `LookupFilter` (used by onboarding and the profile
+ * page): the input stays open, and "Add" (or Enter) takes the best match, so
+ * the next value can be typed right away.
  */
 export function LookupField({
   label,
@@ -98,8 +99,9 @@ export function LookupField({
   }
 
   return (
-    // Enter here adds a value, so it must not also reach StepShell's "OK".
-    // Only Enter in the empty input is left for "OK".
+    // Enter here adds a value, so it must not also reach the parent's own
+    // Enter handling (e.g. "OK" in onboarding, save on the profile page).
+    // Only Enter in the empty input is passed on.
     <div
       className="flex flex-col gap-4"
       onKeyDown={(event) => {
@@ -152,7 +154,7 @@ export function LookupField({
               setText(event.target.value);
             }}
             onKeyDown={(event) => {
-              // Enter adds the best match instead of going to the next step.
+              // Enter adds the best match instead of submitting the form.
               if (event.key === 'Enter' && term !== '') {
                 event.preventDefault();
                 add(best);
