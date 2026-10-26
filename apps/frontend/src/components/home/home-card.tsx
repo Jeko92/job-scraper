@@ -26,7 +26,7 @@ export function HomeCard({
   return (
     <Card
       className={cn(
-        'gap-4 rounded-tile bg-surface py-7 text-base text-ink ring-line',
+        'gap-4 rounded-(--radius-tile) border border-line bg-surface py-7 text-base text-ink ring-0',
         className,
       )}
     >
