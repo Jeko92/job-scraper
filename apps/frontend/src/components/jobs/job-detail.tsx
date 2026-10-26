@@ -5,13 +5,7 @@ import type { ReactNode } from 'react';
 import { GlowPanel } from '@/components/landing/glow-panel';
 import { buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  EMPLOYMENT_TYPE_LABELS,
-  formatJobLocation,
-  formatJobSalary,
-  formatPostedAt,
-  REMOTE_PREFERENCE_LABELS,
-} from '@/lib/jobs/format';
+import { formatCompanyName, formatPostedAt, jobFacts } from '@/lib/jobs/format';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
@@ -33,7 +27,7 @@ interface JobDetailProps {
 export function JobDetail({ job }: JobDetailProps) {
   const required = job.skills.filter((skill) => skill.required);
   const niceToHave = job.skills.filter((skill) => !skill.required);
-  const companyName = job.company.name ?? job.company.domain;
+  const companyName = formatCompanyName(job);
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
@@ -119,37 +113,26 @@ export function JobDetail({ job }: JobDetailProps) {
   );
 }
 
-/** Company, location, work mode, contract and salary; each fact is named for screen readers. */
+/** Each fact is named for screen readers; salary goes on its own line. */
 function JobFacts({ job }: JobDetailProps) {
-  const facts = [
-    { label: 'Company', value: job.company.name ?? job.company.domain },
-    { label: 'Location', value: formatJobLocation(job) },
-    {
-      label: 'Work mode',
-      value: job.workplaceType && REMOTE_PREFERENCE_LABELS[job.workplaceType],
-    },
-    {
-      label: 'Employment type',
-      value: job.employmentType && EMPLOYMENT_TYPE_LABELS[job.employmentType],
-    },
-    { label: 'Salary', value: formatJobSalary(job) },
-  ].filter((fact) => fact.value !== null && fact.value !== '');
-
   return (
     <dl className="flex flex-wrap items-center gap-x-2 gap-y-1 text-ink-muted">
-      {facts.map((fact, index) => (
-        <div key={fact.label}>
-          <dt className="sr-only">{fact.label}</dt>
-          <dd className={fact.label === 'Salary' ? 'text-ink' : undefined}>
-            {index > 0 && (
-              <span aria-hidden="true" className="mr-2 text-ink-muted">
-                ·
-              </span>
-            )}
-            {fact.value}
-          </dd>
-        </div>
-      ))}
+      {jobFacts(job).map((fact, index) => {
+        const isSalary = fact.key === 'salary';
+        return (
+          <div key={fact.key} className={cn(isSalary && 'basis-full')}>
+            <dt className="sr-only">{fact.label}</dt>
+            <dd className={cn(isSalary && 'text-ink')}>
+              {index > 0 && !isSalary && (
+                <span aria-hidden="true" className="mr-2">
+                  ·
+                </span>
+              )}
+              {fact.value}
+            </dd>
+          </div>
+        );
+      })}
     </dl>
   );
 }
