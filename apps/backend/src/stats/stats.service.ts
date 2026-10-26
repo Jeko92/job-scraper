@@ -27,6 +27,13 @@ interface SkillRow {
   jobs: string;
 }
 
+interface CompanyRow {
+  id: string;
+  name: string | null;
+  domain: string | null;
+  openJobs: string;
+}
+
 @Injectable()
 export class StatsService {
   constructor(
@@ -44,7 +51,7 @@ export class StatsService {
     const topLimit = this.config.get('STATS_TOP_LIMIT', { infer: true });
     const industryIds = await this.findIndustryIds(userId);
 
-    const [counts, newCompanies, skills] = await Promise.all([
+    const [counts, newCompanies, skills, companies] = await Promise.all([
       this.activeJobsInFields(industryIds)
         .select('COUNT(*)', 'activeJobs')
         .addSelect(
@@ -73,6 +80,17 @@ export class StatsService {
         .addOrderBy('skill.name', 'ASC')
         .limit(topLimit)
         .getRawMany<SkillRow>(),
+      this.activeJobsInFields(industryIds)
+        .innerJoin('job.company', 'company')
+        .select('company.id', 'id')
+        .addSelect('company.name', 'name')
+        .addSelect('company.domain', 'domain')
+        .addSelect('COUNT(*)', 'openJobs')
+        .groupBy('company.id')
+        .orderBy('COUNT(*)', 'DESC')
+        .addOrderBy('company.name', 'ASC', 'NULLS LAST')
+        .limit(topLimit)
+        .getRawMany<CompanyRow>(),
     ]);
     const activeJobs = Number(counts?.activeJobs ?? 0);
 
@@ -89,7 +107,10 @@ export class StatsService {
             ? 0
             : Math.round((Number(jobs) / activeJobs) * PERCENT),
       })),
-      topCompanies: [],
+      topCompanies: companies.map(({ openJobs, ...company }) => ({
+        ...company,
+        openJobs: Number(openJobs),
+      })),
     };
   }
 
