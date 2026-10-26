@@ -180,6 +180,9 @@ importers:
       shadcn:
         specifier: ^4.21.1
         version: 4.21.1(supports-color@10.2.2)(typescript@6.0.3)
+      swiper:
+        specifier: 14.3.0
+        version: 14.3.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -4540,6 +4543,10 @@ packages:
 
   swagger-ui-dist@5.33.0:
     resolution: {integrity: sha512-wpdK+m6BU5yj6pmUdMskZVTSWYG4DLglAx3sIhylloY37i8O37IrH+YEpqdXNfpaTGxILRBFzUqLF2jKqbfI7A==}
+
+  swiper@14.3.0:
+    resolution: {integrity: sha512-qw0Xv1+sylM8KCQxWxV2iYAK2G6XjFGPZ/8F1baEsY8DK4A3sTnLx6jUJ0G71rDbVQ05JHMWkcWmJ5NvlxZO0w==}
+    engines: {node: '>= 4.7.0'}
 
   systeminformation@5.33.15:
     resolution: {integrity: sha512-s5RloL0F7xhN0ZjfHtLGnbf7EW74EI0N8NFL+1xR7Oxz9QA33obNZsl7lyfnJOhN04E/kGFPoJPlvY7TZ5fzmw==}
@@ -9215,6 +9222,8 @@ snapshots:
   swagger-ui-dist@5.33.0:
     dependencies:
       '@scarf/scarf': 1.4.0
+
+  swiper@14.3.0: {}
 
   systeminformation@5.33.15: {}
 
