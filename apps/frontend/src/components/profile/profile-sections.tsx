@@ -2,7 +2,7 @@
 
 import type { UserProfile } from '@job-scraper/shared';
 
-import { ProfileSectionCard } from './profileSection-card';
+import { BasicInfoSection } from './sections/basic-info-section';
 
 interface OnboardingFlowProps {
   profile: UserProfile;
@@ -10,14 +10,12 @@ interface OnboardingFlowProps {
 export function ProfileSections({ profile }: OnboardingFlowProps) {
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6">
-      <ProfileSectionCard
-        title="Basic info"
+      <BasicInfoSection
+        profile={profile}
         onEdit={() => {
           // Edit mode comes in a later step
         }}
-      >
-        {profile.headline}
-      </ProfileSectionCard>
+      />
     </div>
   );
 }
