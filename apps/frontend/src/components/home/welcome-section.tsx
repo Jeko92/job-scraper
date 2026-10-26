@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { GlowPanel } from '@/components/landing/glow-panel';
 import { SectionChip } from '@/components/landing/section-chip';
 import { buttonVariants } from '@/components/ui/button';
+import { formatJobCount } from '@/lib/jobs/format';
 import { PROFILE_HREF, SEARCH_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
@@ -37,7 +38,8 @@ export function WelcomeSection({
       {stats && (
         <p className="max-w-2xl text-ink-muted">
           <span className="text-ink">
-            {stats.newJobs} new {stats.newJobs === 1 ? 'role' : 'roles'}
+            {formatJobCount(stats.newJobs)} new{' '}
+            {stats.newJobs === 1 ? 'role' : 'roles'}
           </span>{' '}
           {stats.fields.length > 0 ? 'in your fields' : 'posted'} in the last{' '}
           {stats.periodDays} days.
