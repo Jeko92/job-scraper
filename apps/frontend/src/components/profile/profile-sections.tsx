@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import type { RowControl } from './common/editable-row';
 import { BasicInfoSection } from './sections/basic-info-section';
+import { IndustriesSection } from './sections/industries-section';
 import { PreferencesSection } from './sections/preferences-section';
 import { SkillsSection } from './sections/skills-section';
 
@@ -52,6 +53,7 @@ export function ProfileSections({
       <BasicInfoSection profile={profile} row={row} />
       <PreferencesSection profile={profile} row={row} />
       <SkillsSection profile={profile} row={row} />
+      <IndustriesSection profile={profile} row={row} />
     </div>
   );
 }
