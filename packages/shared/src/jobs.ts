@@ -85,7 +85,8 @@ export interface JobDetail extends JobListItem {
 
 export const jobDetailSchema: z.ZodType<JobDetail> = jobListItemObject.extend({
   description: z.string().nullable(),
-  sourceUrl: z.url(),
+  // Rendered as a link, so only web URLs (no `javascript:` and the like).
+  sourceUrl: z.url({ protocol: /^https?$/ }),
 });
 
 // --- List response --------------------------------------------------------
