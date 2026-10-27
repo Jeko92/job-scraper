@@ -36,6 +36,25 @@ export class IndustriesService {
     }
     return toIndustryDto(industry);
   }
+
+  async findOrCreate(name: string): Promise<Industry> {
+    const slug = toSlug(name);
+    const existing = await this.industriesRepository
+      .createQueryBuilder('industry')
+      .where('industry.slug = :slug OR LOWER(industry.name) = LOWER(:name)', {
+        slug,
+        name,
+      })
+      .getOne();
+    return existing ?? this.industriesRepository.save({ name, slug });
+  }
+}
+
+function toSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 function toIndustryDto({ id, name, slug }: Industry): IndustryDto {
