@@ -55,7 +55,6 @@ See ADR-008.
    │ ┌ Job preferences ─────────────────────────┐ │
    │ │ EMPLOYMENT    Full-time                ✎ │ │
    │ │ WORK SETUP    Remote                   ✎ │ │
-   │ │ MIN SALARY    50,000 EUR               ✎ │ │
    │ │ RELOCATE      Yes                      ✎ │ │
    │ │ PLACES        Hamburg · Vienna         ✎ │ │ ← only if relocate = Yes
    │ └──────────────────────────────────────────┘ │
@@ -83,9 +82,8 @@ See ADR-008.
    │                 Senior                       │
    │                 Lead                         │
 
-3  NUMBER (experience, min salary)
+3  NUMBER (experience)
    │ EXPERIENCE    [ 1.5 ] years              ✓ ✕ │
-   │ MIN SALARY    [ 50000   ] [ EUR ▾ ]      ✓ ✕ │
    Experience: 0–30, empty clears it.
 
 4  SEARCH (based in, places, skills, industries)
