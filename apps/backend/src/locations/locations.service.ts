@@ -4,7 +4,7 @@ import type {
 } from '@job-scraper/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Repository } from 'typeorm';
+import { type EntityManager, IsNull, Repository } from 'typeorm';
 
 import { containsPattern } from '../common/contains-pattern.js';
 import { Location } from './entities/location.entity.js';
@@ -53,15 +53,19 @@ export class LocationsService {
     return toLocationDto(location);
   }
 
-  async findOrCreate(location: NewLocation): Promise<Location> {
-    const existing = await this.locationsRepository.findOneBy({
+  async findOrCreate(
+    location: NewLocation,
+    manager: EntityManager = this.locationsRepository.manager,
+  ): Promise<Location> {
+    const repository = manager.getRepository(Location);
+    const existing = await repository.findOneBy({
       countryCode: location.countryCode ?? IsNull(),
       countryName: location.countryName ?? IsNull(),
       stateName: location.stateName ?? IsNull(),
       city: location.city ?? IsNull(),
       postalCode: location.postalCode ?? IsNull(),
     });
-    return existing ?? this.locationsRepository.save(location);
+    return existing ?? repository.save(location);
   }
 }
 

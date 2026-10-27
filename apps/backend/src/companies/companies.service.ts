@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { type EntityManager, Repository } from 'typeorm';
 
 import { IndustriesService } from '../industries/industries.service.js';
 import { LocationsService } from '../locations/locations.service.js';
@@ -23,10 +23,6 @@ export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private readonly companiesRepository: Repository<Company>,
-    @InjectRepository(CompanyLocation)
-    private readonly companyLocationsRepository: Repository<CompanyLocation>,
-    @InjectRepository(CompanyIndustry)
-    private readonly companyIndustriesRepository: Repository<CompanyIndustry>,
     private readonly locationsService: LocationsService,
     private readonly industriesService: IndustriesService,
     private readonly wikidataProvider: WikidataProvider,
@@ -61,42 +57,53 @@ export class CompaniesService {
   }
 
   async createFromNormalized(company: NormalizedCompany): Promise<CompanyDto> {
-    const saved = await this.upsertCompany(company);
-    if (company.location) {
-      const location = await this.locationsService.findOrCreate(
-        company.location,
-      );
-      await this.companyLocationsRepository.save({
-        companyId: saved.id,
-        locationId: location.id,
-      });
-    }
-    for (const name of company.industries) {
-      const industry = await this.industriesService.findOrCreate(name);
-      await this.companyIndustriesRepository.save({
-        companyId: saved.id,
-        industryId: industry.id,
-      });
-    }
-    return saved;
+    return this.companiesRepository.manager.transaction(async (manager) => {
+      const saved = await this.upsertCompany(company, manager);
+      const companyId = saved.id;
+      if (company.location) {
+        const location = await this.locationsService.findOrCreate(
+          company.location,
+          manager,
+        );
+        await manager.save(CompanyLocation, {
+          companyId,
+          locationId: location.id,
+        });
+      }
+      for (const name of company.industries) {
+        const industry = await this.industriesService.findOrCreate(
+          name,
+          manager,
+        );
+        await manager.save(CompanyIndustry, {
+          companyId,
+          industryId: industry.id,
+        });
+      }
+      return saved;
+    });
   }
 
-  private async upsertCompany(company: NormalizedCompany): Promise<Company> {
+  private async upsertCompany(
+    company: NormalizedCompany,
+    manager: EntityManager,
+  ): Promise<Company> {
+    const companiesRepository = manager.getRepository(Company);
     let existingCompany: Company | null = null;
     if (company.domain) {
-      existingCompany = await this.companiesRepository.findOneBy({
+      existingCompany = await companiesRepository.findOneBy({
         domain: company.domain,
       });
     }
 
     if (!existingCompany && company.websiteUrl) {
-      existingCompany = await this.companiesRepository.findOneBy({
+      existingCompany = await companiesRepository.findOneBy({
         websiteUrl: company.websiteUrl,
       });
     }
 
     if (existingCompany) {
-      existingCompany = this.companiesRepository.merge(existingCompany, {
+      existingCompany = companiesRepository.merge(existingCompany, {
         name: company.name ?? existingCompany.name,
         legalName: company.legalName ?? existingCompany.legalName,
         websiteUrl: company.websiteUrl ?? existingCompany.websiteUrl,
@@ -108,10 +115,10 @@ export class CompaniesService {
         foundingYear: company.foundingYear ?? existingCompany.foundingYear,
         updatedAt: new Date(),
       });
-      return this.companiesRepository.save(existingCompany);
+      return companiesRepository.save(existingCompany);
     }
 
-    const newCompany = this.companiesRepository.create({
+    const newCompany = companiesRepository.create({
       name: company.name,
       legalName: company.legalName,
       domain: company.domain,
@@ -125,7 +132,7 @@ export class CompaniesService {
       updatedAt: new Date(),
     });
 
-    return this.companiesRepository.save(newCompany);
+    return companiesRepository.save(newCompany);
   }
 
   async saveAllFromNormalized(

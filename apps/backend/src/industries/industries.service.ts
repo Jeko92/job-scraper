@@ -4,7 +4,7 @@ import type {
 } from '@job-scraper/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { type EntityManager, Repository } from 'typeorm';
 
 import { containsPattern } from '../common/contains-pattern.js';
 import { Industry } from './entities/industry.entity.js';
@@ -37,16 +37,20 @@ export class IndustriesService {
     return toIndustryDto(industry);
   }
 
-  async findOrCreate(name: string): Promise<Industry> {
+  async findOrCreate(
+    name: string,
+    manager: EntityManager = this.industriesRepository.manager,
+  ): Promise<Industry> {
+    const repository = manager.getRepository(Industry);
     const slug = toSlug(name);
-    const existing = await this.industriesRepository
+    const existing = await repository
       .createQueryBuilder('industry')
       .where('industry.slug = :slug OR LOWER(industry.name) = LOWER(:name)', {
         slug,
         name,
       })
       .getOne();
-    return existing ?? this.industriesRepository.save({ name, slug });
+    return existing ?? repository.save({ name, slug });
   }
 }
 
