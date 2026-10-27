@@ -19,10 +19,6 @@ import {
   createCompanySchema,
 } from './dto/create-company.dto.js';
 import {
-  type FetchCompaniesQuery,
-  fetchCompaniesQuerySchema,
-} from './dto/fetch-companies.dto.js';
-import {
   companySearchBodySchema,
   companySearchQuerySchema,
 } from './dto/search-companies.dto.js';
@@ -71,37 +67,8 @@ export class CompaniesController {
     return this.companiesService.findByDomain(domain);
   }
 
-  @Post('fetch')
-  @ApiOperation({
-    summary:
-      'Fetch companies from external APIs (Wikidata and/or CompanyEnrich)',
-    description:
-      'Fetches company data from external APIs and optionally saves to database',
-  })
-  @HttpCode(HttpStatus.OK)
-  async fetchFromApis(
-    @Query({
-      schema: fetchCompaniesQuerySchema,
-      pipes: [StandardSchemaValidationPipe],
-    })
-    options: FetchCompaniesQuery,
-    @Body({
-      schema: companySearchBodySchema,
-      pipes: [StandardSchemaValidationPipe],
-    })
-    params: CompanySearchParams,
-  ): Promise<NormalizedCompany[]> {
-    return this.companiesService.fetchFromApis({
-      ...options,
-      params: params,
-    });
-  }
-
   @Post('fetch/wikidata')
-  @ApiOperation({
-    summary: 'Fetch companies from Wikidata',
-    description: 'Fetches company data from Wikidata only',
-  })
+  @ApiOperation({ summary: 'Fetch companies from Wikidata' })
   @HttpCode(HttpStatus.OK)
   async fetchFromWikidata(
     @Body({
@@ -114,10 +81,7 @@ export class CompaniesController {
   }
 
   @Post('fetch/company-enrich')
-  @ApiOperation({
-    summary: 'Fetch companies from CompanyEnrich',
-    description: 'Fetches company data from CompanyEnrich only',
-  })
+  @ApiOperation({ summary: 'Fetch companies from CompanyEnrich' })
   @HttpCode(HttpStatus.OK)
   async fetchFromCompanyEnrich(
     @Body({
@@ -139,8 +103,7 @@ export class CompaniesController {
     })
     dto: CreateCompanyRequest,
   ): Promise<CompanyDto> {
-    // For direct creation, we create a normalized company manually
-    const normalized = {
+    return this.companiesService.createFromNormalized({
       name: dto.name ?? null,
       legalName: dto.legalName ?? null,
       domain: dto.domain ?? null,
@@ -153,36 +116,6 @@ export class CompaniesController {
       source: 'manual',
       externalId: null,
       rawData: null,
-    };
-
-    return this.companiesService.createFromNormalized(normalized);
-  }
-
-  @Post('refresh')
-  @ApiOperation({
-    summary: 'Refresh company data from external APIs',
-    description: 'Fetches data from external APIs and saves to database',
-  })
-  @HttpCode(HttpStatus.OK)
-  async refresh(
-    @Query({
-      schema: fetchCompaniesQuerySchema,
-      pipes: [StandardSchemaValidationPipe],
-    })
-    options: FetchCompaniesQuery,
-    @Body({
-      schema: companySearchBodySchema,
-      pipes: [StandardSchemaValidationPipe],
-    })
-    params: CompanySearchParams,
-  ): Promise<CompanyDto[]> {
-    const companies = await this.companiesService.fetchFromApis({
-      ...options,
-      params: params,
-      saveToDatabase: true, // Always save when using refresh endpoint
     });
-
-    // Save all fetched companies to database
-    return this.companiesService.saveAllFromNormalized(companies);
   }
 }
