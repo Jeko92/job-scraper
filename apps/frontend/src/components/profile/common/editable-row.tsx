@@ -89,11 +89,16 @@ export function EditableRow<T>({
           />
         ) : (
           <div className="flex items-center gap-2">
-            <span
-              className={isEmpty ? 'flex-1 text-ink-muted' : 'flex-1 text-ink'}
+            {/* A div, not a span: the value can be a list (ChipList). */}
+            <div
+              className={
+                isEmpty
+                  ? 'min-w-0 flex-1 text-ink-muted'
+                  : 'min-w-0 flex-1 text-ink'
+              }
             >
               {isEmpty ? NOT_SET : value}
-            </span>
+            </div>
             {justSaved && (
               <span
                 aria-hidden

@@ -7,6 +7,7 @@ import { toIndustryOption } from '@/lib/lookups/options';
 import { searchIndustryOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
+import { ChipList } from '../common/chip-list';
 import { EditableRow, type RowControl } from '../common/editable-row';
 import { ProfileGroup } from '../common/profile-group';
 
@@ -23,10 +24,15 @@ export function IndustriesSection({ profile, row }: IndustriesSectionProps) {
       <EditableRow<LookupOption[]>
         {...row('industries')}
         label="Industries"
-        // The order is the priority: "1. Finance · 2. Software".
-        value={industries
-          .map((industry, index) => `${String(index + 1)}. ${industry.label}`)
-          .join(' · ')}
+        // The order is the priority: "1. Finance", "2. Software".
+        value={
+          industries.length > 0 ? (
+            <ChipList
+              numbered
+              labels={industries.map((industry) => industry.label)}
+            />
+          ) : null
+        }
         initialDraft={industries}
         renderEditor={(draft, setDraft) => (
           <LookupField

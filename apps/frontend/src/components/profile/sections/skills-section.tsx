@@ -7,6 +7,7 @@ import { toSkillOption } from '@/lib/lookups/options';
 import { searchSkillOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
+import { ChipList } from '../common/chip-list';
 import { EditableRow, type RowControl } from '../common/editable-row';
 import { ProfileGroup } from '../common/profile-group';
 
@@ -23,7 +24,12 @@ export function SkillsSection({ profile, row }: SkillsSectionProps) {
       <EditableRow<LookupOption[]>
         {...row('skills')}
         label="Skills"
-        value={skills.map((skill) => skill.label).join(' · ')}
+        // null when empty, so the row shows "Not set".
+        value={
+          skills.length > 0 ? (
+            <ChipList labels={skills.map((skill) => skill.label)} />
+          ) : null
+        }
         initialDraft={skills}
         renderEditor={(draft, setDraft) => (
           <LookupField

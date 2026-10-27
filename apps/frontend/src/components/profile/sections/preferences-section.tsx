@@ -16,6 +16,7 @@ import {
   WORK_SETUP_LABELS,
 } from '@/lib/profile/enum-labels';
 
+import { ChipList } from '../common/chip-list';
 import { EditableRow, type RowControl } from '../common/editable-row';
 import { ProfileGroup } from '../common/profile-group';
 import { enumItems, RowSelect, type RowSelectItem } from '../common/row-select';
@@ -108,7 +109,11 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
         <EditableRow<LookupOption[]>
           {...row('preferencesLocations')}
           label="Places"
-          value={places.map((place) => place.label).join(' · ')}
+          value={
+            places.length > 0 ? (
+              <ChipList labels={places.map((place) => place.label)} />
+            ) : null
+          }
           initialDraft={places}
           renderEditor={(draft, setDraft) => (
             <LookupField
