@@ -66,11 +66,14 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
               />
             </div>
           )}
-          //TODO: Refactot -> Names cannot be cleared on the backend, so an empty one is not sent.
-          buildRequest={(draft) => ({
-            firstName: draft.firstName.trim() || undefined,
-            lastName: draft.lastName.trim() || undefined,
-          })}
+          buildRequest={(draft) => {
+            const firstName = draft.firstName.trim();
+            const lastName = draft.lastName.trim();
+            const errors: string[] = [];
+            if (firstName === '') errors.push('First name is required.');
+            if (lastName === '') errors.push('Last name is required.');
+            return errors.length > 0 ? errors : { firstName, lastName };
+          }}
         />
 
         <EditableRow

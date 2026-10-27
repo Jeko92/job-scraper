@@ -1,7 +1,6 @@
 # ADR-008: Profile page edits one field at a time, in place
 
 * Status: accepted
-* Decided by: Zeinab, the team left this decision to her.
 
 ## Decision
 

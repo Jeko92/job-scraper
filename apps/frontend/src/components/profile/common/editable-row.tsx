@@ -81,10 +81,13 @@ export function EditableRow<T>({
               {isEmpty ? NOT_SET : value}
             </span>
             {justSaved && (
-              <CircleCheck
+              <span
                 aria-hidden
-                className="size-5 text-green-600 dark:text-green-400"
-              />
+                className="flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400"
+              >
+                <CircleCheck className="size-4" />
+                Saved
+              </span>
             )}
             <Button
               type="button"
