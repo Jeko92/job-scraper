@@ -65,6 +65,7 @@ export {
   MAX_PREFERENCES_LOCATIONS,
   MAX_PROFILE_INDUSTRIES,
   MAX_PROFILE_SKILLS,
+  MAX_YEARS_EXPERIENCE,
   REMOTE_PREFERENCES,
   type RemotePreference,
   remotePreferenceSchema,

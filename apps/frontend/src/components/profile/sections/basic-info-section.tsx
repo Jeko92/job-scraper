@@ -1,6 +1,6 @@
 'use client';
 
-import { SENIORITY_LEVELS } from '@job-scraper/shared';
+import { MAX_YEARS_EXPERIENCE, SENIORITY_LEVELS } from '@job-scraper/shared';
 
 import { LookupField } from '@/components/lookups/lookup-field';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,6 @@ import { EditableRow, type SectionProps } from '../common/editable-row';
 import { enumItems, RowSelect } from '../common/row-select';
 
 const FIELD_CLASS = 'h-12 rounded-card px-4 text-base';
-const MAX_YEARS = 99.9;
 
 const SENIORITY_ITEMS = enumItems(SENIORITY_LEVELS, SENIORITY_LABELS);
 
@@ -137,9 +136,9 @@ export function BasicInfoSection({ profile, row }: SectionProps) {
             return ['Enter a number of years, e.g. 2.5.'];
           }
           const value = Number(text.replace(',', '.'));
-          if (value > MAX_YEARS) {
+          if (value > MAX_YEARS_EXPERIENCE) {
             return [
-              `Experience must be between 0 and ${String(MAX_YEARS)} years.`,
+              `Experience must be between 0 and ${String(MAX_YEARS_EXPERIENCE)} years.`,
             ];
           }
           // The backend stores one decimal.
