@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { IndustriesModule } from '../industries/industries.module.js';
 import { LocationsModule } from '../locations/locations.module.js';
+import { SkillsModule } from '../skills/skills.module.js';
 import { CompaniesController } from './companies.controller.js';
 import { CompaniesService } from './companies.service.js';
 import { Company } from './entities/company.entity.js';
@@ -15,6 +16,7 @@ import { WikidataProvider } from './providers/wikidata.provider.js';
     ConfigModule,
     IndustriesModule,
     LocationsModule,
+    SkillsModule,
     TypeOrmModule.forFeature([Company]),
   ],
   controllers: [CompaniesController],

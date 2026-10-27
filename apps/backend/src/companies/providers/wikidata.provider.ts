@@ -102,6 +102,7 @@ export class WikidataProvider implements CompanyDataProvider<CompanySearchParams
       foundingYear: yearMatch?.[1] ? parseInt(yearMatch[1], 10) : null,
       location: null,
       industries: [],
+      skills: [],
       source: 'wikidata',
       externalId: company.company,
       rawData: company,

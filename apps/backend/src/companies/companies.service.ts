@@ -4,11 +4,13 @@ import { type EntityManager, Repository } from 'typeorm';
 
 import { IndustriesService } from '../industries/industries.service.js';
 import { LocationsService } from '../locations/locations.service.js';
+import { SkillsService } from '../skills/skills.service.js';
 import type { CompanyDto } from './dto/company.dto.js';
 import type { CompanyEnrichSearchRequest } from './dto/company-enrich-search.dto.js';
 import { Company } from './entities/company.entity.js';
 import { CompanyIndustry } from './entities/company-industry.entity.js';
 import { CompanyLocation } from './entities/company-location.entity.js';
+import { CompanySkill } from './entities/company-skill.entity.js';
 import type {
   CompanySearchParams,
   NormalizedCompany,
@@ -25,6 +27,7 @@ export class CompaniesService {
     private readonly companiesRepository: Repository<Company>,
     private readonly locationsService: LocationsService,
     private readonly industriesService: IndustriesService,
+    private readonly skillsService: SkillsService,
     private readonly wikidataProvider: WikidataProvider,
     private readonly companyEnrichProvider: CompanyEnrichProvider,
   ) {}
@@ -79,6 +82,10 @@ export class CompaniesService {
           companyId,
           industryId: industry.id,
         });
+      }
+      for (const name of company.skills) {
+        const skill = await this.skillsService.findOrCreate(name, manager);
+        await manager.save(CompanySkill, { companyId, skillId: skill.id });
       }
       return saved;
     });

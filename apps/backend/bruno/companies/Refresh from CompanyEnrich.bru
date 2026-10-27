@@ -33,6 +33,9 @@ docs {
   all fields match) and linked via `company_locations`.
   Each of its CompanyEnrich `industries` is stored in `industries` (reused when
   the slug or name matches) and linked via `company_industries`.
+  Each of its CompanyEnrich `technologies` is stored in `skills` (reused when
+  the slug or name matches) and linked via `company_skills`.
+  Each company is saved with its links in one transaction.
   The body follows CompanyEnrich `POST /companies/search`.
 
   Request Body:

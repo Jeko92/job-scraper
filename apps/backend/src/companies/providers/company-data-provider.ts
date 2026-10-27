@@ -16,6 +16,7 @@ export interface NormalizedCompany {
   foundingYear: number | null;
   location: NewLocation | null;
   industries: string[];
+  skills: string[];
   source: string;
   externalId: string | null;
   rawData: unknown;

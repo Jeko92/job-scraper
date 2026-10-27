@@ -153,6 +153,7 @@ export class CompaniesController {
       foundingYear: dto.foundingYear ?? null,
       location: null,
       industries: [],
+      skills: [],
       source: 'manual',
       externalId: null,
       rawData: null,

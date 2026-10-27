@@ -48,6 +48,7 @@ export interface CompanyInfo {
   founded_year: number | null;
   location: CompanyLocationInfo | null;
   industries: string[] | null;
+  technologies: string[] | null;
 }
 
 interface CompanyLocationInfo {
@@ -130,6 +131,7 @@ export class CompanyEnrichProvider implements CompanyDataProvider<CompanyEnrichS
         postalCode: company.location.postal_code,
       },
       industries: company.industries ?? [],
+      skills: company.technologies ?? [],
       source: 'company-enrich',
       externalId: company.id,
       rawData: company,
