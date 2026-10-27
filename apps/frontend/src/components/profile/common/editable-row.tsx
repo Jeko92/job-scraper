@@ -145,7 +145,6 @@ export function EditableRow<T>({
   }
 
   return (
-    // Label above the field. List rows take both columns of the grid.
     <div
       className={cn(
         'flex min-w-0 flex-col gap-2',
@@ -204,7 +203,6 @@ function RowEditor<T>({
   const [errors, setErrors] = useState<string[]>([]);
 
   function save() {
-    // Nothing changed: close without calling the server.
     if (JSON.stringify(draft) === JSON.stringify(initialDraft)) {
       onClose();
       return;

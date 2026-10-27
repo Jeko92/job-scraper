@@ -46,7 +46,7 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
     <>
       <EditableRow
         {...row('employmentType')}
-        label="Employment"
+        label="Employment type"
         value={
           preferences?.employmentType &&
           EMPLOYMENT_TYPE_LABELS[preferences.employmentType]
@@ -86,7 +86,7 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
 
       <EditableRow
         {...row('willingToRelocate')}
-        label="Relocate"
+        label="Open to relocating"
         value={relocate === null ? null : relocate ? 'Yes' : 'No'}
         initialDraft={relocate}
         renderEditor={(draft, setDraft) => (
@@ -95,16 +95,13 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
             items={RELOCATE_ITEMS}
             value={draft}
             onChange={setDraft}
+            placeholder="Choose Yes or No"
           />
         )}
-        buildRequest={(draft) =>
-          draft === null
-            ? ['Choose Yes or No.']
-            : {
-                preferences: { willingToRelocate: draft },
-                ...(draft ? {} : { preferencesLocationIds: [] }),
-              }
-        }
+        buildRequest={(draft) => ({
+          preferences: { willingToRelocate: draft === true },
+          ...(draft ? {} : { preferencesLocationIds: [] }),
+        })}
       />
 
       {relocate === true && (

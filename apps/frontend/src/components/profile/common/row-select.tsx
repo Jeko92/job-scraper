@@ -18,6 +18,8 @@ interface RowSelectProps<T> {
   items: RowSelectItem<T>[];
   value: T;
   onChange: (value: T) => void;
+  /** Shown while no item matches the value. */
+  placeholder?: string;
 }
 
 export function RowSelect<T>({
@@ -25,6 +27,7 @@ export function RowSelect<T>({
   items,
   value,
   onChange,
+  placeholder,
 }: RowSelectProps<T>) {
   return (
     <Select
@@ -39,7 +42,7 @@ export function RowSelect<T>({
         aria-label={label}
         className="w-full rounded-card px-4 text-base data-[size=default]:h-12"
       >
-        <SelectValue />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         {items.map((item) => (
