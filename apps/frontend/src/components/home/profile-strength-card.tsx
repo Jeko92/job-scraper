@@ -2,13 +2,13 @@ import type { UserProfile } from '@job-scraper/shared';
 import { Check, Circle } from 'lucide-react';
 import Link from 'next/link';
 
+import { MatchRing } from '@/components/common/match-ring';
 import { buttonVariants } from '@/components/ui/button';
 import { getCompleteness, getProfileChecks } from '@/lib/profile/completeness';
 import { PROFILE_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 import { HomeCard } from './home-card';
-import { MatchRing } from './match-ring';
 
 const TITLE = 'Better profile, better matches';
 
