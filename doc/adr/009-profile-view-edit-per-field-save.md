@@ -1,6 +1,7 @@
-# ADR-008: Profile page edits one field at a time, in place
+# ADR-009: Profile page edits one field at a time, in place
 
 * Status: accepted
+* Supersedes: ADR-008
 
 ## Decision
 
@@ -39,7 +40,8 @@ box, dropdown or search) with ✓ (save) and ✕ (cancel).
   tab. In-app links do not fire it; a guard for them is not in the MVP.
 * A toggle takes three clicks (✎, toggle, ✓).
 * Role and location cannot be cleared (checked in the frontend only, for
-  now). An empty name is not sent.
+  now). An empty first or last name shows an error (e.g. "First name is
+  required.").
 * "Saved" and errors are announced to screen readers (WCAG 4.1.3).
 
 ## Notes

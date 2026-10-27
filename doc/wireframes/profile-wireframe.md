@@ -40,7 +40,7 @@ Required: role (headline) and based in (location), so the profile stays
 complete (onboardingCompleted).
 Closing or reloading the tab with an open row shows the browser's
 "Leave site?" dialog.
-See ADR-008.
+See ADR-009.
 
 
 0  VIEW MODE
