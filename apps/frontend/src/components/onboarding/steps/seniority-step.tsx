@@ -3,7 +3,7 @@
 import { SENIORITY_LEVELS, type SeniorityLevel } from '@job-scraper/shared';
 import type { Dispatch } from 'react';
 
-import { SENIORITY_LABELS } from '@/lib/profile/enum-labels';
+import { SENIORITY_LABELS } from '@/lib/common/enum-labels';
 
 import type { OnboardingAction } from '../onboarding-state';
 import { type Option, OptionList } from './common/option-list';

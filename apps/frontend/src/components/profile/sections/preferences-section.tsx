@@ -8,20 +8,23 @@ import {
 } from '@job-scraper/shared';
 
 import { LookupField } from '@/components/lookups/lookup-field';
+import {
+  EMPLOYMENT_TYPE_LABELS,
+  REMOTE_PREFERENCE_LABELS,
+} from '@/lib/common/enum-labels';
 import { toLocationOption } from '@/lib/lookups/options';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
-import {
-  EMPLOYMENT_LABELS,
-  WORK_SETUP_LABELS,
-} from '@/lib/profile/enum-labels';
 
 import { ChipList } from '../common/chip-list';
 import { EditableRow, type RowControl } from '../common/editable-row';
 import { enumItems, RowSelect, type RowSelectItem } from '../common/row-select';
 
-const EMPLOYMENT_ITEMS = enumItems(EMPLOYMENT_TYPES, EMPLOYMENT_LABELS);
-const WORK_SETUP_ITEMS = enumItems(REMOTE_PREFERENCES, WORK_SETUP_LABELS);
+const EMPLOYMENT_ITEMS = enumItems(EMPLOYMENT_TYPES, EMPLOYMENT_TYPE_LABELS);
+const WORK_SETUP_ITEMS = enumItems(
+  REMOTE_PREFERENCES,
+  REMOTE_PREFERENCE_LABELS,
+);
 const RELOCATE_ITEMS: RowSelectItem<boolean | null>[] = [
   { value: true, label: 'Yes' },
   { value: false, label: 'No' },
@@ -46,7 +49,7 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
         label="Employment"
         value={
           preferences?.employmentType &&
-          EMPLOYMENT_LABELS[preferences.employmentType]
+          EMPLOYMENT_TYPE_LABELS[preferences.employmentType]
         }
         initialDraft={preferences?.employmentType ?? null}
         renderEditor={(draft, setDraft) => (
@@ -65,7 +68,7 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
         label="Work setup"
         value={
           preferences?.remotePreference &&
-          WORK_SETUP_LABELS[preferences.remotePreference]
+          REMOTE_PREFERENCE_LABELS[preferences.remotePreference]
         }
         initialDraft={preferences?.remotePreference ?? null}
         renderEditor={(draft, setDraft) => (

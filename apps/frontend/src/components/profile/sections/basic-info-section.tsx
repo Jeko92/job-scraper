@@ -4,10 +4,10 @@ import { SENIORITY_LEVELS, type UserProfile } from '@job-scraper/shared';
 
 import { LookupField } from '@/components/lookups/lookup-field';
 import { Input } from '@/components/ui/input';
+import { SENIORITY_LABELS } from '@/lib/common/enum-labels';
 import { toLocationOption } from '@/lib/lookups/options';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
-import { SENIORITY_LABELS } from '@/lib/profile/enum-labels';
 
 import { EditableRow, type RowControl } from '../common/editable-row';
 import { enumItems, RowSelect } from '../common/row-select';

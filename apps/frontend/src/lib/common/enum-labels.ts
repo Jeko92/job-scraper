@@ -4,8 +4,7 @@ import type {
   SeniorityLevel,
 } from '@job-scraper/shared';
 
-// Display text for the shared profile enums (onboarding and profile page).
-//TODO: Refactor making it centralized and use it also in job search rather than formate lib/jobs/formart
+// Display text for the shared enums (onboarding, profile page and job search).
 
 export const SENIORITY_LABELS: Record<SeniorityLevel, string> = {
   INTERN: 'Intern',
@@ -15,7 +14,7 @@ export const SENIORITY_LABELS: Record<SeniorityLevel, string> = {
   LEAD: 'Lead',
 };
 
-export const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
+export const EMPLOYMENT_TYPE_LABELS: Record<EmploymentType, string> = {
   FULL_TIME: 'Full-time',
   PART_TIME: 'Part-time',
   CONTRACT: 'Contract',
@@ -23,7 +22,7 @@ export const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
   FREELANCE: 'Freelance',
 };
 
-export const WORK_SETUP_LABELS: Record<RemotePreference, string> = {
+export const REMOTE_PREFERENCE_LABELS: Record<RemotePreference, string> = {
   ONSITE: 'On-site',
   HYBRID: 'Hybrid',
   REMOTE: 'Remote',
