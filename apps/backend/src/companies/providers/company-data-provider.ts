@@ -1,3 +1,5 @@
+import type { NewLocation } from '../../locations/locations.service.js';
+
 export interface CompanyDataProvider<TRequest> {
   fetchCompanies(request: TRequest): Promise<unknown[]>;
 }
@@ -12,6 +14,7 @@ export interface NormalizedCompany {
   numberOfEmployees: number | null;
   employeeRange: string | null;
   foundingYear: number | null;
+  location: NewLocation | null;
   source: string;
   externalId: string | null;
   rawData: unknown;

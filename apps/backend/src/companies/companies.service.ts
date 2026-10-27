@@ -2,9 +2,11 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { LocationsService } from '../locations/locations.service.js';
 import type { CompanyDto } from './dto/company.dto.js';
 import type { CompanyEnrichSearchRequest } from './dto/company-enrich-search.dto.js';
 import { Company } from './entities/company.entity.js';
+import { CompanyLocation } from './entities/company-location.entity.js';
 import type {
   CompanySearchParams,
   NormalizedCompany,
@@ -19,6 +21,9 @@ export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private readonly companiesRepository: Repository<Company>,
+    @InjectRepository(CompanyLocation)
+    private readonly companyLocationsRepository: Repository<CompanyLocation>,
+    private readonly locationsService: LocationsService,
     private readonly wikidataProvider: WikidataProvider,
     private readonly companyEnrichProvider: CompanyEnrichProvider,
   ) {}
@@ -51,6 +56,20 @@ export class CompaniesService {
   }
 
   async createFromNormalized(company: NormalizedCompany): Promise<CompanyDto> {
+    const saved = await this.upsertCompany(company);
+    if (company.location) {
+      const location = await this.locationsService.findOrCreate(
+        company.location,
+      );
+      await this.companyLocationsRepository.save({
+        companyId: saved.id,
+        locationId: location.id,
+      });
+    }
+    return saved;
+  }
+
+  private async upsertCompany(company: NormalizedCompany): Promise<Company> {
     let existingCompany: Company | null = null;
     if (company.domain) {
       existingCompany = await this.companiesRepository.findOneBy({

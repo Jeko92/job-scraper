@@ -100,6 +100,7 @@ export class WikidataProvider implements CompanyDataProvider<CompanySearchParams
       numberOfEmployees: isNaN(employeeCount) ? null : employeeCount,
       employeeRange: isEmployeeRange ? (employees ?? null) : null,
       foundingYear: yearMatch?.[1] ? parseInt(yearMatch[1], 10) : null,
+      location: null,
       source: 'wikidata',
       externalId: company.company,
       rawData: company,

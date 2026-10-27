@@ -29,6 +29,8 @@ body:json {
 docs {
   Fetch companies from CompanyEnrich and save them to the database.
   Existing companies (same domain or website) are updated.
+  Each company's CompanyEnrich location is stored in `locations` (reused when
+  all fields match) and linked via `company_locations`.
   The body follows CompanyEnrich `POST /companies/search`.
 
   Request Body:

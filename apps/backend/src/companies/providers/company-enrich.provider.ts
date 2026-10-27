@@ -46,6 +46,14 @@ export interface CompanyInfo {
   employees: CompanyEmployees | null;
   reported_employees: CompanyEmployees | null;
   founded_year: number | null;
+  location: CompanyLocationInfo | null;
+}
+
+interface CompanyLocationInfo {
+  country: { code: string; name: string } | null;
+  state: { name: string } | null;
+  city: { name: string } | null;
+  postal_code: string | null;
 }
 
 const ESTIMATED_EMPLOYEES: Record<CompanyEmployees, number> = {
@@ -113,6 +121,13 @@ export class CompanyEnrichProvider implements CompanyDataProvider<CompanyEnrichS
         : null,
       employeeRange,
       foundingYear: company.founded_year,
+      location: company.location && {
+        countryCode: company.location.country?.code ?? null,
+        countryName: company.location.country?.name ?? null,
+        stateName: company.location.state?.name ?? null,
+        city: company.location.city?.name ?? null,
+        postalCode: company.location.postal_code,
+      },
       source: 'company-enrich',
       externalId: company.id,
       rawData: company,
