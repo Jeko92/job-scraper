@@ -63,7 +63,9 @@ export function formatPostedAt(iso: string, now: number = Date.now()): string {
 }
 
 /** The company's name, or its domain when the name is unknown. */
-export function formatCompanyName(job: JobListItem): string | null {
+export function formatCompanyName(
+  job: Pick<JobListItem, 'company'>,
+): string | null {
   return job.company.name ?? job.company.domain;
 }
 

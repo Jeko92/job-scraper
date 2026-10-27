@@ -15,6 +15,7 @@ import { IndustriesModule } from './industries/industries.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { LocationsModule } from './locations/locations.module.js';
 import { SkillsModule } from './skills/skills.module.js';
+import { StatsModule } from './stats/stats.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -33,6 +34,7 @@ import { UsersModule } from './users/users.module.js';
     IndustriesModule,
     LocationsModule,
     JobsModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],

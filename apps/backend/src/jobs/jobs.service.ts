@@ -25,11 +25,10 @@ import { Job } from './entities/job.entity.js';
 import { hasPgCode, jobNotFound } from './utils/db-errors.js';
 import { definedOnly, toDate, toJobListItem } from './utils/job-list-item.js';
 import { replaceSkills } from './utils/job-skills.js';
+import { POSTED_AT, withinDays } from './utils/posted-at.js';
 
 const UNIQUE_VIOLATION = '23505';
 const FOREIGN_KEY_VIOLATION = '23503';
-
-const POSTED_AT = 'COALESCE(job.publishedAt, job.firstSeenAt)';
 
 const SORT_DIRECTIONS: Record<JobSort, 'ASC' | 'DESC'> = {
   newest: 'DESC',
@@ -164,10 +163,9 @@ export class JobsService {
       );
     }
     if (query.postedWithinDays) {
-      builder.andWhere(
-        `${POSTED_AT} >= NOW() - make_interval(days => :postedWithinDays)`,
-        { postedWithinDays: query.postedWithinDays },
-      );
+      builder.andWhere(withinDays(POSTED_AT, 'postedWithinDays'), {
+        postedWithinDays: query.postedWithinDays,
+      });
     }
     return builder;
   }
