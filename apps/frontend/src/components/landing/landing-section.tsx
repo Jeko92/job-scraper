@@ -23,7 +23,11 @@ export function LandingSection({
   const headingId = `${id}-heading`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="px-4 sm:px-8">
+    <section
+      id={id}
+      aria-labelledby={headingId}
+      className="scroll-mt-8 px-4 sm:px-8"
+    >
       <div
         className={cn(
           'flex flex-col gap-10 rounded-tile border border-line bg-surface p-8 lg:p-12',
