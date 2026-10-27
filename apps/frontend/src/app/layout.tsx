@@ -46,6 +46,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         'h-full antialiased',
         theme === 'dark' && 'dark',
       )}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
