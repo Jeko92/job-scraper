@@ -1,30 +1,25 @@
 import { JobCardSkeleton } from '@/components/jobs/job-card-skeleton';
 import { cn } from '@/lib/utils';
 
+import {
+  cardsRow,
+  homeMain,
+  summaryTile,
+  welcomeRow,
+  welcomeTile,
+} from './home-layout';
+
 const DEFAULT_LINES = 3;
-export const MARKET_PULSE_LINES = 6;
+const MARKET_PULSE_LINES = 6;
 
 const bar = 'rounded-pill bg-line';
-
-interface LineSkeletonProps {
-  className?: string;
-}
-
-export function LineSkeleton({ className }: LineSkeletonProps) {
-  return (
-    <div aria-hidden="true" className={cn(bar, 'animate-pulse', className)} />
-  );
-}
 
 interface TileSkeletonProps {
   lines?: number;
   className?: string;
 }
 
-export function TileSkeleton({
-  lines = DEFAULT_LINES,
-  className,
-}: TileSkeletonProps) {
+function TileSkeleton({ lines = DEFAULT_LINES, className }: TileSkeletonProps) {
   return (
     <div
       aria-hidden="true"
@@ -41,6 +36,15 @@ export function TileSkeleton({
   );
 }
 
+export function WelcomeRowSkeleton() {
+  return (
+    <div className={welcomeRow}>
+      <TileSkeleton className={cn(welcomeTile, 'min-h-76')} />
+      <TileSkeleton className={cn(summaryTile, 'min-h-76')} />
+    </div>
+  );
+}
+
 export function JobsSliderSkeleton() {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -52,5 +56,35 @@ export function JobsSliderSkeleton() {
         <JobCardSkeleton />
       </div>
     </div>
+  );
+}
+
+export function CardsRowSkeleton() {
+  return (
+    <div className={cardsRow}>
+      <TileSkeleton className="min-h-100" />
+      <TileSkeleton className="min-h-100" />
+    </div>
+  );
+}
+
+export function MarketPulseSkeleton() {
+  return <TileSkeleton lines={MARKET_PULSE_LINES} className="min-h-80" />;
+}
+
+export function HomeOverviewSkeleton() {
+  return (
+    <main aria-busy="true" className={homeMain}>
+      <span className="sr-only">Loading your overview</span>
+      <WelcomeRowSkeleton />
+      <div
+        aria-hidden="true"
+        className="rounded-tile border border-line bg-surface p-6 sm:p-8"
+      >
+        <JobsSliderSkeleton />
+      </div>
+      <CardsRowSkeleton />
+      <MarketPulseSkeleton />
+    </main>
   );
 }

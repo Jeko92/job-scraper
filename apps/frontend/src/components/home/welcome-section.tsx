@@ -1,7 +1,6 @@
 import type { AuthUser } from '@job-scraper/shared';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense } from 'react';
 
 import { GlowPanel } from '@/components/landing/glow-panel';
 import { SectionChip } from '@/components/landing/section-chip';
@@ -12,27 +11,7 @@ import { getProfile } from '@/lib/profile/profile';
 import { PROFILE_HREF, SEARCH_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
-import { LineSkeleton } from './home-skeletons';
-
 const pill = 'h-11 rounded-pill px-5 text-[0.95rem] font-semibold';
-
-async function WelcomeStats() {
-  const stats = await getUserStats();
-  if (!stats) {
-    return null;
-  }
-
-  return (
-    <p className="max-w-2xl text-ink-muted">
-      <span className="text-ink">
-        {formatJobCount(stats.newJobs)} new{' '}
-        {stats.newJobs === 1 ? 'role' : 'roles'}
-      </span>{' '}
-      {stats.fields.length > 0 ? 'in your fields' : 'posted'} in the last{' '}
-      {stats.periodDays} days.
-    </p>
-  );
-}
 
 interface WelcomeSectionProps {
   user: AuthUser;
@@ -40,7 +19,7 @@ interface WelcomeSectionProps {
 }
 
 export async function WelcomeSection({ user, className }: WelcomeSectionProps) {
-  const profile = await getProfile();
+  const [profile, stats] = await Promise.all([getProfile(), getUserStats()]);
 
   return (
     <GlowPanel
@@ -55,9 +34,16 @@ export async function WelcomeSection({ user, className }: WelcomeSectionProps) {
         Welcome back, {profile?.firstName ?? user.username}.
       </h1>
 
-      <Suspense fallback={<LineSkeleton className="h-6 w-80 max-w-full" />}>
-        <WelcomeStats />
-      </Suspense>
+      {stats && (
+        <p className="max-w-2xl text-ink-muted">
+          <span className="text-ink">
+            {formatJobCount(stats.newJobs)} new{' '}
+            {stats.newJobs === 1 ? 'role' : 'roles'}
+          </span>{' '}
+          {stats.fields.length > 0 ? 'in your fields' : 'posted'} in the last{' '}
+          {stats.periodDays} days.
+        </p>
+      )}
 
       <div className="mt-auto flex flex-wrap gap-3">
         <Link href={SEARCH_HREF} className={cn(buttonVariants(), pill)}>
