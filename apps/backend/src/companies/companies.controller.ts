@@ -15,6 +15,10 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service.js';
 import type { CompanyDto } from './dto/company.dto.js';
 import {
+  type CompanyEnrichSearchRequest,
+  companyEnrichSearchSchema,
+} from './dto/company-enrich-search.dto.js';
+import {
   type CreateCompanyRequest,
   createCompanySchema,
 } from './dto/create-company.dto.js';
@@ -97,17 +101,34 @@ export class CompaniesController {
     );
   }
 
-  @Post('fetch/company-enrich')
+  @Post('company-enrich/fetch')
   @ApiOperation({ summary: 'Fetch companies from CompanyEnrich' })
   @HttpCode(HttpStatus.OK)
   async fetchFromCompanyEnrich(
     @Body({
-      schema: companySearchBodySchema,
+      schema: companyEnrichSearchSchema,
       pipes: [StandardSchemaValidationPipe],
     })
-    params: CompanySearchParams,
+    request: CompanyEnrichSearchRequest,
   ): Promise<NormalizedCompany[]> {
-    return this.companiesService.fetchFromCompanyEnrich(params);
+    return this.companiesService.fetchFromCompanyEnrich(request);
+  }
+
+  @Post('company-enrich/refresh')
+  @ApiOperation({
+    summary: 'Fetch companies from CompanyEnrich and save them to the database',
+  })
+  @HttpCode(HttpStatus.OK)
+  async refreshFromCompanyEnrich(
+    @Body({
+      schema: companyEnrichSearchSchema,
+      pipes: [StandardSchemaValidationPipe],
+    })
+    request: CompanyEnrichSearchRequest,
+  ): Promise<CompanyDto[]> {
+    return this.companiesService.saveAllFromNormalized(
+      await this.companiesService.fetchFromCompanyEnrich(request),
+    );
   }
 
   @Post()

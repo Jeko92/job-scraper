@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import type { CompanyDto } from './dto/company.dto.js';
+import type { CompanyEnrichSearchRequest } from './dto/company-enrich-search.dto.js';
 import { Company } from './entities/company.entity.js';
 import type {
   CompanySearchParams,
@@ -36,10 +37,10 @@ export class CompaniesService {
   }
 
   async fetchFromCompanyEnrich(
-    params: CompanySearchParams,
+    request: CompanyEnrichSearchRequest,
   ): Promise<NormalizedCompany[]> {
     const rawCompanies =
-      await this.companyEnrichProvider.fetchCompanies(params);
+      await this.companyEnrichProvider.fetchCompanies(request);
     const companies = rawCompanies.map((c) =>
       this.companyEnrichProvider.normalizeCompany(c),
     );
