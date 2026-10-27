@@ -4,6 +4,8 @@ import type { UserProfile } from '@job-scraper/shared';
 import { useEffect, useState } from 'react';
 
 import type { RowControl } from './common/editable-row';
+import { ProfileTile } from './common/profile-tile';
+import { ProfileSummary } from './profile-summary';
 import { BasicInfoSection } from './sections/basic-info-section';
 import { IndustriesSection } from './sections/industries-section';
 import { PreferencesSection } from './sections/preferences-section';
@@ -49,11 +51,16 @@ export function ProfileSections({
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-6">
-      <BasicInfoSection profile={profile} row={row} />
-      <PreferencesSection profile={profile} row={row} />
-      <SkillsSection profile={profile} row={row} />
-      <IndustriesSection profile={profile} row={row} />
+    <div className="mx-auto grid w-full max-w-6xl items-start gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+      <ProfileSummary profile={profile} />
+      <ProfileTile title="Edit profile">
+        <div className="space-y-8">
+          <BasicInfoSection profile={profile} row={row} />
+          <PreferencesSection profile={profile} row={row} />
+          <SkillsSection profile={profile} row={row} />
+          <IndustriesSection profile={profile} row={row} />
+        </div>
+      </ProfileTile>
     </div>
   );
 }
