@@ -6,12 +6,17 @@ import { Company } from '../companies/entities/company.entity.js';
 import { JobCrawlerController } from './crawler/job-crawler.controller.js';
 import { JobCrawlerService } from './crawler/job-crawler.service.js';
 import { Job } from './entities/job.entity.js';
+import { UserSavedJob } from './entities/user-saved-job.entity.js';
 import { JobsController } from './jobs.controller.js';
 import { JobsService } from './jobs.service.js';
+import { SaveJobsController } from './save-jobs.controller.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Job, Company]), AiProviderModule],
-  controllers: [JobsController, JobCrawlerController],
+  imports: [
+    TypeOrmModule.forFeature([Job, Company, UserSavedJob]),
+    AiProviderModule,
+  ],
+  controllers: [JobsController, JobCrawlerController, SaveJobsController],
   providers: [JobsService, JobCrawlerService],
 })
 export class JobsModule {}

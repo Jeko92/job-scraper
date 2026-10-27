@@ -1,4 +1,5 @@
 import type { JobsListResponse, JobsQuery } from '@job-scraper/shared';
+import type { ReactNode } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -10,18 +11,26 @@ import { JobsPagination } from './jobs-pagination';
 interface JobsFeedProps {
   query: JobsQuery;
   result: JobsListResponse;
+  /** Page links point here; defaults to the search page. */
+  basePath?: string;
+  /** Shown when there are no jobs; defaults to the search hint. */
+  empty?: ReactNode;
 }
 
-export function JobsFeed({ query, result }: JobsFeedProps) {
+export function JobsFeed({ query, result, basePath, empty }: JobsFeedProps) {
   const { items, total, page, limit, totalPages } = result;
 
   if (items.length === 0) {
     return (
       <Card className="items-center gap-2 rounded-card p-10 text-center ring-line">
-        <p className="font-heading text-2xl text-ink">No jobs match yet</p>
-        <p className="text-sm text-ink-muted">
-          Try removing a filter or widening your search.
-        </p>
+        {empty ?? (
+          <>
+            <p className="font-heading text-2xl text-ink">No jobs match yet</p>
+            <p className="text-sm text-ink-muted">
+              Try removing a filter or widening your search.
+            </p>
+          </>
+        )}
       </Card>
     );
   }
@@ -48,6 +57,7 @@ export function JobsFeed({ query, result }: JobsFeedProps) {
           query={query}
           page={page}
           totalPages={totalPages}
+          basePath={basePath}
           className="mx-0 w-auto"
         />
       </div>

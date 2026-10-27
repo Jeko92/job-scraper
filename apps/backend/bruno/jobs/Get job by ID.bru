@@ -12,7 +12,7 @@ get {
 
 docs {
   A single job by id, shaped like a job list item. Run **Create job** first to fill `jobId`.
-
-  - 200: OK - job with company, location and skills (ordered by name)
+  
+  - 200: OK - job with company, location, skills (ordered by name) and `isSaved` for the logged-in user
   - 400: id is not a UUID, 404: unknown id, 401: run Login
 }

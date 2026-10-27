@@ -12,6 +12,8 @@ import {
 import { jobHref } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
+import { SaveJobButton } from './save-job-button';
+
 interface JobCardProps {
   job: JobListItem;
   headingLevel?: 'h2' | 'h3';
@@ -58,16 +60,23 @@ export function JobCard({
 
       <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
         <p className="text-sm text-ink-muted">{skills}</p>
-        <Link
-          href={jobHref(job.id)}
-          aria-label={`View details for ${job.title}`}
-          className={cn(
-            buttonVariants({ size: 'lg' }),
-            'ml-auto rounded-pill px-4 font-semibold',
-          )}
-        >
-          View details
-        </Link>
+        <div className="ml-auto flex items-start gap-2">
+          <SaveJobButton
+            jobId={job.id}
+            jobTitle={job.title}
+            isSaved={job.isSaved}
+          />
+          <Link
+            href={jobHref(job.id)}
+            aria-label={`View details for ${job.title}`}
+            className={cn(
+              buttonVariants({ size: 'lg' }),
+              'rounded-pill px-4 font-semibold',
+            )}
+          >
+            View details
+          </Link>
+        </div>
       </div>
     </Card>
   );

@@ -1,0 +1,18 @@
+meta {
+  name: Save job
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/users/me/save-jobs/{{jobId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Save a job to the logged-in user's list. Saving it again does nothing. Set `jobId` from **List jobs**. See the saved jobs with **List jobs** and `saved=true`.
+  
+  - 204: No Content - saved
+  - 400: id is not a UUID, 404: unknown job, 401: run Login
+}

@@ -46,6 +46,8 @@ export interface JobListItem {
   postedAt: string;
   /** Ordered by name. */
   skills: JobSkill[];
+  /** Whether the current user has saved this job. */
+  isSaved: boolean;
 }
 
 export const jobCompanySchema: z.ZodType<JobCompany> = z.object({
@@ -73,6 +75,7 @@ const jobListItemObject = z.object({
       required: z.boolean(),
     }),
   ),
+  isSaved: z.boolean(),
 });
 
 export const jobListItemSchema: z.ZodType<JobListItem> = jobListItemObject;
@@ -122,6 +125,8 @@ export interface JobsQuery {
   /** Skill slugs. */
   skill?: string[] | undefined;
   postedWithinDays?: number | undefined;
+  /** Only jobs the current user has saved. */
+  saved?: boolean | undefined;
   sort: JobSort;
   page: number;
   limit: number;
@@ -145,6 +150,7 @@ export const jobsQuerySchema: z.ZodType<JobsQuery> = z.object({
   locationId: queryArray(z.uuid()),
   skill: queryArray(slugSchema),
   postedWithinDays: z.coerce.number().int().min(1).max(365).optional(),
+  saved: z.stringbool().optional(),
   sort: jobSortSchema.default('newest'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce

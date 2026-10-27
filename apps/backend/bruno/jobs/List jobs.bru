@@ -20,20 +20,22 @@ params:query {
   limit: 20
   ~locationId: {{locationId}}
   ~sort: newest
+  ~saved: true
 }
 
 docs {
   Active jobs, sorted by posted date (published date, or first-seen date when there is none), newest first by default. Every filter is optional; repeat a param for several values (OR-ed).
-
+  
   - `workplaceType`: REMOTE, HYBRID, ONSITE
   - `employmentType`: FULL_TIME, PART_TIME, CONTRACT, INTERNSHIP, FREELANCE
   - `locationId`: location UUIDs (run **List locations**)
   - `skill`: skill slugs (run **List skills**)
   - `postedWithinDays`: 1-365
+  - `saved`: true = only jobs the logged-in user has saved (run **Save job**)
   - `sort`: newest (default) or oldest
   - `page`: starts at 1, default 1
   - `limit`: jobs per page, 1-100, default 20
-
-  - 200: OK - `{ items, total, page, limit, totalPages }`; a page past the end returns empty `items`
+  
+  - 200: OK - `{ items, total, page, limit, totalPages }`; a page past the end returns empty `items`; each item has `isSaved` for the logged-in user
   - 400: invalid filter, sort, page or limit, 401: run Login
 }

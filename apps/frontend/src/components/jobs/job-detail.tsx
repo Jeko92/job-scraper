@@ -10,6 +10,7 @@ import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { BackToSearchLink } from './back-to-search-link';
+import { SaveJobButton } from './save-job-button';
 
 // Shown until the backend sends descriptions (#39).
 const DESCRIPTION_PLACEHOLDER = [
@@ -46,19 +47,26 @@ export function JobDetail({ job }: JobDetailProps) {
               {formatPostedAt(job.postedAt)}
             </time>
           </p>
-          <a
-            href={job.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              buttonVariants({ size: 'lg' }),
-              'ml-auto rounded-pill px-4 font-semibold',
-            )}
-          >
-            View original posting
-            {newTabHint}
-            <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
-          </a>
+          <div className="ml-auto flex items-start gap-2">
+            <SaveJobButton
+              jobId={job.id}
+              jobTitle={job.title}
+              isSaved={job.isSaved}
+            />
+            <a
+              href={job.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                buttonVariants({ size: 'lg' }),
+                'rounded-pill px-4 font-semibold',
+              )}
+            >
+              View original posting
+              {newTabHint}
+              <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </GlowPanel>
 

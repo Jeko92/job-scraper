@@ -19,6 +19,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   StandardSchemaValidationPipe,
 } from '@nestjs/common';
 import {
@@ -28,6 +29,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import type { RequestWithUser } from '../auth/request-with-user.js';
 import {
   type CreateJobRequest,
   createJobSchema,
@@ -77,6 +79,12 @@ export class JobsController {
     description: 'Skill slugs',
   })
   @ApiQuery({ name: 'postedWithinDays', required: false, type: Number })
+  @ApiQuery({
+    name: 'saved',
+    required: false,
+    type: Boolean,
+    description: 'Only jobs the current user has saved',
+  })
   @ApiQuery({ name: 'sort', required: false, enum: JOB_SORTS })
   @ApiQuery({
     name: 'page',
@@ -86,16 +94,20 @@ export class JobsController {
   })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   findAll(
+    @Req() request: RequestWithUser,
     @Query({ schema: jobsQuerySchema, pipes: [StandardSchemaValidationPipe] })
     query: JobsQuery,
   ): Promise<JobsListResponse> {
-    return this.jobsService.findAll(query);
+    return this.jobsService.findAll(query, request.user.id);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a job by its id' })
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<JobListItem> {
-    return this.jobsService.findOne(id);
+  findOne(
+    @Req() request: RequestWithUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<JobListItem> {
+    return this.jobsService.findOne(id, request.user.id);
   }
 
   @Patch(':id')
