@@ -63,32 +63,37 @@ export class CompaniesService {
     return this.companiesRepository.manager.transaction(async (manager) => {
       const entity = await this.buildCompany(company, manager);
 
-      entity.locations = [];
       if (company.location) {
         const location = await this.locationsService.findOrCreate(
           company.location,
           manager,
         );
-        entity.locations.push(
+        entity.locations = [
           manager.create(CompanyLocation, { locationId: location.id }),
-        );
+        ];
       }
 
-      entity.industries = [];
-      for (const name of company.industries) {
-        const industry = await this.industriesService.findOrCreate(
-          name,
-          manager,
-        );
-        entity.industries.push(
-          manager.create(CompanyIndustry, { industryId: industry.id }),
-        );
+      if (company.industries) {
+        entity.industries = [];
+        for (const name of company.industries) {
+          const industry = await this.industriesService.findOrCreate(
+            name,
+            manager,
+          );
+          entity.industries.push(
+            manager.create(CompanyIndustry, { industryId: industry.id }),
+          );
+        }
       }
 
-      entity.skills = [];
-      for (const name of company.skills) {
-        const skill = await this.skillsService.findOrCreate(name, manager);
-        entity.skills.push(manager.create(CompanySkill, { skillId: skill.id }));
+      if (company.skills) {
+        entity.skills = [];
+        for (const name of company.skills) {
+          const skill = await this.skillsService.findOrCreate(name, manager);
+          entity.skills.push(
+            manager.create(CompanySkill, { skillId: skill.id }),
+          );
+        }
       }
 
       const {
