@@ -61,37 +61,47 @@ export class CompaniesService {
 
   async createFromNormalized(company: NormalizedCompany): Promise<CompanyDto> {
     return this.companiesRepository.manager.transaction(async (manager) => {
-      const saved = await this.upsertCompany(company, manager);
-      const companyId = saved.id;
+      const entity = await this.buildCompany(company, manager);
+
+      entity.locations = [];
       if (company.location) {
         const location = await this.locationsService.findOrCreate(
           company.location,
           manager,
         );
-        await manager.save(CompanyLocation, {
-          companyId,
-          locationId: location.id,
-        });
+        entity.locations.push(
+          manager.create(CompanyLocation, { locationId: location.id }),
+        );
       }
+
+      entity.industries = [];
       for (const name of company.industries) {
         const industry = await this.industriesService.findOrCreate(
           name,
           manager,
         );
-        await manager.save(CompanyIndustry, {
-          companyId,
-          industryId: industry.id,
-        });
+        entity.industries.push(
+          manager.create(CompanyIndustry, { industryId: industry.id }),
+        );
       }
+
+      entity.skills = [];
       for (const name of company.skills) {
         const skill = await this.skillsService.findOrCreate(name, manager);
-        await manager.save(CompanySkill, { companyId, skillId: skill.id });
+        entity.skills.push(manager.create(CompanySkill, { skillId: skill.id }));
       }
+
+      const {
+        locations: _locations,
+        industries: _industries,
+        skills: _skills,
+        ...saved
+      } = await manager.save(entity);
       return saved;
     });
   }
 
-  private async upsertCompany(
+  private async buildCompany(
     company: NormalizedCompany,
     manager: EntityManager,
   ): Promise<Company> {
@@ -110,7 +120,7 @@ export class CompaniesService {
     }
 
     if (existingCompany) {
-      existingCompany = companiesRepository.merge(existingCompany, {
+      return companiesRepository.merge(existingCompany, {
         name: company.name ?? existingCompany.name,
         legalName: company.legalName ?? existingCompany.legalName,
         websiteUrl: company.websiteUrl ?? existingCompany.websiteUrl,
@@ -122,10 +132,9 @@ export class CompaniesService {
         foundingYear: company.foundingYear ?? existingCompany.foundingYear,
         updatedAt: new Date(),
       });
-      return companiesRepository.save(existingCompany);
     }
 
-    const newCompany = companiesRepository.create({
+    return companiesRepository.create({
       name: company.name,
       legalName: company.legalName,
       domain: company.domain,
@@ -138,8 +147,6 @@ export class CompaniesService {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
-    return companiesRepository.save(newCompany);
   }
 
   async saveAllFromNormalized(
