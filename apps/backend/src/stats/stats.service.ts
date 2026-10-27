@@ -1,4 +1,4 @@
-import type { StatsCompany, UserStats } from '@job-scraper/shared';
+import type { Skill, StatsCompany, UserStats } from '@job-scraper/shared';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,10 +19,7 @@ interface JobCountsRow {
   hiringCompanies: string;
 }
 
-interface SkillRow {
-  id: string;
-  name: string;
-  slug: string;
+interface SkillRow extends Skill {
   jobs: string;
 }
 
