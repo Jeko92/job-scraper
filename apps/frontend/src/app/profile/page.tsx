@@ -14,6 +14,7 @@ export default async function ProfilePage() {
 
   return (
     <main className="flex-1 p-6">
+      <h1 className="sr-only">Profile</h1>
       <ProfileSections profile={profile} />
     </main>
   );
