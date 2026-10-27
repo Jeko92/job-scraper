@@ -74,26 +74,28 @@ export class CompaniesService {
       }
 
       if (company.industries) {
-        entity.industries = [];
+        const industryIds = new Set<string>();
         for (const name of company.industries) {
           const industry = await this.industriesService.findOrCreate(
             name,
             manager,
           );
-          entity.industries.push(
-            manager.create(CompanyIndustry, { industryId: industry.id }),
-          );
+          industryIds.add(industry.id);
         }
+        entity.industries = [...industryIds].map((industryId) =>
+          manager.create(CompanyIndustry, { industryId }),
+        );
       }
 
       if (company.skills) {
-        entity.skills = [];
+        const skillIds = new Set<string>();
         for (const name of company.skills) {
           const skill = await this.skillsService.findOrCreate(name, manager);
-          entity.skills.push(
-            manager.create(CompanySkill, { skillId: skill.id }),
-          );
+          skillIds.add(skill.id);
         }
+        entity.skills = [...skillIds].map((skillId) =>
+          manager.create(CompanySkill, { skillId }),
+        );
       }
 
       const {
