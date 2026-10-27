@@ -62,15 +62,53 @@ export function formatPostedAt(iso: string, now: number = Date.now()): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-/** "Company · City · Work mode · Contract" */
+/** The company's name, or its domain when the name is unknown. */
+export function formatCompanyName(job: JobListItem): string | null {
+  return job.company.name ?? job.company.domain;
+}
+
+export interface JobFact {
+  key: 'company' | 'location' | 'workMode' | 'employmentType' | 'salary';
+  label: string;
+  value: string;
+}
+
+/** The job's known facts, in display order; unknown ones are left out. */
+export function jobFacts(job: JobListItem): JobFact[] {
+  const facts: { key: JobFact['key']; label: string; value: string | null }[] =
+    [
+      {
+        key: 'company',
+        label: 'Company',
+        value: formatCompanyName(job),
+      },
+      {
+        key: 'location',
+        label: 'Location',
+        value: job.location?.city ?? job.location?.countryName ?? null,
+      },
+      {
+        key: 'workMode',
+        label: 'Work mode',
+        value: job.workplaceType && REMOTE_PREFERENCE_LABELS[job.workplaceType],
+      },
+      {
+        key: 'employmentType',
+        label: 'Employment type',
+        value: job.employmentType && EMPLOYMENT_TYPE_LABELS[job.employmentType],
+      },
+      { key: 'salary', label: 'Salary', value: formatJobSalary(job) },
+    ];
+  return facts.filter(
+    (fact): fact is JobFact => fact.value !== null && fact.value !== '',
+  );
+}
+
+/** "Company · City · Work mode · Contract"; salary has its own line. */
 export function formatJobMeta(job: JobListItem): string {
-  return [
-    job.company.name ?? job.company.domain,
-    job.location?.city ?? job.location?.countryName,
-    job.workplaceType && REMOTE_PREFERENCE_LABELS[job.workplaceType],
-    job.employmentType && EMPLOYMENT_TYPE_LABELS[job.employmentType],
-  ]
-    .filter((part) => part !== null && part !== undefined && part !== '')
+  return jobFacts(job)
+    .filter((fact) => fact.key !== 'salary')
+    .map((fact) => fact.value)
     .join(' · ');
 }
 
