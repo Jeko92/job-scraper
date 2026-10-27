@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { JobCompany } from './jobs';
+import { type JobCompany, jobCompanySchema } from './jobs';
 import { type Skill, skillSchema } from './skills';
 
 export interface StatsSkill extends Skill {
@@ -35,11 +35,6 @@ export const userStatsSchema: z.ZodType<UserStats> = z.object({
     skillSchema.and(z.object({ share: z.number().int().min(0).max(100) })),
   ),
   topCompanies: z.array(
-    z.object({
-      id: z.uuid(),
-      name: z.string().nullable(),
-      domain: z.string().nullable(),
-      openJobs: countSchema,
-    }),
+    jobCompanySchema.and(z.object({ openJobs: countSchema })),
   ),
 });
