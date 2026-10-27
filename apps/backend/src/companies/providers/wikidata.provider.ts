@@ -101,6 +101,7 @@ export class WikidataProvider implements CompanyDataProvider<CompanySearchParams
       employeeRange: isEmployeeRange ? (employees ?? null) : null,
       foundingYear: yearMatch?.[1] ? parseInt(yearMatch[1], 10) : null,
       location: null,
+      industries: [],
       source: 'wikidata',
       externalId: company.company,
       rawData: company,

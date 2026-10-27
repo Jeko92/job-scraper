@@ -47,6 +47,7 @@ export interface CompanyInfo {
   reported_employees: CompanyEmployees | null;
   founded_year: number | null;
   location: CompanyLocationInfo | null;
+  industries: string[] | null;
 }
 
 interface CompanyLocationInfo {
@@ -128,6 +129,7 @@ export class CompanyEnrichProvider implements CompanyDataProvider<CompanyEnrichS
         city: company.location.city?.name ?? null,
         postalCode: company.location.postal_code,
       },
+      industries: company.industries ?? [],
       source: 'company-enrich',
       externalId: company.id,
       rawData: company,

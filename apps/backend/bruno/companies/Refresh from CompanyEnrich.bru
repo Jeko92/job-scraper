@@ -31,6 +31,8 @@ docs {
   Existing companies (same domain or website) are updated.
   Each company's CompanyEnrich location is stored in `locations` (reused when
   all fields match) and linked via `company_locations`.
+  Each of its CompanyEnrich `industries` is stored in `industries` (reused when
+  the slug or name matches) and linked via `company_industries`.
   The body follows CompanyEnrich `POST /companies/search`.
 
   Request Body:

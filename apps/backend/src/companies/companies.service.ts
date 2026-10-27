@@ -2,10 +2,12 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { IndustriesService } from '../industries/industries.service.js';
 import { LocationsService } from '../locations/locations.service.js';
 import type { CompanyDto } from './dto/company.dto.js';
 import type { CompanyEnrichSearchRequest } from './dto/company-enrich-search.dto.js';
 import { Company } from './entities/company.entity.js';
+import { CompanyIndustry } from './entities/company-industry.entity.js';
 import { CompanyLocation } from './entities/company-location.entity.js';
 import type {
   CompanySearchParams,
@@ -23,7 +25,10 @@ export class CompaniesService {
     private readonly companiesRepository: Repository<Company>,
     @InjectRepository(CompanyLocation)
     private readonly companyLocationsRepository: Repository<CompanyLocation>,
+    @InjectRepository(CompanyIndustry)
+    private readonly companyIndustriesRepository: Repository<CompanyIndustry>,
     private readonly locationsService: LocationsService,
+    private readonly industriesService: IndustriesService,
     private readonly wikidataProvider: WikidataProvider,
     private readonly companyEnrichProvider: CompanyEnrichProvider,
   ) {}
@@ -64,6 +69,13 @@ export class CompaniesService {
       await this.companyLocationsRepository.save({
         companyId: saved.id,
         locationId: location.id,
+      });
+    }
+    for (const name of company.industries) {
+      const industry = await this.industriesService.findOrCreate(name);
+      await this.companyIndustriesRepository.save({
+        companyId: saved.id,
+        industryId: industry.id,
       });
     }
     return saved;
