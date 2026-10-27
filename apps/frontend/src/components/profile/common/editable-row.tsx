@@ -15,7 +15,7 @@ import {
 
 import { FormErrors } from '@/components/auth/form-errors';
 import { Button } from '@/components/ui/button';
-import { submitProfile } from '@/lib/profile/actions';
+import { patchProfile } from '@/lib/profile/actions';
 import { fieldLabel, overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
@@ -39,10 +39,6 @@ interface EditableRowProps<T> extends RowControl {
   renderEditor: (draft: T, setDraft: (draft: T) => void) => ReactNode;
   /** The PATCH body for this row, or errors that stop the save. */
   buildRequest: (draft: T) => UpdateUserProfileRequest | string[];
-  /**
-   * For list rows (skills, industries, places): the row spans the full
-   * width, the label is an overline, and ✎ becomes "+ <addLabel>".
-   */
   addLabel?: string;
 }
 
@@ -74,8 +70,6 @@ export function EditableRow<T>({
     };
   }, [justSaved]);
 
-  // When the row closes (save, cancel, Escape), its ✓ / ✕ buttons disappear.
-  // Put the focus back on ✎ so keyboard users stay on this row.
   useEffect(() => {
     if (wasOpen.current && !isOpen) editButtonRef.current?.focus();
     wasOpen.current = isOpen;
@@ -96,8 +90,6 @@ export function EditableRow<T>({
     onEdit();
   }
 
-  // View mode, as in the mockup: a field box with ✎, or for list rows the
-  // chips followed by "+ Add …".
   function renderView() {
     if (addLabel !== undefined) {
       return (
@@ -120,7 +112,6 @@ export function EditableRow<T>({
     }
     return (
       <div className="flex min-h-12 items-center gap-2 rounded-card border border-line pr-2 pl-4">
-        {/* A div, not a span: the value can be a list (ChipList). */}
         <div
           className={cn(
             'min-w-0 flex-1 py-2',
@@ -217,8 +208,8 @@ function RowEditor<T>({
 
     setErrors([]);
     startTransition(async () => {
-      const result = await submitProfile(request);
-      if (result.profile === null) {
+      const result = await patchProfile(request);
+      if (!result.ok) {
         setErrors(result.errors);
         return;
       }

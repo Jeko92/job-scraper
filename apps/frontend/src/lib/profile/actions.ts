@@ -19,21 +19,19 @@ export interface SubmitOnboardingState {
   errors: string[];
 }
 
-export interface SubmitProfileResult {
-  errors: string[];
-  profile: UserProfile | null;
-}
+export type PatchProfileResult =
+  { ok: true; profile: UserProfile } | { ok: false; errors: string[] };
 
-async function patchProfile(
+export async function patchProfile(
   input: UpdateUserProfileRequest,
-): Promise<SubmitProfileResult> {
+): Promise<PatchProfileResult> {
   const parsed = updateUserProfileSchema.safeParse(input);
   if (!parsed.success) {
     return {
+      ok: false,
       errors: parsed.error.issues.map(
         (issue) => `${issue.path.join('.')}: ${issue.message}`,
       ),
-      profile: null,
     };
   }
 
@@ -49,35 +47,28 @@ async function patchProfile(
       parsed.data,
     );
     if (!response.ok) {
-      return { errors: await readErrorMessages(response), profile: null };
+      return { ok: false, errors: await readErrorMessages(response) };
     }
     const profile = userProfileSchema.safeParse(await response.json());
     if (!profile.success) {
-      return { errors: [SAVE_FAILED], profile: null };
+      return { ok: false, errors: [SAVE_FAILED] };
     }
-    return { errors: [], profile: profile.data };
+    return { ok: true, profile: profile.data };
   } catch {
-    return { errors: [SAVE_FAILED], profile: null };
+    return { ok: false, errors: [SAVE_FAILED] };
   }
 }
 
 export async function submitOnboarding(
   input: UpdateUserProfileRequest,
 ): Promise<SubmitOnboardingState> {
-  const { errors, profile } = await patchProfile(input);
-  if (errors.length > 0) {
-    return { errors };
+  const result = await patchProfile(input);
+  if (!result.ok) {
+    return { errors: result.errors };
   }
-  if (!profile?.onboardingCompleted) {
+  if (!result.profile.onboardingCompleted) {
     return { errors: ['Please add your role and where you are based.'] };
   }
 
   redirect(HOME_HREF);
-}
-
-// Profile page: one section per call
-export async function submitProfile(
-  input: UpdateUserProfileRequest,
-): Promise<SubmitProfileResult> {
-  return patchProfile(input);
 }
