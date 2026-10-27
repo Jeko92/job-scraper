@@ -9,6 +9,7 @@ import { PROFILE_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 import { HomeCard } from './home-card';
+import { LoadError } from './load-error';
 
 const TITLE = 'Better profile, better matches';
 
@@ -17,9 +18,7 @@ export async function ProfileStrengthCard() {
   if (profile === null) {
     return (
       <HomeCard title={TITLE}>
-        <p className="text-sm text-ink-muted">
-          Your profile could not be loaded right now. Please try again later.
-        </p>
+        <LoadError subject="Your profile" />
       </HomeCard>
     );
   }

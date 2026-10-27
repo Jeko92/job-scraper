@@ -1,7 +1,21 @@
+import type { UserStats } from '@job-scraper/shared';
+
 import { getUserStats } from '@/lib/home/data';
 import { formatJobCount } from '@/lib/jobs/format';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
+
+import { LoadError } from './load-error';
+
+function summaryItems(stats: UserStats) {
+  const period = `last ${String(stats.periodDays)} days`;
+  return [
+    { value: stats.newJobs, label: `new roles, ${period}` },
+    { value: stats.activeJobs, label: 'open roles' },
+    { value: stats.hiringCompanies, label: 'companies hiring' },
+    { value: stats.newCompanies, label: `new career pages, ${period}` },
+  ];
+}
 
 interface WeekSummaryTileProps {
   className?: string;
@@ -9,17 +23,7 @@ interface WeekSummaryTileProps {
 
 export async function WeekSummaryTile({ className }: WeekSummaryTileProps) {
   const stats = await getUserStats();
-  if (!stats) {
-    return null;
-  }
-
-  const period = `last ${String(stats.periodDays)} days`;
-  const items = [
-    { value: stats.newJobs, label: `new roles, ${period}` },
-    { value: stats.activeJobs, label: 'open roles' },
-    { value: stats.hiringCompanies, label: 'companies hiring' },
-    { value: stats.newCompanies, label: `new career pages, ${period}` },
-  ];
+  const items = stats && summaryItems(stats);
 
   return (
     <section
@@ -32,19 +36,23 @@ export async function WeekSummaryTile({ className }: WeekSummaryTileProps) {
       <h2 id="at-a-glance" className={overline}>
         At a glance
       </h2>
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-6">
-        {items.map((item) => (
-          <div
-            key={item.label}
-            className="flex flex-col-reverse justify-end gap-0.5"
-          >
-            <dt className="text-sm text-ink-muted">{item.label}</dt>
-            <dd className="font-heading text-[2.75rem] leading-12 tracking-tight">
-              {formatJobCount(item.value)}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {items ? (
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-6">
+          {items.map((item) => (
+            <div
+              key={item.label}
+              className="flex flex-col-reverse justify-end gap-0.5"
+            >
+              <dt className="text-sm text-ink-muted">{item.label}</dt>
+              <dd className="font-heading text-[2.75rem] leading-12 tracking-tight">
+                {formatJobCount(item.value)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <LoadError subject="Statistics" />
+      )}
     </section>
   );
 }

@@ -8,7 +8,12 @@ import { PROFILE_HREF } from '@/lib/routes';
 import { overline, sectionHeading, textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
+import { LoadError } from './load-error';
+
 const INITIALS_LENGTH = 2;
+
+const sectionBox =
+  'flex flex-col gap-6 rounded-tile border border-line bg-surface p-6 sm:p-8';
 
 function initials(name: string): string {
   return name
@@ -22,7 +27,14 @@ function initials(name: string): string {
 export async function MarketPulseSection() {
   const [stats, profile] = await Promise.all([getUserStats(), getProfile()]);
   if (!stats) {
-    return null;
+    return (
+      <section aria-labelledby="market-pulse" className={sectionBox}>
+        <h2 id="market-pulse" className={sectionHeading}>
+          Market pulse
+        </h2>
+        <LoadError subject="Market data" />
+      </section>
+    );
   }
 
   const { fields } = stats;
@@ -35,10 +47,7 @@ export async function MarketPulseSection() {
     profile === null ? undefined : skills.find((skill) => !skill.yours);
 
   return (
-    <section
-      aria-labelledby="market-pulse"
-      className="flex flex-col gap-6 rounded-tile border border-line bg-surface p-6 sm:p-8"
-    >
+    <section aria-labelledby="market-pulse" className={sectionBox}>
       <div className="flex flex-col gap-1">
         <h2 id="market-pulse" className={sectionHeading}>
           {fields.length > 0 ? 'Market pulse in your fields' : 'Market pulse'}
