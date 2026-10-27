@@ -9,7 +9,11 @@ import { toLocationOption } from '@/lib/lookups/options';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
-import { EditableRow, type RowControl } from '../common/editable-row';
+import {
+  EditableRow,
+  type RowControl,
+  type RowId,
+} from '../common/editable-row';
 import { enumItems, RowSelect } from '../common/row-select';
 
 const FIELD_CLASS = 'h-12 rounded-card px-4 text-base';
@@ -19,8 +23,7 @@ const SENIORITY_ITEMS = enumItems(SENIORITY_LEVELS, SENIORITY_LABELS);
 
 interface BasicInfoSectionProps {
   profile: UserProfile;
-  /** Open state and callbacks for one row, by its id. */
-  row: (id: string) => RowControl;
+  row: (id: RowId) => RowControl;
 }
 
 export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {

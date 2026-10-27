@@ -8,11 +8,15 @@ import { searchSkillOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import { ChipList } from '../common/chip-list';
-import { EditableRow, type RowControl } from '../common/editable-row';
+import {
+  EditableRow,
+  type RowControl,
+  type RowId,
+} from '../common/editable-row';
 
 interface SkillsSectionProps {
   profile: UserProfile;
-  row: (id: string) => RowControl;
+  row: (id: RowId) => RowControl;
 }
 
 export function SkillsSection({ profile, row }: SkillsSectionProps) {

@@ -3,7 +3,7 @@
 import type { UserProfile } from '@job-scraper/shared';
 import { useEffect, useState } from 'react';
 
-import type { RowControl } from './common/editable-row';
+import type { RowControl, RowId } from './common/editable-row';
 import { ProfileTile } from './common/profile-tile';
 import { ProfileSummary } from './profile-summary';
 import { BasicInfoSection } from './sections/basic-info-section';
@@ -19,7 +19,7 @@ export function ProfileSections({
   profile: initialProfile,
 }: ProfileSectionsProps) {
   const [profile, setProfile] = useState(initialProfile);
-  const [openRow, setOpenRow] = useState<string | null>(null);
+  const [openRow, setOpenRow] = useState<RowId | null>(null);
 
   // Warn before closing or reloading the tab while a row is open.
   useEffect(() => {
@@ -33,7 +33,7 @@ export function ProfileSections({
     };
   }, [openRow]);
 
-  function row(id: string): RowControl {
+  function row(id: RowId): RowControl {
     return {
       isOpen: openRow === id,
       editDisabled: openRow !== null && openRow !== id,

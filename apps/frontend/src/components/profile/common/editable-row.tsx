@@ -23,6 +23,20 @@ const NOT_SET = 'Not set';
 // How long the "Saved" pill stays after a save.
 const SAVED_MS = 3000;
 
+// One id per row on the profile page; only one row is open at a time.
+export type RowId =
+  | 'name'
+  | 'headline'
+  | 'seniority'
+  | 'yearsExperience'
+  | 'location'
+  | 'employmentType'
+  | 'remotePreference'
+  | 'willingToRelocate'
+  | 'preferencesLocations'
+  | 'skills'
+  | 'industries';
+
 export interface RowControl {
   isOpen: boolean;
   editDisabled: boolean;
