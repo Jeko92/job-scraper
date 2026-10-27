@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 import { GlowPanel } from '@/components/landing/glow-panel';
-import { SectionChip } from '@/components/landing/section-chip';
+import { SectionChip } from '@/components/landing/landing-section';
 import { buttonVariants } from '@/components/ui/button';
 import { getUserStats } from '@/lib/home/data';
 import { formatJobCount } from '@/lib/jobs/format';
