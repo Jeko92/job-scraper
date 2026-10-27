@@ -13,7 +13,7 @@ export default async function ProfilePage() {
   if (!profile.onboardingCompleted) redirect(ONBOARDING_HREF);
 
   return (
-    <main className="flex-1 p-6">
+    <main className="flex-1 px-4 pb-12 sm:px-8">
       <h1 className="sr-only">Profile</h1>
       <ProfileSections profile={profile} />
     </main>

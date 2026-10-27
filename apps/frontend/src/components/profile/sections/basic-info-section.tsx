@@ -10,12 +10,10 @@ import type { LookupOption } from '@/lib/lookups/types';
 import { SENIORITY_LABELS } from '@/lib/profile/enum-labels';
 
 import { EditableRow, type RowControl } from '../common/editable-row';
-import { ProfileGroup } from '../common/profile-group';
 import { enumItems, RowSelect } from '../common/row-select';
 
-const FIELD_CLASS = 'h-10 rounded-card px-3 text-base';
-// The backend allows up to 99.9;
-const MAX_YEARS = 30;
+const FIELD_CLASS = 'h-12 rounded-card px-4 text-base';
+const MAX_YEARS = 99.9;
 
 const SENIORITY_ITEMS = enumItems(SENIORITY_LEVELS, SENIORITY_LABELS);
 
@@ -31,10 +29,10 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
   const location = profile.location ? toLocationOption(profile.location) : null;
 
   return (
-    <ProfileGroup title="Basic info">
+    <>
       <EditableRow
         {...row('name')}
-        label="Name"
+        label="Full name"
         value={name}
         initialDraft={{
           firstName: profile.firstName ?? '',
@@ -126,8 +124,6 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
             <Input
               autoFocus
               aria-label="Years of experience"
-              // Text, not number: a number input reports "" for invalid
-              // input like "1e", which would clear the saved value.
               type="text"
               inputMode="decimal"
               className={`${FIELD_CLASS} w-24`}
@@ -180,6 +176,6 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
             : { locationId: draft.value }
         }
       />
-    </ProfileGroup>
+    </>
   );
 }

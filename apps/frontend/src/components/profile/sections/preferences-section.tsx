@@ -18,7 +18,6 @@ import {
 
 import { ChipList } from '../common/chip-list';
 import { EditableRow, type RowControl } from '../common/editable-row';
-import { ProfileGroup } from '../common/profile-group';
 import { enumItems, RowSelect, type RowSelectItem } from '../common/row-select';
 
 const EMPLOYMENT_ITEMS = enumItems(EMPLOYMENT_TYPES, EMPLOYMENT_LABELS);
@@ -41,7 +40,7 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
   const places = profile.preferencesLocations.map(toLocationOption);
 
   return (
-    <ProfileGroup title="Job preferences">
+    <>
       <EditableRow
         {...row('employmentType')}
         label="Employment"
@@ -108,7 +107,8 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
       {relocate === true && (
         <EditableRow<LookupOption[]>
           {...row('preferencesLocations')}
-          label="Places"
+          label="Preferred locations"
+          addLabel="Add city"
           value={
             places.length > 0 ? (
               <ChipList labels={places.map((place) => place.label)} />
@@ -130,6 +130,6 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
           })}
         />
       )}
-    </ProfileGroup>
+    </>
   );
 }

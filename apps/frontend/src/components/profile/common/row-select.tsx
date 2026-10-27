@@ -34,7 +34,11 @@ export function RowSelect<T>({
         onChange(next as T);
       }}
     >
-      <SelectTrigger aria-label={label} className="h-10 w-full">
+      <SelectTrigger
+        autoFocus
+        aria-label={label}
+        className="w-full rounded-card px-4 text-base data-[size=default]:h-12"
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

@@ -29,12 +29,14 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
       <div className="space-y-4">
         <div
           aria-hidden="true"
-          className="flex size-24 items-center justify-center rounded-full bg-highlight font-heading text-4xl text-on-highlight"
+          className="flex size-24 items-center justify-center rounded-full bg-highlight text-3xl font-semibold text-on-highlight"
         >
           {initials}
         </div>
         <div className="space-y-1">
-          <p className="font-heading text-4xl break-words text-ink">{name}</p>
+          <p className="font-heading text-3xl leading-tight break-words text-ink">
+            {name}
+          </p>
           {subtitle && <p className="text-ink-muted">{subtitle}</p>}
         </div>
         <div className="flex items-center gap-4 pt-2">

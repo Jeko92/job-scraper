@@ -4,7 +4,7 @@ import type {
   UpdateUserProfileRequest,
   UserProfile,
 } from '@job-scraper/shared';
-import { Check, CircleCheck, Pencil, X } from 'lucide-react';
+import { Check, CircleCheck, Pencil, Plus, X } from 'lucide-react';
 import {
   type ReactNode,
   useEffect,
@@ -16,7 +16,7 @@ import {
 import { FormErrors } from '@/components/auth/form-errors';
 import { Button } from '@/components/ui/button';
 import { submitProfile } from '@/lib/profile/actions';
-import { fieldLabel } from '@/lib/styles';
+import { fieldLabel, overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 const NOT_SET = 'Not set';
@@ -39,6 +39,11 @@ interface EditableRowProps<T> extends RowControl {
   renderEditor: (draft: T, setDraft: (draft: T) => void) => ReactNode;
   /** The PATCH body for this row, or errors that stop the save. */
   buildRequest: (draft: T) => UpdateUserProfileRequest | string[];
+  /**
+   * For list rows (skills, industries, places): the row spans the full
+   * width, the label is an overline, and ✎ becomes "+ <addLabel>".
+   */
+  addLabel?: string;
 }
 
 // in edit mode the value becomes its field with ✓ (save) and ✕ (cancel).
@@ -49,6 +54,7 @@ export function EditableRow<T>({
   editDisabled,
   onEdit,
   onSaved,
+  addLabel,
   ...editor
 }: EditableRowProps<T>) {
   const [justSaved, setJustSaved] = useState(false);
@@ -74,10 +80,86 @@ export function EditableRow<T>({
     wasOpen.current = isOpen;
   }, [isOpen]);
 
+  const savedPill = justSaved && (
+    <span
+      aria-hidden
+      className="flex shrink-0 items-center gap-1 rounded-pill bg-status-done px-2 py-0.5 text-xs font-medium text-on-status"
+    >
+      <CircleCheck className="size-4" />
+      Saved
+    </span>
+  );
+
+  function edit() {
+    setJustSaved(false);
+    onEdit();
+  }
+
+  // View mode, as in the mockup: a field box with ✎, or for list rows the
+  // chips followed by "+ Add …".
+  function renderView() {
+    if (addLabel !== undefined) {
+      return (
+        <div className="flex flex-wrap items-center gap-2">
+          {!isEmpty && value}
+          <Button
+            ref={editButtonRef}
+            type="button"
+            variant="outline"
+            disabled={editDisabled}
+            onClick={edit}
+            className="h-8 rounded-pill border-line bg-surface px-3 font-medium text-ink"
+          >
+            <Plus aria-hidden="true" />
+            {addLabel}
+          </Button>
+          {savedPill}
+        </div>
+      );
+    }
+    return (
+      <div className="flex min-h-12 items-center gap-2 rounded-card border border-line pr-2 pl-4">
+        {/* A div, not a span: the value can be a list (ChipList). */}
+        <div
+          className={cn(
+            'min-w-0 flex-1 py-2',
+            isEmpty ? 'text-ink-muted' : 'text-ink',
+          )}
+        >
+          {isEmpty ? NOT_SET : value}
+        </div>
+        {savedPill}
+        <Button
+          ref={editButtonRef}
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label={`Edit ${label}`}
+          disabled={editDisabled}
+          onClick={edit}
+        >
+          <Pencil />
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-1 py-3 sm:flex-row sm:items-start sm:gap-4">
-      <dt className={cn(fieldLabel, 'shrink-0 sm:w-40 sm:pt-2')}>{label}</dt>
-      <dd className="min-w-0 flex-1">
+    // Label above the field. List rows take both columns of the grid.
+    <div
+      className={cn(
+        'flex min-w-0 flex-col gap-2',
+        addLabel !== undefined && 'sm:col-span-2',
+      )}
+    >
+      <dt
+        className={
+          addLabel !== undefined ? cn(overline, 'text-ink-muted') : fieldLabel
+        }
+      >
+        {label}
+      </dt>
+      <dd className="min-w-0">
         {isOpen ? (
           <RowEditor
             label={label}
@@ -88,41 +170,7 @@ export function EditableRow<T>({
             }}
           />
         ) : (
-          <div className="flex items-center gap-2">
-            {/* A div, not a span: the value can be a list (ChipList). */}
-            <div
-              className={
-                isEmpty
-                  ? 'min-w-0 flex-1 text-ink-muted'
-                  : 'min-w-0 flex-1 text-ink'
-              }
-            >
-              {isEmpty ? NOT_SET : value}
-            </div>
-            {justSaved && (
-              <span
-                aria-hidden
-                className="flex items-center gap-1 rounded-pill bg-status-done px-2 py-0.5 text-xs font-medium text-on-status"
-              >
-                <CircleCheck className="size-4" />
-                Saved
-              </span>
-            )}
-            <Button
-              ref={editButtonRef}
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label={`Edit ${label}`}
-              disabled={editDisabled}
-              onClick={() => {
-                setJustSaved(false);
-                onEdit();
-              }}
-            >
-              <Pencil />
-            </Button>
-          </div>
+          renderView()
         )}
         <span role="status" className="sr-only">
           {justSaved ? `${label} saved` : ''}
@@ -198,6 +246,7 @@ function RowEditor<T>({
         <Button
           type="submit"
           size="icon"
+          className="mt-2"
           aria-label={pending ? `Saving ${label}` : `Save ${label}`}
           disabled={pending}
         >
@@ -207,6 +256,7 @@ function RowEditor<T>({
           type="button"
           variant="ghost"
           size="icon"
+          className="mt-2"
           aria-label={`Cancel editing ${label}`}
           disabled={pending}
           onClick={onClose}
