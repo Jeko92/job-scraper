@@ -1,0 +1,40 @@
+meta {
+  name: Refresh companies from Wikidata
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/companies/wikidata/refresh
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "query": "allgeier",
+  //   "location": "München",
+  //   "industry": "Sicherheit",
+    "limit": 10,
+    "offset": 0
+  }
+}
+
+docs {
+  Fetch companies from Wikidata and save them to the database.
+  Existing companies (same domain or website) are updated.
+
+  Request Body (CompanySearchParams):
+  - `query`: company name contains (optional)
+  - `location`: headquarters name contains (optional)
+  - `industry`: industry name contains (optional)
+  - `limit`: maximum results, 1-100, default 20
+  - `offset`: pagination offset, default 0
+
+  Employee and founding year filters are not supported by Wikidata.
+
+  - 200: OK - array of saved companies
+  - 400: Bad Request - invalid parameters
+  - 401: Unauthorized - run Login
+  - 500: Internal Server Error - Wikidata request failed
+}

@@ -1,11 +1,11 @@
 meta {
   name: Fetch companies from Wikidata
   type: http
-  seq: 9
+  seq: 5
 }
 
 post {
-  url: {{baseUrl}}/companies/fetch/wikidata
+  url: {{baseUrl}}/companies/wikidata/fetch
   body: json
   auth: inherit
 }
@@ -21,7 +21,7 @@ body:json {
 }
 
 docs {
-  Fetch companies from Wikidata only.
+  Fetch companies from Wikidata without saving them.
 
   Request Body (CompanySearchParams):
   - `query`: company name contains (optional)

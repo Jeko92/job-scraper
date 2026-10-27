@@ -67,7 +67,7 @@ export class CompaniesController {
     return this.companiesService.findByDomain(domain);
   }
 
-  @Post('fetch/wikidata')
+  @Post('wikidata/fetch')
   @ApiOperation({ summary: 'Fetch companies from Wikidata' })
   @HttpCode(HttpStatus.OK)
   async fetchFromWikidata(
@@ -78,6 +78,23 @@ export class CompaniesController {
     params: CompanySearchParams,
   ): Promise<NormalizedCompany[]> {
     return this.companiesService.fetchFromWikidata(params);
+  }
+
+  @Post('wikidata/refresh')
+  @ApiOperation({
+    summary: 'Fetch companies from Wikidata and save them to the database',
+  })
+  @HttpCode(HttpStatus.OK)
+  async refreshFromWikidata(
+    @Body({
+      schema: companySearchBodySchema,
+      pipes: [StandardSchemaValidationPipe],
+    })
+    params: CompanySearchParams,
+  ): Promise<CompanyDto[]> {
+    return this.companiesService.saveAllFromNormalized(
+      await this.companiesService.fetchFromWikidata(params),
+    );
   }
 
   @Post('fetch/company-enrich')
