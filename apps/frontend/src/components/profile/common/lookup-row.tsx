@@ -23,6 +23,7 @@ interface LookupRowProps extends RowControl {
   numbered?: boolean;
 }
 
+// A list row (skills, industries, places): chips in view mode, a lookup
 // field in edit mode.
 export function LookupRow({
   searchLabel,
