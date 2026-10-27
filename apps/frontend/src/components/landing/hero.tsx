@@ -21,9 +21,8 @@ export function Hero() {
           <Logo className="text-ink" />
 
           <h1 className="font-heading text-[2.5rem] leading-[1.1] font-normal text-ink sm:text-[3.5rem] sm:leading-15">
-            Every open role,
-            <br className="hidden sm:block" />
-            found for you.
+            Find hiring
+            <br className="hidden sm:block" /> companies.
           </h1>
 
           <p className="max-w-3xl text-ink-muted">
