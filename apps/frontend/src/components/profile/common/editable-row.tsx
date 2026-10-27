@@ -16,9 +16,11 @@ import {
 import { FormErrors } from '@/components/auth/form-errors';
 import { Button } from '@/components/ui/button';
 import { submitProfile } from '@/lib/profile/actions';
+import { fieldLabel } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 
 const NOT_SET = 'Not set';
-// After saving:the green check stays after a save.
+// How long the "Saved" pill stays after a save.
 const SAVED_MS = 3000;
 
 export interface RowControl {
@@ -52,10 +54,9 @@ export function EditableRow<T>({
   const [justSaved, setJustSaved] = useState(false);
   const editButtonRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(isOpen);
-  const isEmpty =
-    value === undefined || value === null || value === '' || value === false;
+  const isEmpty = value === undefined || value === null || value === '';
 
-  // Hide the green check again after a few seconds from saving.
+  // Hide the "Saved" pill again a few seconds after saving.
   useEffect(() => {
     if (!justSaved) return;
     const timer = setTimeout(() => {
@@ -74,10 +75,8 @@ export function EditableRow<T>({
   }, [isOpen]);
 
   return (
-    <div className="flex items-start gap-4 py-3">
-      <dt className="w-40 shrink-0 pt-2 text-xs font-medium tracking-widest text-ink-muted uppercase">
-        {label}
-      </dt>
+    <div className="flex flex-col gap-1 py-3 sm:flex-row sm:items-start sm:gap-4">
+      <dt className={cn(fieldLabel, 'shrink-0 sm:w-40 sm:pt-2')}>{label}</dt>
       <dd className="min-w-0 flex-1">
         {isOpen ? (
           <RowEditor
@@ -98,7 +97,7 @@ export function EditableRow<T>({
             {justSaved && (
               <span
                 aria-hidden
-                className="flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400"
+                className="flex items-center gap-1 rounded-pill bg-status-done px-2 py-0.5 text-xs font-medium text-on-status"
               >
                 <CircleCheck className="size-4" />
                 Saved
@@ -152,7 +151,7 @@ function RowEditor<T>({
   const [errors, setErrors] = useState<string[]>([]);
 
   function save() {
-    //avoid call the server when the value hasn't been changed.
+    // Nothing changed: close without calling the server.
     if (JSON.stringify(draft) === JSON.stringify(initialDraft)) {
       onClose();
       return;
