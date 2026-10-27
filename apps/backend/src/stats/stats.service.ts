@@ -1,4 +1,4 @@
-import type { UserStats } from '@job-scraper/shared';
+import type { StatsCompany, UserStats } from '@job-scraper/shared';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,10 +26,7 @@ interface SkillRow {
   jobs: string;
 }
 
-interface CompanyRow {
-  id: string;
-  name: string | null;
-  domain: string | null;
+interface CompanyRow extends Omit<StatsCompany, 'openJobs'> {
   openJobs: string;
 }
 
