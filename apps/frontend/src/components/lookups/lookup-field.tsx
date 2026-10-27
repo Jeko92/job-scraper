@@ -13,19 +13,15 @@ import { cn } from '@/lib/utils';
 const SEARCH_DELAY_MS = 250;
 
 interface LookupFieldProps {
-  /** Label above the input, e.g. "Search skills". */
   label: string;
   placeholder: string;
   selected: LookupOption[];
   max: number;
-  /** Module-level search from `lib/lookups/search`, so it keeps its identity. */
   search: (text: string) => Promise<LookupSearchResult>;
   onChange: (selected: LookupOption[]) => void;
   /** Show "1. …", "2. …" on the chips when the order is a priority. */
   numbered?: boolean;
-  /** Search with an empty text too, to show suggestions before typing. */
   suggestWhenEmpty?: boolean;
-  /** Off when another field on the card should get the focus first. */
   autoFocus?: boolean;
 }
 
@@ -52,9 +48,7 @@ export function LookupField({
   const inputId = useId();
 
   const term = text.trim();
-  // Fields that hold only one value (max = 1, e.g. "Based in") are never
-  // full: picking a new value replaces the old one. So the search box is
-  // never disabled, and the user can type a new city right away.
+  // One-value fields (e.g. "Based in"): a new pick replaces the old one.
   const replaces = max === 1;
   const isFull = !replaces && selected.length >= max;
   const shouldSearch = term !== '' || suggestWhenEmpty;
