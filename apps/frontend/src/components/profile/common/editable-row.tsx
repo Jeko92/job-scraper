@@ -46,7 +46,8 @@ interface EditableRowProps<T> extends RowControl {
   addLabel?: string;
 }
 
-// in edit mode the value becomes its field with ✓ (save) and ✕ (cancel).
+// One profile field: its value with ✎, and in edit mode the field
+// itself with ✓ (save) and ✕ (cancel).
 export function EditableRow<T>({
   label,
   value,
