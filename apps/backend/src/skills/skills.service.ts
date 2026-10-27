@@ -1,7 +1,7 @@
 import type { Skill as SkillDto, SkillsQuery } from '@job-scraper/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { type EntityManager, Repository } from 'typeorm';
 
 import { containsPattern } from '../common/contains-pattern.js';
 import { Skill } from './entities/skill.entity.js';
@@ -33,6 +33,29 @@ export class SkillsService {
     }
     return toSkillDto(skill);
   }
+
+  async findOrCreate(
+    name: string,
+    manager: EntityManager = this.skillsRepository.manager,
+  ): Promise<Skill> {
+    const repository = manager.getRepository(Skill);
+    const slug = toSlug(name);
+    const existing = await repository
+      .createQueryBuilder('skill')
+      .where('skill.slug = :slug OR LOWER(skill.name) = LOWER(:name)', {
+        slug,
+        name,
+      })
+      .getOne();
+    return existing ?? repository.save({ name, slug });
+  }
+}
+
+function toSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 function toSkillDto({ id, name, slug }: Skill): SkillDto {
