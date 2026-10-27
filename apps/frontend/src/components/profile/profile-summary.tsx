@@ -1,9 +1,9 @@
 import type { UserProfile } from '@job-scraper/shared';
 
+import { MatchRing } from '@/components/common/match-ring';
 import { toLocationOption } from '@/lib/lookups/options';
-import { getProfileCompletion } from '@/lib/profile/completion';
+import { getCompleteness, getProfileChecks } from '@/lib/profile/completeness';
 
-import { CompletionRing } from './common/completion-ring';
 import { ProfileTile } from './common/profile-tile';
 
 interface ProfileSummaryProps {
@@ -22,7 +22,9 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
   ]
     .filter(Boolean)
     .join(' · ');
-  const completion = getProfileCompletion(profile);
+  const checks = getProfileChecks(profile);
+  const completeness = getCompleteness(checks);
+  const nextStep = checks.find((check) => !check.done);
 
   return (
     <ProfileTile title="Your profile">
@@ -40,14 +42,17 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
           {subtitle && <p className="text-ink-muted">{subtitle}</p>}
         </div>
         <div className="flex items-center gap-4 pt-2">
-          <CompletionRing percent={completion.percent} />
+          <MatchRing
+            value={completeness}
+            label={`Profile ${String(completeness)}% complete`}
+          />
           <div className="space-y-1">
             <p className="text-lg font-medium text-ink">
-              Profile {completion.percent}% complete
+              Profile {completeness}% complete
             </p>
             <p className="text-sm text-ink-muted">
-              {completion.nextMissing
-                ? `Add your ${completion.nextMissing} to improve your matches.`
+              {nextStep
+                ? `Add your ${nextStep.label.toLowerCase()} to improve your matches.`
                 : 'Your profile is complete.'}
             </p>
           </div>
