@@ -1,0 +1,18 @@
+meta {
+  name: Unsave job
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/users/me/save-jobs/{{jobId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Remove a job from the logged-in user's saved jobs. Does nothing if the job is not saved.
+  
+  - 204: No Content - unsaved
+  - 400: id is not a UUID, 401: run Login
+}

@@ -79,6 +79,12 @@ export class JobsController {
     description: 'Skill slugs',
   })
   @ApiQuery({ name: 'postedWithinDays', required: false, type: Number })
+  @ApiQuery({
+    name: 'saved',
+    required: false,
+    type: Boolean,
+    description: 'Only jobs the current user has saved',
+  })
   @ApiQuery({ name: 'sort', required: false, enum: JOB_SORTS })
   @ApiQuery({
     name: 'page',

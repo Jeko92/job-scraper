@@ -20,6 +20,7 @@ params:query {
   limit: 20
   ~locationId: {{locationId}}
   ~sort: newest
+  ~saved: true
 }
 
 docs {
@@ -30,6 +31,7 @@ docs {
   - `locationId`: location UUIDs (run **List locations**)
   - `skill`: skill slugs (run **List skills**)
   - `postedWithinDays`: 1-365
+  - `saved`: true = only jobs the logged-in user has saved (run **Save job**)
   - `sort`: newest (default) or oldest
   - `page`: starts at 1, default 1
   - `limit`: jobs per page, 1-100, default 20

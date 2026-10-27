@@ -67,9 +67,9 @@ export class JobsService {
     const { page, limit } = query;
     const direction = SORT_DIRECTIONS[query.sort];
 
-    const total = await this.filteredQuery(query).getCount();
+    const total = await this.filteredQuery(query, userId).getCount();
 
-    const rows = await this.filteredQuery(query)
+    const rows = await this.filteredQuery(query, userId)
       .select('job.id', 'id')
       .orderBy(POSTED_AT, direction)
       .addOrderBy('job.id', direction)
@@ -124,6 +124,28 @@ export class JobsService {
     }
   }
 
+  /** Saving an already saved job does nothing. */
+  async save(jobId: string, userId: string): Promise<void> {
+    try {
+      await this.savedJobsRepository
+        .createQueryBuilder()
+        .insert()
+        .values({ jobId, userId })
+        .orIgnore()
+        .execute();
+    } catch (error) {
+      if (hasPgCode(error, FOREIGN_KEY_VIOLATION)) {
+        throw jobNotFound(jobId);
+      }
+      throw error;
+    }
+  }
+
+  /** Unsaving a job that is not saved does nothing. */
+  async unsave(jobId: string, userId: string): Promise<void> {
+    await this.savedJobsRepository.delete({ jobId, userId });
+  }
+
   private async write<T>(
     work: (manager: EntityManager) => Promise<T>,
   ): Promise<T> {
@@ -142,7 +164,10 @@ export class JobsService {
     }
   }
 
-  private filteredQuery(query: JobsQuery): SelectQueryBuilder<Job> {
+  private filteredQuery(
+    query: JobsQuery,
+    userId: string,
+  ): SelectQueryBuilder<Job> {
     const builder = this.jobsRepository
       .createQueryBuilder('job')
       .where('job.isActive = true');
@@ -174,6 +199,13 @@ export class JobsService {
       builder.andWhere(withinDays(POSTED_AT, 'postedWithinDays'), {
         postedWithinDays: query.postedWithinDays,
       });
+    }
+    if (query.saved) {
+      builder.andWhere(
+        `EXISTS (SELECT 1 FROM user_saved_jobs usj
+          WHERE usj.job_id = job.id AND usj.user_id = :userId)`,
+        { userId },
+      );
     }
     return builder;
   }
