@@ -19,6 +19,8 @@ interface JobsPaginationProps {
   query: JobsQuery;
   page: number;
   totalPages: number;
+  /** Page links point here; defaults to the search page. */
+  basePath?: string | undefined;
   className?: string;
 }
 
@@ -26,6 +28,7 @@ export function JobsPagination({
   query,
   page,
   totalPages,
+  basePath,
   className,
 }: JobsPaginationProps) {
   if (totalPages <= 1) {
@@ -38,7 +41,7 @@ export function JobsPagination({
         <PaginationItem>
           <StepLink
             direction="previous"
-            href={page > 1 ? jobsPageHref(query, page - 1) : null}
+            href={page > 1 ? jobsPageHref(query, page - 1, basePath) : null}
           />
         </PaginationItem>
 
@@ -54,7 +57,7 @@ export function JobsPagination({
           ) : (
             <PaginationItem key={item} className="hidden sm:block">
               <PageLink
-                href={jobsPageHref(query, item)}
+                href={jobsPageHref(query, item, basePath)}
                 isActive={item === page}
                 ariaLabel={`Page ${String(item)}`}
               >
@@ -71,7 +74,9 @@ export function JobsPagination({
         <PaginationItem>
           <StepLink
             direction="next"
-            href={page < totalPages ? jobsPageHref(query, page + 1) : null}
+            href={
+              page < totalPages ? jobsPageHref(query, page + 1, basePath) : null
+            }
           />
         </PaginationItem>
       </PaginationContent>
