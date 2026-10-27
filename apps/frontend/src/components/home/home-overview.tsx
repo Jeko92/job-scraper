@@ -1,8 +1,7 @@
 import type { AuthUser } from '@job-scraper/shared';
+import { Suspense } from 'react';
 
-import { getLatestJobs, getSavedJobs, getUserStats } from '@/lib/home/data';
-import { getProfile } from '@/lib/profile/profile';
-
+import { MARKET_PULSE_LINES, TileSkeleton } from './home-skeletons';
 import { LatestJobsSection } from './latest-jobs-section';
 import { MarketPulseSection } from './market-pulse-section';
 import { ProfileStrengthCard } from './profile-strength-card';
@@ -11,36 +10,36 @@ import { SavedJobsCard } from './saved-jobs-card';
 import { WeekSummaryTile } from './week-summary-tile';
 import { WelcomeSection } from './welcome-section';
 
+const welcomeTile = 'flex-[2_1_34rem]';
+const summaryTile = 'flex-[1_1_20rem]';
+
 interface HomeOverviewProps {
   user: AuthUser;
 }
 
-export async function HomeOverview({ user }: HomeOverviewProps) {
-  const [profile, stats, latestJobs, savedJobs] = await Promise.all([
-    getProfile(),
-    getUserStats(),
-    getLatestJobs(),
-    getSavedJobs(),
-  ]);
-
+export function HomeOverview({ user }: HomeOverviewProps) {
   return (
     <main className="flex flex-1 flex-col gap-2 px-4 pb-8 sm:px-8">
       <section className="flex flex-wrap gap-2">
-        <WelcomeSection
-          firstName={profile?.firstName ?? user.username}
-          stats={stats}
-          className="flex-[2_1_34rem]"
-        />
-        {stats && (
-          <WeekSummaryTile stats={stats} className="flex-[1_1_20rem]" />
-        )}
+        <Suspense fallback={<TileSkeleton className={welcomeTile} />}>
+          <WelcomeSection user={user} className={welcomeTile} />
+        </Suspense>
+        <Suspense fallback={<TileSkeleton className={summaryTile} />}>
+          <WeekSummaryTile className={summaryTile} />
+        </Suspense>
       </section>
-      <LatestJobsSection jobs={latestJobs} />
+      <LatestJobsSection />
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        <SavedJobsCard savedJobs={savedJobs} />
-        <ProfileStrengthCard profile={profile} />
+        <Suspense fallback={<TileSkeleton />}>
+          <SavedJobsCard />
+        </Suspense>
+        <Suspense fallback={<TileSkeleton />}>
+          <ProfileStrengthCard />
+        </Suspense>
       </div>
-      {stats && <MarketPulseSection stats={stats} profile={profile} />}
+      <Suspense fallback={<TileSkeleton lines={MARKET_PULSE_LINES} />}>
+        <MarketPulseSection />
+      </Suspense>
       <PromoTiles />
     </main>
   );

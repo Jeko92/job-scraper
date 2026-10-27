@@ -1,18 +1,32 @@
-import type { JobListItem } from '@job-scraper/shared';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
+import { getLatestJobs } from '@/lib/home/data';
 import { SEARCH_HREF } from '@/lib/routes';
 import { sectionHeading, textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
+import { JobsSliderSkeleton } from './home-skeletons';
 import { JobsSlider } from './jobs-slider';
 
-interface LatestJobsSectionProps {
-  jobs: JobListItem[] | null;
+async function LatestJobs() {
+  const jobs = await getLatestJobs();
+
+  if (jobs === null) {
+    return (
+      <p className="text-ink-muted">
+        Jobs could not be loaded right now. Please try again later.
+      </p>
+    );
+  }
+  if (jobs.length === 0) {
+    return <p className="text-ink-muted">No jobs yet. Check back soon.</p>;
+  }
+  return <JobsSlider jobs={jobs} />;
 }
 
-export function LatestJobsSection({ jobs }: LatestJobsSectionProps) {
+export function LatestJobsSection() {
   return (
     <section
       aria-labelledby="latest-jobs"
@@ -40,15 +54,9 @@ export function LatestJobsSection({ jobs }: LatestJobsSectionProps) {
         </Link>
       </div>
 
-      {jobs === null ? (
-        <p className="text-ink-muted">
-          Jobs could not be loaded right now. Please try again later.
-        </p>
-      ) : jobs.length > 0 ? (
-        <JobsSlider jobs={jobs} />
-      ) : (
-        <p className="text-ink-muted">No jobs yet. Check back soon.</p>
-      )}
+      <Suspense fallback={<JobsSliderSkeleton />}>
+        <LatestJobs />
+      </Suspense>
     </section>
   );
 }

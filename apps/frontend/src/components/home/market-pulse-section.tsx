@@ -1,8 +1,9 @@
-import type { UserProfile, UserStats } from '@job-scraper/shared';
 import { Check } from 'lucide-react';
 import Link from 'next/link';
 
+import { getUserStats } from '@/lib/home/data';
 import { formatCompanyName, formatJobCount } from '@/lib/jobs/format';
+import { getProfile } from '@/lib/profile/profile';
 import { PROFILE_HREF } from '@/lib/routes';
 import { overline, sectionHeading, textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
@@ -18,15 +19,12 @@ function initials(name: string): string {
     .join('');
 }
 
-interface MarketPulseSectionProps {
-  stats: UserStats;
-  profile: UserProfile | null;
-}
+export async function MarketPulseSection() {
+  const [stats, profile] = await Promise.all([getUserStats(), getProfile()]);
+  if (!stats) {
+    return null;
+  }
 
-export function MarketPulseSection({
-  stats,
-  profile,
-}: MarketPulseSectionProps) {
   const { fields } = stats;
   const profileSkills = new Set(profile?.skills.map((skill) => skill.slug));
   const skills = stats.topSkills.map((skill) => ({

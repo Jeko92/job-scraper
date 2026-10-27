@@ -1,6 +1,6 @@
-import type { JobListItem } from '@job-scraper/shared';
 import Link from 'next/link';
 
+import { getSavedJobs } from '@/lib/home/data';
 import { formatJobMeta, formatPostedAt } from '@/lib/jobs/format';
 import { jobHref, SAVED_HREF } from '@/lib/routes';
 import { textLink } from '@/lib/styles';
@@ -8,11 +8,9 @@ import { cn } from '@/lib/utils';
 
 import { HomeCard } from './home-card';
 
-interface SavedJobsCardProps {
-  savedJobs: JobListItem[];
-}
+export async function SavedJobsCard() {
+  const savedJobs = await getSavedJobs();
 
-export function SavedJobsCard({ savedJobs }: SavedJobsCardProps) {
   return (
     <HomeCard
       title="Saved jobs"

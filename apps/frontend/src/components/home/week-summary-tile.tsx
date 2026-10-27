@@ -1,15 +1,18 @@
-import type { UserStats } from '@job-scraper/shared';
-
+import { getUserStats } from '@/lib/home/data';
 import { formatJobCount } from '@/lib/jobs/format';
 import { overline } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 interface WeekSummaryTileProps {
-  stats: UserStats;
   className?: string;
 }
 
-export function WeekSummaryTile({ stats, className }: WeekSummaryTileProps) {
+export async function WeekSummaryTile({ className }: WeekSummaryTileProps) {
+  const stats = await getUserStats();
+  if (!stats) {
+    return null;
+  }
+
   const period = `last ${String(stats.periodDays)} days`;
   const items = [
     { value: stats.newJobs, label: `new roles, ${period}` },
