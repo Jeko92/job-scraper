@@ -5,14 +5,16 @@ import { type ReactNode, useEffect, useRef } from 'react';
 import { LogoMark } from '@/components/brand/logo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  EMPLOYMENT_TYPE_LABELS,
+  REMOTE_PREFERENCE_LABELS,
+  SENIORITY_LABELS,
+} from '@/lib/common/enum-labels';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import { OnboardingCard } from '../onboarding-card';
 import type { Answers, Step } from '../onboarding-state';
 import { SubmitOnboardingButton } from '../submit-onboarding-button';
-import { EMPLOYMENT_LABELS } from './employment-step';
-import { SENIORITY_LABELS } from './seniority-step';
-import { WORK_SETUP_LABELS } from './work-setup-step';
 
 const NOT_SET = 'Not set';
 
@@ -92,7 +94,7 @@ export function ReviewStep({
           label="Employment type"
           value={
             preferences?.employmentType &&
-            EMPLOYMENT_LABELS[preferences.employmentType]
+            EMPLOYMENT_TYPE_LABELS[preferences.employmentType]
           }
           onEdit={() => {
             onEdit('employment');
@@ -102,7 +104,7 @@ export function ReviewStep({
           label="Work setup"
           value={
             preferences?.remotePreference &&
-            WORK_SETUP_LABELS[preferences.remotePreference]
+            REMOTE_PREFERENCE_LABELS[preferences.remotePreference]
           }
           onEdit={() => {
             onEdit('workSetup');

@@ -1,6 +1,6 @@
 # ADR-008: Profile page edits one section at a time with explicit Save
 
-* Status: proposed
+* Status: superseded by ADR-009
 
 ## Decision
 

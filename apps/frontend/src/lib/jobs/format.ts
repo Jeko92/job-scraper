@@ -1,23 +1,9 @@
-import type {
-  EmploymentType,
-  JobListItem,
-  JobSort,
-  RemotePreference,
-} from '@job-scraper/shared';
+import type { JobListItem, JobSort } from '@job-scraper/shared';
 
-export const REMOTE_PREFERENCE_LABELS: Record<RemotePreference, string> = {
-  REMOTE: 'Remote',
-  HYBRID: 'Hybrid',
-  ONSITE: 'On-site',
-};
-
-export const EMPLOYMENT_TYPE_LABELS: Record<EmploymentType, string> = {
-  FULL_TIME: 'Full-time',
-  PART_TIME: 'Part-time',
-  CONTRACT: 'Contract',
-  INTERNSHIP: 'Internship',
-  FREELANCE: 'Freelance',
-};
+import {
+  EMPLOYMENT_TYPE_LABELS,
+  REMOTE_PREFERENCE_LABELS,
+} from '@/lib/common/enum-labels';
 
 export const JOB_SORT_LABELS: Record<JobSort, string> = {
   newest: 'Newest',

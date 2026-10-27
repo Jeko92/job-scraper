@@ -13,25 +13,22 @@ import { cn } from '@/lib/utils';
 const SEARCH_DELAY_MS = 250;
 
 interface LookupFieldProps {
-  /** Label above the input, e.g. "Search skills". */
   label: string;
   placeholder: string;
   selected: LookupOption[];
   max: number;
-  /** Module-level search from `lib/lookups/search`, so it keeps its identity. */
   search: (text: string) => Promise<LookupSearchResult>;
   onChange: (selected: LookupOption[]) => void;
   /** Show "1. …", "2. …" on the chips when the order is a priority. */
   numbered?: boolean;
-  /** Search with an empty text too, to show suggestions before typing. */
   suggestWhenEmpty?: boolean;
-  /** Off when another field on the card should get the focus first. */
   autoFocus?: boolean;
 }
 
 /**
- * The onboarding take on `LookupFilter`: the input stays open, and "Add"
- * (or Enter) takes the best match, so the next value can be typed right away.
+ * A form field version of `LookupFilter` (used by onboarding and the profile
+ * page): the input stays open, and "Add" (or Enter) takes the best match, so
+ * the next value can be typed right away.
  */
 export function LookupField({
   label,
@@ -51,7 +48,9 @@ export function LookupField({
   const inputId = useId();
 
   const term = text.trim();
-  const isFull = selected.length >= max;
+  // One-value fields (e.g. "Based in"): a new pick replaces the old one.
+  const replaces = max === 1;
+  const isFull = !replaces && selected.length >= max;
   const shouldSearch = term !== '' || suggestWhenEmpty;
 
   // Debounce: search once the user pauses typing; ignore outdated answers.
@@ -93,13 +92,14 @@ export function LookupField({
     if (!option || isFull) {
       return;
     }
-    onChange([...selected, option]);
+    onChange(replaces ? [option] : [...selected, option]);
     setText('');
   }
 
   return (
-    // Enter here adds a value, so it must not also reach StepShell's "OK".
-    // Only Enter in the empty input is left for "OK".
+    // Enter here adds a value, so it must not also reach the parent's own
+    // Enter handling (e.g. "OK" in onboarding, save on the profile page).
+    // Only Enter in the empty input is passed on.
     <div
       className="flex flex-col gap-4"
       onKeyDown={(event) => {
@@ -152,7 +152,7 @@ export function LookupField({
               setText(event.target.value);
             }}
             onKeyDown={(event) => {
-              // Enter adds the best match instead of going to the next step.
+              // Enter adds the best match instead of submitting the form.
               if (event.key === 'Enter' && term !== '') {
                 event.preventDefault();
                 add(best);

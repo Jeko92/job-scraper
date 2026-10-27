@@ -2,10 +2,10 @@
 
 import { MAX_PROFILE_SKILLS } from '@job-scraper/shared';
 
+import { LookupField } from '@/components/lookups/lookup-field';
 import { searchSkillOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
-import { LookupField } from './common/lookup-field';
 import { StepShell } from './common/step-shell';
 
 interface SkillsStepProps {

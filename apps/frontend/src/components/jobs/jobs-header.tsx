@@ -8,10 +8,12 @@ import { GlowPanel } from '@/components/landing/glow-panel';
 import { FilterChip } from '@/components/lookups/filter-chip';
 import {
   EMPLOYMENT_TYPE_LABELS,
+  REMOTE_PREFERENCE_LABELS,
+} from '@/lib/common/enum-labels';
+import {
   formatJobCount,
   formatPostedWithin,
   JOB_SORT_LABELS,
-  REMOTE_PREFERENCE_LABELS,
 } from '@/lib/jobs/format';
 import { removeFilterValue } from '@/lib/jobs/query-filters';
 
