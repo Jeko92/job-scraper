@@ -45,6 +45,13 @@ export interface RowControl {
   onSaved: (profile: UserProfile) => void;
 }
 
+/** Props of every profile section. */
+export interface SectionProps {
+  profile: UserProfile;
+  /** Open state and callbacks for one row, by its id. */
+  row: (id: RowId) => RowControl;
+}
+
 interface EditableRowProps<T> extends RowControl {
   label: string;
   /** Read-only value; empty shows "Not set". */

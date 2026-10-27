@@ -1,6 +1,6 @@
 'use client';
 
-import { SENIORITY_LEVELS, type UserProfile } from '@job-scraper/shared';
+import { SENIORITY_LEVELS } from '@job-scraper/shared';
 
 import { LookupField } from '@/components/lookups/lookup-field';
 import { Input } from '@/components/ui/input';
@@ -9,11 +9,7 @@ import { toLocationOption } from '@/lib/lookups/options';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
-import {
-  EditableRow,
-  type RowControl,
-  type RowId,
-} from '../common/editable-row';
+import { EditableRow, type SectionProps } from '../common/editable-row';
 import { enumItems, RowSelect } from '../common/row-select';
 
 const FIELD_CLASS = 'h-12 rounded-card px-4 text-base';
@@ -21,12 +17,7 @@ const MAX_YEARS = 99.9;
 
 const SENIORITY_ITEMS = enumItems(SENIORITY_LEVELS, SENIORITY_LABELS);
 
-interface BasicInfoSectionProps {
-  profile: UserProfile;
-  row: (id: RowId) => RowControl;
-}
-
-export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
+export function BasicInfoSection({ profile, row }: SectionProps) {
   const name = [profile.firstName, profile.lastName].filter(Boolean).join(' ');
   const years = profile.yearsExperience;
   const location = profile.location ? toLocationOption(profile.location) : null;

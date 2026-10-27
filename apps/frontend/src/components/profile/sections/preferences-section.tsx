@@ -4,24 +4,17 @@ import {
   EMPLOYMENT_TYPES,
   MAX_PREFERENCES_LOCATIONS,
   REMOTE_PREFERENCES,
-  type UserProfile,
 } from '@job-scraper/shared';
 
-import { LookupField } from '@/components/lookups/lookup-field';
 import {
   EMPLOYMENT_TYPE_LABELS,
   REMOTE_PREFERENCE_LABELS,
 } from '@/lib/common/enum-labels';
 import { toLocationOption } from '@/lib/lookups/options';
 import { searchLocationOptions } from '@/lib/lookups/search';
-import type { LookupOption } from '@/lib/lookups/types';
 
-import { ChipList } from '../common/chip-list';
-import {
-  EditableRow,
-  type RowControl,
-  type RowId,
-} from '../common/editable-row';
+import { EditableRow, type SectionProps } from '../common/editable-row';
+import { LookupRow } from '../common/lookup-row';
 import { enumItems, RowSelect, type RowSelectItem } from '../common/row-select';
 
 const EMPLOYMENT_ITEMS = enumItems(EMPLOYMENT_TYPES, EMPLOYMENT_TYPE_LABELS);
@@ -34,16 +27,10 @@ const RELOCATE_ITEMS: RowSelectItem<boolean | null>[] = [
   { value: false, label: 'No' },
 ];
 
-interface PreferencesSectionProps {
-  profile: UserProfile;
-  row: (id: RowId) => RowControl;
-}
-
-export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
+export function PreferencesSection({ profile, row }: SectionProps) {
   // null until the user answered any preference question.
   const { preferences } = profile;
   const relocate = preferences?.willingToRelocate ?? null;
-  const places = profile.preferencesLocations.map(toLocationOption);
 
   return (
     <>
@@ -108,29 +95,16 @@ export function PreferencesSection({ profile, row }: PreferencesSectionProps) {
       />
 
       {relocate === true && (
-        <EditableRow<LookupOption[]>
+        <LookupRow
           {...row('preferencesLocations')}
           label="Preferred locations"
           addLabel="Add city"
-          value={
-            places.length > 0 ? (
-              <ChipList labels={places.map((place) => place.label)} />
-            ) : null
-          }
-          initialDraft={places}
-          renderEditor={(draft, setDraft) => (
-            <LookupField
-              label="Search cities or regions"
-              placeholder="e.g. Hamburg"
-              selected={draft}
-              max={MAX_PREFERENCES_LOCATIONS}
-              search={searchLocationOptions}
-              onChange={setDraft}
-            />
-          )}
-          buildRequest={(draft) => ({
-            preferencesLocationIds: draft.map((place) => place.value),
-          })}
+          searchLabel="Search cities or regions"
+          placeholder="e.g. Hamburg"
+          options={profile.preferencesLocations.map(toLocationOption)}
+          max={MAX_PREFERENCES_LOCATIONS}
+          search={searchLocationOptions}
+          buildRequest={(ids) => ({ preferencesLocationIds: ids })}
         />
       )}
     </>
