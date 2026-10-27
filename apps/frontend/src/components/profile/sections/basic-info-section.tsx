@@ -10,8 +10,8 @@ import type { LookupOption } from '@/lib/lookups/types';
 import { SENIORITY_LABELS } from '@/lib/profile/enum-labels';
 
 import { EditableRow, type RowControl } from '../common/editable-row';
+import { ProfileGroup } from '../common/profile-group';
 import { enumItems, RowSelect } from '../common/row-select';
-import { ProfileSectionCard } from '../common/section-card';
 
 const FIELD_CLASS = 'h-10 rounded-card px-3 text-base';
 // The backend allows up to 99.9;
@@ -31,157 +31,155 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
   const location = profile.location ? toLocationOption(profile.location) : null;
 
   return (
-    <ProfileSectionCard title="Basic info">
-      <dl className="divide-y divide-line">
-        <EditableRow
-          {...row('name')}
-          label="Name"
-          value={name}
-          initialDraft={{
-            firstName: profile.firstName ?? '',
-            lastName: profile.lastName ?? '',
-          }}
-          renderEditor={(draft, setDraft) => (
-            <div className="grid gap-2 sm:grid-cols-2">
-              <Input
-                autoFocus
-                aria-label="First name"
-                placeholder="First name"
-                maxLength={100}
-                className={FIELD_CLASS}
-                value={draft.firstName}
-                onChange={(event) => {
-                  setDraft({ ...draft, firstName: event.target.value });
-                }}
-              />
-              <Input
-                aria-label="Last name"
-                placeholder="Last name"
-                maxLength={100}
-                className={FIELD_CLASS}
-                value={draft.lastName}
-                onChange={(event) => {
-                  setDraft({ ...draft, lastName: event.target.value });
-                }}
-              />
-            </div>
-          )}
-          buildRequest={(draft) => {
-            const firstName = draft.firstName.trim();
-            const lastName = draft.lastName.trim();
-            const errors: string[] = [];
-            if (firstName === '') errors.push('First name is required.');
-            if (lastName === '') errors.push('Last name is required.');
-            return errors.length > 0 ? errors : { firstName, lastName };
-          }}
-        />
-
-        <EditableRow
-          {...row('headline')}
-          label="Role"
-          value={profile.headline}
-          initialDraft={profile.headline ?? ''}
-          renderEditor={(draft, setDraft) => (
+    <ProfileGroup title="Basic info">
+      <EditableRow
+        {...row('name')}
+        label="Name"
+        value={name}
+        initialDraft={{
+          firstName: profile.firstName ?? '',
+          lastName: profile.lastName ?? '',
+        }}
+        renderEditor={(draft, setDraft) => (
+          <div className="grid gap-2 sm:grid-cols-2">
             <Input
               autoFocus
-              aria-label="Role"
-              placeholder="e.g. Fullstack developer"
-              maxLength={200}
+              aria-label="First name"
+              placeholder="First name"
+              maxLength={100}
               className={FIELD_CLASS}
+              value={draft.firstName}
+              onChange={(event) => {
+                setDraft({ ...draft, firstName: event.target.value });
+              }}
+            />
+            <Input
+              aria-label="Last name"
+              placeholder="Last name"
+              maxLength={100}
+              className={FIELD_CLASS}
+              value={draft.lastName}
+              onChange={(event) => {
+                setDraft({ ...draft, lastName: event.target.value });
+              }}
+            />
+          </div>
+        )}
+        buildRequest={(draft) => {
+          const firstName = draft.firstName.trim();
+          const lastName = draft.lastName.trim();
+          const errors: string[] = [];
+          if (firstName === '') errors.push('First name is required.');
+          if (lastName === '') errors.push('Last name is required.');
+          return errors.length > 0 ? errors : { firstName, lastName };
+        }}
+      />
+
+      <EditableRow
+        {...row('headline')}
+        label="Role"
+        value={profile.headline}
+        initialDraft={profile.headline ?? ''}
+        renderEditor={(draft, setDraft) => (
+          <Input
+            autoFocus
+            aria-label="Role"
+            placeholder="e.g. Fullstack developer"
+            maxLength={200}
+            className={FIELD_CLASS}
+            value={draft}
+            onChange={(event) => {
+              setDraft(event.target.value);
+            }}
+          />
+        )}
+        buildRequest={(draft) =>
+          draft.trim() === ''
+            ? ['Role is required.']
+            : { headline: draft.trim() }
+        }
+      />
+
+      <EditableRow
+        {...row('seniority')}
+        label="Seniority"
+        value={profile.seniority && SENIORITY_LABELS[profile.seniority]}
+        initialDraft={profile.seniority}
+        renderEditor={(draft, setDraft) => (
+          <RowSelect
+            label="Seniority"
+            items={SENIORITY_ITEMS}
+            value={draft}
+            onChange={setDraft}
+          />
+        )}
+        buildRequest={(draft) => ({ seniority: draft })}
+      />
+
+      <EditableRow
+        {...row('yearsExperience')}
+        label="Experience"
+        value={years === null ? null : `${String(years)} years`}
+        initialDraft={years === null ? '' : String(years)}
+        renderEditor={(draft, setDraft) => (
+          <div className="flex items-center gap-2">
+            <Input
+              autoFocus
+              aria-label="Years of experience"
+              // Text, not number: a number input reports "" for invalid
+              // input like "1e", which would clear the saved value.
+              type="text"
+              inputMode="decimal"
+              className={`${FIELD_CLASS} w-24`}
               value={draft}
               onChange={(event) => {
                 setDraft(event.target.value);
               }}
             />
-          )}
-          buildRequest={(draft) =>
-            draft.trim() === ''
-              ? ['Role is required.']
-              : { headline: draft.trim() }
+            <span className="text-ink-muted">years</span>
+          </div>
+        )}
+        buildRequest={(draft) => {
+          const text = draft.trim();
+          if (text === '') return { yearsExperience: null };
+          // Digits with an optional decimal part; "1,5" is read as 1.5.
+          if (!/^\d+([.,]\d+)?$/.test(text)) {
+            return ['Enter a number of years, e.g. 2.5.'];
           }
-        />
-
-        <EditableRow
-          {...row('seniority')}
-          label="Seniority"
-          value={profile.seniority && SENIORITY_LABELS[profile.seniority]}
-          initialDraft={profile.seniority}
-          renderEditor={(draft, setDraft) => (
-            <RowSelect
-              label="Seniority"
-              items={SENIORITY_ITEMS}
-              value={draft}
-              onChange={setDraft}
-            />
-          )}
-          buildRequest={(draft) => ({ seniority: draft })}
-        />
-
-        <EditableRow
-          {...row('yearsExperience')}
-          label="Experience"
-          value={years === null ? null : `${String(years)} years`}
-          initialDraft={years === null ? '' : String(years)}
-          renderEditor={(draft, setDraft) => (
-            <div className="flex items-center gap-2">
-              <Input
-                autoFocus
-                aria-label="Years of experience"
-                // Text, not number: a number input reports "" for invalid
-                // input like "1e", which would clear the saved value.
-                type="text"
-                inputMode="decimal"
-                className={`${FIELD_CLASS} w-24`}
-                value={draft}
-                onChange={(event) => {
-                  setDraft(event.target.value);
-                }}
-              />
-              <span className="text-ink-muted">years</span>
-            </div>
-          )}
-          buildRequest={(draft) => {
-            const text = draft.trim();
-            if (text === '') return { yearsExperience: null };
-            // Digits with an optional decimal part; "1,5" is read as 1.5.
-            if (!/^\d+([.,]\d+)?$/.test(text)) {
-              return ['Enter a number of years, e.g. 2.5.'];
-            }
-            const value = Number(text.replace(',', '.'));
-            if (value > MAX_YEARS) {
-              return [
-                `Experience must be between 0 and ${String(MAX_YEARS)} years.`,
-              ];
-            }
-            // The backend stores one decimal.
-            return { yearsExperience: Math.round(value * 10) / 10 };
-          }}
-        />
-
-        <EditableRow<LookupOption | null>
-          {...row('location')}
-          label="Based in"
-          value={location?.label}
-          initialDraft={location}
-          renderEditor={(draft, setDraft) => (
-            <LookupField
-              label="Search your city or region"
-              placeholder="e.g. Berlin"
-              selected={draft ? [draft] : []}
-              max={1}
-              search={searchLocationOptions}
-              onChange={(next) => {
-                setDraft(next[0] ?? null);
-              }}
-            />
-          )}
-          buildRequest={(draft) =>
-            draft === null
-              ? ['Location is required.']
-              : { locationId: draft.value }
+          const value = Number(text.replace(',', '.'));
+          if (value > MAX_YEARS) {
+            return [
+              `Experience must be between 0 and ${String(MAX_YEARS)} years.`,
+            ];
           }
-        />
-      </dl>
-    </ProfileSectionCard>
+          // The backend stores one decimal.
+          return { yearsExperience: Math.round(value * 10) / 10 };
+        }}
+      />
+
+      <EditableRow<LookupOption | null>
+        {...row('location')}
+        label="Based in"
+        value={location?.label}
+        initialDraft={location}
+        renderEditor={(draft, setDraft) => (
+          <LookupField
+            label="Search your city or region"
+            placeholder="e.g. Berlin"
+            selected={draft ? [draft] : []}
+            max={1}
+            search={searchLocationOptions}
+            onChange={(next) => {
+              setDraft(next[0] ?? null);
+            }}
+          />
+        )}
+        buildRequest={(draft) =>
+          draft === null
+            ? ['Location is required.']
+            : { locationId: draft.value }
+        }
+      />
+    </ProfileGroup>
   );
 }
