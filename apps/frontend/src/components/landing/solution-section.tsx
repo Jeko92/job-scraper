@@ -51,7 +51,7 @@ export function SolutionSection() {
           ))}
         </ul>
 
-        <div className="grid gap-2 sm:grid-cols-2 sr-only" aria-hidden="true">
+        <div className="sr-only grid gap-2 sm:grid-cols-2" aria-hidden="true">
           <CrowdPanel
             label="Job portal"
             others={PORTAL_APPLICANTS}
