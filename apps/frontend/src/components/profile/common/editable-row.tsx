@@ -5,7 +5,13 @@ import type {
   UserProfile,
 } from '@job-scraper/shared';
 import { Check, CircleCheck, Pencil, X } from 'lucide-react';
-import { type ReactNode, useEffect, useState, useTransition } from 'react';
+import {
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 
 import { FormErrors } from '@/components/auth/form-errors';
 import { Button } from '@/components/ui/button';
@@ -44,6 +50,8 @@ export function EditableRow<T>({
   ...editor
 }: EditableRowProps<T>) {
   const [justSaved, setJustSaved] = useState(false);
+  const editButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(isOpen);
   const isEmpty =
     value === undefined || value === null || value === '' || value === false;
 
@@ -57,6 +65,13 @@ export function EditableRow<T>({
       clearTimeout(timer);
     };
   }, [justSaved]);
+
+  // When the row closes (save, cancel, Escape), its ✓ / ✕ buttons disappear.
+  // Put the focus back on ✎ so keyboard users stay on this row.
+  useEffect(() => {
+    if (wasOpen.current && !isOpen) editButtonRef.current?.focus();
+    wasOpen.current = isOpen;
+  }, [isOpen]);
 
   return (
     <div className="flex items-start gap-4 py-3">
@@ -90,6 +105,7 @@ export function EditableRow<T>({
               </span>
             )}
             <Button
+              ref={editButtonRef}
               type="button"
               variant="ghost"
               size="icon"
@@ -168,7 +184,9 @@ function RowEditor<T>({
         save();
       }}
       onKeyDown={(event) => {
-        if (event.key === 'Escape') onClose();
+        // Not while saving: the request would still finish and close
+        // another row that was opened in the meantime.
+        if (event.key === 'Escape' && !pending) onClose();
       }}
     >
       <div className="flex items-start gap-2">

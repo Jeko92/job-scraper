@@ -52,7 +52,11 @@ export function LookupField({
   const inputId = useId();
 
   const term = text.trim();
-  const isFull = selected.length >= max;
+  // Fields that hold only one value (max = 1, e.g. "Based in") are never
+  // full: picking a new value replaces the old one. So the search box is
+  // never disabled, and the user can type a new city right away.
+  const replaces = max === 1;
+  const isFull = !replaces && selected.length >= max;
   const shouldSearch = term !== '' || suggestWhenEmpty;
 
   // Debounce: search once the user pauses typing; ignore outdated answers.
@@ -94,7 +98,7 @@ export function LookupField({
     if (!option || isFull) {
       return;
     }
-    onChange([...selected, option]);
+    onChange(replaces ? [option] : [...selected, option]);
     setText('');
   }
 

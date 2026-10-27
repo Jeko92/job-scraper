@@ -127,11 +127,10 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
               <Input
                 autoFocus
                 aria-label="Years of experience"
-                type="number"
+                // Text, not number: a number input reports "" for invalid
+                // input like "1e", which would clear the saved value.
+                type="text"
                 inputMode="decimal"
-                min={0}
-                max={MAX_YEARS}
-                step={0.5}
                 className={`${FIELD_CLASS} w-24`}
                 value={draft}
                 onChange={(event) => {
@@ -142,9 +141,14 @@ export function BasicInfoSection({ profile, row }: BasicInfoSectionProps) {
             </div>
           )}
           buildRequest={(draft) => {
-            if (draft.trim() === '') return { yearsExperience: null };
-            const value = Number(draft);
-            if (!Number.isFinite(value) || value < 0 || value > MAX_YEARS) {
+            const text = draft.trim();
+            if (text === '') return { yearsExperience: null };
+            // Digits with an optional decimal part; "1,5" is read as 1.5.
+            if (!/^\d+([.,]\d+)?$/.test(text)) {
+              return ['Enter a number of years, e.g. 2.5.'];
+            }
+            const value = Number(text.replace(',', '.'));
+            if (value > MAX_YEARS) {
               return [
                 `Experience must be between 0 and ${String(MAX_YEARS)} years.`,
               ];
