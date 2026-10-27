@@ -179,7 +179,7 @@ type CompanyRevenue =
   | 'over-1b';
 
 @Injectable()
-export class CompanyEnrichProvider implements CompanyDataProvider {
+export class CompanyEnrichProvider implements CompanyDataProvider<CompanySearchParams> {
   private readonly logger = new Logger(CompanyEnrichProvider.name);
   private readonly baseUrl: string;
   private readonly apiKey: string;
@@ -232,57 +232,6 @@ export class CompanyEnrichProvider implements CompanyDataProvider {
       return data.items;
     } catch (error) {
       this.logger.error(`Failed to fetch from CompanyEnrich: ${String(error)}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Fetch a single company by identifier from CompanyEnrich.
-   * Note: The new API doesn't have a direct GET by ID endpoint in the search path,
-   * but we can use search with a specific domain or name query.
-   */
-  async fetchCompany(identifier: string): Promise<CompanyInfo | null> {
-    // Try to fetch by domain or name using search
-    const endpoint = `${this.baseUrl}/companies/search`;
-
-    // Try with domain first
-    const requestBody: CompanySearchPageInput = {
-      page: 1,
-      pageSize: 1,
-      query: identifier,
-    };
-
-    this.logger.debug(
-      `Fetching single company from CompanyEnrich: ${endpoint} with body: ${JSON.stringify(requestBody)}`,
-    );
-
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null;
-        }
-        const errorText = await response.text();
-        throw new Error(
-          `CompanyEnrich API request failed: ${String(response.status)} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`,
-        );
-      }
-
-      const data = (await response.json()) as PaginatedListOfCompanyInfo;
-
-      return data.items[0] ?? null;
-    } catch (error) {
-      this.logger.error(
-        `Failed to fetch company from CompanyEnrich: ${String(error)}`,
-      );
       throw error;
     }
   }

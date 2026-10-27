@@ -5,7 +5,6 @@ import type {
 } from '../providers/wikidata.provider.js';
 
 /**
- * Projection and optional attributes shared by all company queries.
  * Multi-valued properties are aggregated so each company yields one row.
  */
 const COMPANY_SELECT = `
@@ -27,9 +26,6 @@ const COMPANY_OPTIONAL_ATTRIBUTES = `
   }
 `;
 
-/**
- * Build SPARQL query based on search parameters.
- */
 export function buildSparqlQuery(params: CompanySearchParams): string {
   const { query, location, industry, limit, offset } = params;
 
@@ -79,36 +75,6 @@ export function buildSparqlQuery(params: CompanySearchParams): string {
   `;
 }
 
-/**
- * Build SPARQL query for a single company by name.
- * Uses the Wikidata entity search API, as a regex over all labels times out.
- */
-export function buildSingleCompanyQuery(identifier: string): string {
-  return `
-    ${COMPANY_SELECT}
-    WHERE {
-      SERVICE wikibase:mwapi {
-        bd:serviceParam wikibase:endpoint "www.wikidata.org";
-                        wikibase:api "EntitySearch";
-                        mwapi:search "${escapeSparqlString(identifier)}";
-                        mwapi:language "de".
-        ?company wikibase:apiOutputItem mwapi:item.
-        ?ordinal wikibase:apiOrdinal true.
-      }
-
-      # Restrict to instances of business (or subclasses)
-      ?company wdt:P31/wdt:P279* wd:Q4830453.
-      ${COMPANY_OPTIONAL_ATTRIBUTES}
-    }
-    GROUP BY ?company ?companyLabel ?ordinal
-    ORDER BY ?ordinal
-    LIMIT 1
-  `;
-}
-
-/**
- * Parse Wikidata SPARQL results into company objects.
- */
 export function parseWikidataResults(
   data: WikidataResponse,
 ): WikidataCompany[] {
@@ -140,9 +106,6 @@ function containsIgnoreCase(variable: string, value: string): string {
   return `CONTAINS(LCASE(${variable}), LCASE("${escapeSparqlString(value)}"))`;
 }
 
-/**
- * Escape special characters in SPARQL string literals.
- */
 function escapeSparqlString(str: string): string {
   return str
     .replace(/\\/g, '\\\\')
