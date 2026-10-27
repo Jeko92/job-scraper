@@ -45,9 +45,19 @@ export function LandingSection({
   );
 }
 
-function SectionChip({ children }: { children: ReactNode }) {
+interface SectionChipProps {
+  children: ReactNode;
+  className?: string;
+}
+
+export function SectionChip({ children, className }: SectionChipProps) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-chip border border-line bg-surface px-3 py-1.5 text-[0.8125rem] leading-4 text-ink">
+    <span
+      className={cn(
+        'inline-flex items-center gap-2 rounded-chip border border-line bg-surface px-3 py-1.5 text-[0.8125rem] leading-4 text-ink',
+        className,
+      )}
+    >
       <LogoMark className="size-3.5" />
       {children}
     </span>

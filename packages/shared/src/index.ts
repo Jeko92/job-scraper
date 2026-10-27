@@ -53,6 +53,12 @@ export {
   skillsQuerySchema,
 } from './skills';
 export {
+  type StatsCompany,
+  type StatsSkill,
+  type UserStats,
+  userStatsSchema,
+} from './stats';
+export {
   EMPLOYMENT_TYPES,
   type EmploymentType,
   employmentTypeSchema,

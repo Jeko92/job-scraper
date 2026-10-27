@@ -15,6 +15,8 @@ export const envSchema = z.object({
   COMPANYENRICH_API_KEY: z.string().nonempty(),
   COMPANYENRICH_API_URL: z.url(),
   WIKIDATA_API_URL: z.url(),
+  STATS_PERIOD_DAYS: z.coerce.number().int().positive().default(7),
+  STATS_TOP_LIMIT: z.coerce.number().int().positive().default(5),
 });
 
 export type Env = z.infer<typeof envSchema>;

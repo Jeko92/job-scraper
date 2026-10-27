@@ -48,14 +48,16 @@ export interface JobListItem {
   skills: JobSkill[];
 }
 
+export const jobCompanySchema: z.ZodType<JobCompany> = z.object({
+  id: z.uuid(),
+  name: z.string().nullable(),
+  domain: z.string().nullable(),
+});
+
 const jobListItemObject = z.object({
   id: z.uuid(),
   title: z.string(),
-  company: z.object({
-    id: z.uuid(),
-    name: z.string().nullable(),
-    domain: z.string().nullable(),
-  }),
+  company: jobCompanySchema,
   location: locationSchema.nullable(),
   workplaceType: remotePreferenceSchema.nullable(),
   employmentType: employmentTypeSchema.nullable(),
