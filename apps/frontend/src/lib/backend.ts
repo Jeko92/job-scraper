@@ -43,9 +43,13 @@ export async function readErrorMessages(response: Response): Promise<string[]> {
   return ['Something went wrong. Please try again.'];
 }
 
-export function getFromBackend(path: string, token: string): Promise<Response> {
+/** Without `token` for public routes, e.g. the job preview. */
+export function getFromBackend(
+  path: string,
+  token?: string,
+): Promise<Response> {
   return fetch(new URL(path, getBackendUrl()), {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: token === undefined ? {} : { Authorization: `Bearer ${token}` },
     cache: 'no-store',
     signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
   });
