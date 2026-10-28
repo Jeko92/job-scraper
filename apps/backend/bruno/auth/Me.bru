@@ -11,7 +11,8 @@ get {
 }
 
 docs {
-  Returns the logged-in user `{ id, username }`.
+  Returns the logged-in user `{ id, username, role }`. `role` is `user` or
+  `admin`.
 
   - 401: missing or expired token — run Login
 }
