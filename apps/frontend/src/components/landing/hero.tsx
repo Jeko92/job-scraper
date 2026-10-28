@@ -3,13 +3,13 @@ import {
   PREVIEW_SKILL_LABELS,
   PREVIEW_SKILLS,
 } from '@job-scraper/shared';
-import { ChevronDown, Circle } from 'lucide-react';
+import { Circle } from 'lucide-react';
 
 import { AnimatedLogoMark } from '@/components/brand/animated-logo-mark';
 import { Logo } from '@/components/brand/logo';
+import { HeroSelect } from '@/components/explore/hero-select';
 import { EXPLORE_HREF } from '@/lib/routes';
-import { field, fieldLabel, overline } from '@/lib/styles';
-import { cn } from '@/lib/utils';
+import { overline } from '@/lib/styles';
 
 import { GlowPanel } from './glow-panel';
 
@@ -59,51 +59,19 @@ export function Hero() {
             />
             <button
               type="submit"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-pill bg-primary px-5 font-semibold text-primary-foreground"
+              className="group inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-pill bg-primary px-6 font-semibold text-primary-foreground transition-[background-color,box-shadow,translate] duration-200 outline-none hover:translate-x-0.5 hover:bg-primary/85 hover:shadow-lg focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-0 active:shadow-md motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
             >
               Explore jobs
-              <Circle className="size-3.5" strokeWidth={3} aria-hidden="true" />
+              {/* The dot grows and fills in on hover: "go". */}
+              <Circle
+                className="size-3.5 transition-[scale,fill] duration-300 ease-out group-hover:scale-125 group-hover:fill-current motion-reduce:group-hover:scale-100"
+                strokeWidth={3}
+                aria-hidden="true"
+              />
             </button>
           </form>
         </GlowPanel>
       </div>
     </section>
-  );
-}
-
-interface HeroSelectProps {
-  label: string;
-  name: string;
-  /** The empty first option; the explore page drops the empty value. */
-  anyLabel: string;
-  options: { value: string; label: string }[];
-}
-
-function HeroSelect({ label, name, anyLabel, options }: HeroSelectProps) {
-  return (
-    <label className="flex flex-col gap-2">
-      <span className={fieldLabel}>{label}</span>
-      <span className="relative">
-        <select
-          name={name}
-          defaultValue=""
-          className={cn(
-            field,
-            'w-full cursor-pointer appearance-none pr-10 outline-none focus-visible:ring-3 focus-visible:ring-ring/50',
-          )}
-        >
-          <option value="">{anyLabel}</option>
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-ink"
-          aria-hidden="true"
-        />
-      </span>
-    </label>
   );
 }
