@@ -1,6 +1,6 @@
 # ADR-010: Role-based access control with a role column and the JWT
 
-* Status: proposed
+* Status: accepted
 
 ## Decision
 
