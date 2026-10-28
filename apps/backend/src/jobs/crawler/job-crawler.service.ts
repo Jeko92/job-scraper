@@ -24,9 +24,11 @@ import {
   LocationsService,
   type NewLocation,
 } from '../../locations/locations.service.js';
+import { SkillsService } from '../../skills/skills.service.js';
 import {
   type CreateJobRequest,
   createJobSchema,
+  MAX_JOB_SKILLS,
 } from '../dto/create-job.dto.js';
 import { Job } from '../entities/job.entity.js';
 import { JobsService } from '../jobs.service.js';
@@ -54,6 +56,7 @@ const CRAWL_INSTRUCTIONS = [
   'salaryMin, salaryMax: yearly gross amounts as numbers; salaryCurrency: ISO 4217 code.',
   'publishedAt: ISO 8601 date-time with offset.',
   'location: the primary work location; countryCode: ISO 3166-1 alpha-2; null when not stated.',
+  'skills: technologies, tools and professional skills named in the posting, one short name each; required: false when listed as nice-to-have.',
 ].join('\n');
 
 const CAREERS_PAGE_FORMAT = strictFormat('careers_page', {
@@ -98,6 +101,14 @@ const JOB_FORMAT = strictFormat('job_listing', {
             { type: 'null' },
           ],
         },
+        skills: {
+          type: 'array',
+          maxItems: MAX_JOB_SKILLS,
+          items: strictFormat('job_skill', {
+            name: { type: 'string' },
+            required: { type: 'boolean' },
+          }).schema,
+        },
       }).schema,
       { type: 'null' },
     ],
@@ -108,7 +119,10 @@ const JOB_FORMAT = strictFormat('job_listing', {
 type CrawledJob = Omit<
   CreateJobRequest,
   'companyId' | 'locationId' | 'skills' | 'sourceUrl'
-> & { location: NewLocation | null };
+> & {
+  location: NewLocation | null;
+  skills: { name: string; required: boolean }[];
+};
 
 @Injectable()
 export class JobCrawlerService {
@@ -122,6 +136,7 @@ export class JobCrawlerService {
     private readonly companiesRepository: Repository<Company>,
     private readonly aiProvider: AiProvider,
     private readonly locationsService: LocationsService,
+    private readonly skillsService: SkillsService,
   ) {}
 
   /**
@@ -238,16 +253,31 @@ export class JobCrawlerService {
       if (!job) {
         return null;
       }
-      const { location, ...fields } = job;
+      const { location, skills, ...fields } = job;
       const locationId =
         location && Object.values(location).some((value) => value !== null)
           ? (await this.locationsService.findOrCreate(location)).id
           : null;
+      const requiredBySlug = new Map<string, boolean>();
+      for (const { name, required } of skills) {
+        const trimmed = name.trim();
+        if (!trimmed) {
+          continue;
+        }
+        const { slug } = await this.skillsService.findOrCreate(trimmed);
+        if (!requiredBySlug.has(slug)) {
+          requiredBySlug.set(slug, required);
+        }
+      }
       const input = createJobSchema.safeParse({
         ...fields,
         companyId,
         sourceUrl,
         locationId,
+        skills: [...requiredBySlug].map(([slug, required]) => ({
+          slug,
+          required,
+        })),
       });
       if (!input.success) {
         this.logger.warn(`Skipped invalid job listing "${sourceUrl}"`);
