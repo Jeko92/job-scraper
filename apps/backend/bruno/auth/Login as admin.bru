@@ -25,7 +25,8 @@ script:post-response {
 
 docs {
   Same as **Login**, but for the admin user. Stores `adminAccessToken`, which
-  the admin-only job and company requests use.
+  the admin-only requests use: all companies requests, changing and crawling
+  jobs, calculating job matches and AI supplement.
 
   `adminUsername` must be an existing user with the admin role. Sign-up only
   creates normal users, so promote one in the database once, then log in
