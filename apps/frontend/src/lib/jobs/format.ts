@@ -8,6 +8,7 @@ import {
 export const JOB_SORT_LABELS: Record<JobSort, string> = {
   newest: 'Newest',
   oldest: 'Oldest',
+  bestMatch: 'Best match',
 };
 
 export const POSTED_WITHIN_OPTIONS = [1, 7, 30] as const;

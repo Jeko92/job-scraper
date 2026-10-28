@@ -27,6 +27,8 @@ export {
   jobIdSchema,
   type JobListItem,
   jobListItemSchema,
+  type JobMatchSummary,
+  jobMatchSummarySchema,
   type JobSkill,
   type JobsListResponse,
   jobsListResponseSchema,

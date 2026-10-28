@@ -34,6 +34,7 @@ export function toJobListItem(
         : [],
     ),
     isSaved,
+    match: null,
   };
 }
 

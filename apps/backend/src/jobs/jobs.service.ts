@@ -35,6 +35,7 @@ const FOREIGN_KEY_VIOLATION = '23503';
 const SORT_DIRECTIONS: Record<JobSort, 'ASC' | 'DESC'> = {
   newest: 'DESC',
   oldest: 'ASC',
+  bestMatch: 'DESC',
 };
 
 @Injectable()
