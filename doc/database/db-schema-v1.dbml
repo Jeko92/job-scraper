@@ -19,6 +19,9 @@
 //   A profile's location is optional.
 // - user_profiles.seniority is one of INTERN, JUNIOR, MID, SENIOR, LEAD
 //   (SENIORITY_LEVELS in packages/shared), or null.
+// - users.role is user or admin (USER_ROLES in packages/shared, checked by
+//   CHK_users_role) and defaults to user. Admins are set directly in the
+//   database (ADR-010).
 // - user_skills, user_industries, user_preferences_locations,
 //   company_locations, company_skills, company_industries and job_skills are
 //   many-to-many join tables. They use composite primary keys and can carry
@@ -63,6 +66,7 @@ Table users {
   email varchar [unique] // optional
   username varchar [unique, not null]
   password_hash varchar [not null]
+  role varchar(20) [not null, default: 'user'] // user | admin
   created_at timestamptz [not null]
   updated_at timestamptz [not null]
 }

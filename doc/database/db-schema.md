@@ -19,6 +19,7 @@ erDiagram
         varchar email UK "optional"
         varchar username UK
         varchar password_hash
+        varchar role "user | admin"
         timestamptz created_at
         timestamptz updated_at
     }
