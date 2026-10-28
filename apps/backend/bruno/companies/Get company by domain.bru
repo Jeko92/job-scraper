@@ -7,7 +7,11 @@ meta {
 get {
   url: {{baseUrl}}/companies/domain/{{domain}}
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 params:path {
@@ -22,4 +26,5 @@ docs {
   - 200: OK - company object
   - 404: Not Found - unknown domain
   - 401: Unauthorized - run Login
+  - 403: Forbidden - not an admin, run Login as admin
 }

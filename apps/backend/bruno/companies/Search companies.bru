@@ -7,7 +7,11 @@ meta {
 get {
   url: {{baseUrl}}/companies/search
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 params:query {
@@ -39,4 +43,5 @@ docs {
   - 200: OK - array of matching companies
   - 400: Bad Request - invalid filter parameters
   - 401: Unauthorized - run Login
+  - 403: Forbidden - not an admin, run Login as admin
 }
