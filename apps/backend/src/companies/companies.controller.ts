@@ -39,6 +39,8 @@ import type {
 
 @ApiTags('companies')
 @ApiBearerAuth()
+@Roles('admin')
+@ApiForbiddenResponse({ description: 'Admin only' })
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
@@ -78,8 +80,6 @@ export class CompaniesController {
   }
 
   @Post('fetch')
-  @Roles('admin')
-  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary:
       'Fetch companies from external APIs (Wikidata and/or CompanyEnrich)',
@@ -106,8 +106,6 @@ export class CompaniesController {
   }
 
   @Post('fetch/wikidata')
-  @Roles('admin')
-  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary: 'Fetch companies from Wikidata',
     description: 'Fetches company data from Wikidata only',
@@ -124,8 +122,6 @@ export class CompaniesController {
   }
 
   @Post('fetch/company-enrich')
-  @Roles('admin')
-  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary: 'Fetch companies from CompanyEnrich',
     description: 'Fetches company data from CompanyEnrich only',
@@ -142,8 +138,6 @@ export class CompaniesController {
   }
 
   @Post()
-  @Roles('admin')
-  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({ summary: 'Create a company directly' })
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -173,8 +167,6 @@ export class CompaniesController {
   }
 
   @Post('refresh')
-  @Roles('admin')
-  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary: 'Refresh company data from external APIs',
     description: 'Fetches data from external APIs and saves to database',
