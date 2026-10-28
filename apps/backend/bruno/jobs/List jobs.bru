@@ -5,19 +5,19 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/jobs?workplaceType=HYBRID&workplaceType=REMOTE&employmentType=FULL_TIME&skill=typescript&postedWithinDays=30&page=1&limit=20
+  url: {{baseUrl}}/jobs?postedWithinDays=30&page=1&limit=20
   body: none
   auth: inherit
 }
 
 params:query {
-  workplaceType: HYBRID
-  workplaceType: REMOTE
-  employmentType: FULL_TIME
-  skill: typescript
   postedWithinDays: 30
   page: 1
   limit: 20
+  ~skill: typescript
+  ~workplaceType: HYBRID
+  ~workplaceType: REMOTE
+  ~employmentType: FULL_TIME
   ~locationId: {{locationId}}
   ~sort: newest
   ~saved: true
@@ -32,10 +32,10 @@ docs {
   - `skill`: skill slugs (run **List skills**)
   - `postedWithinDays`: 1-365
   - `saved`: true = only jobs the logged-in user has saved (run **Save job**)
-  - `sort`: newest (default) or oldest
+  - `sort`: newest (default), oldest or bestMatch (highest `match` first, jobs without a match last, newest first; run **Calculate job matches** first)
   - `page`: starts at 1, default 1
   - `limit`: jobs per page, 1-100, default 20
   
-  - 200: OK - `{ items, total, page, limit, totalPages }`; a page past the end returns empty `items`; each item has `isSaved` for the logged-in user
+  - 200: OK - `{ items, total, page, limit, totalPages }`; a page past the end returns empty `items`; each item has `isSaved` and `match` (0-100, null without a calculated match) for the logged-in user
   - 400: invalid filter, sort, page or limit, 401: run Login
 }

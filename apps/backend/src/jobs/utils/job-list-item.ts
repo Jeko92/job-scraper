@@ -11,6 +11,7 @@ import type { Job } from '../entities/job.entity.js';
 export function toJobListItem(
   job: Job,
   isSaved: boolean,
+  match: number | null,
 ): JobListItem & Pick<JobDetail, 'sourceUrl'> {
   const company = job.company;
   if (!company) {
@@ -34,7 +35,7 @@ export function toJobListItem(
         : [],
     ),
     isSaved,
-    match: null,
+    match,
   };
 }
 
