@@ -21,7 +21,10 @@ export class RolesGuard implements CanActivate {
     if (!roles || roles.length === 0) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest<RequestWithUser>();
+    // A @Public() route has no user.
+    const { user } = context
+      .switchToHttp()
+      .getRequest<Partial<RequestWithUser>>();
     return user !== undefined && roles.includes(user.role);
   }
 }
