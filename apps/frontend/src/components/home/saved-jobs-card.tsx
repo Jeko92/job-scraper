@@ -7,6 +7,7 @@ import { textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
 
 import { HomeCard } from './home-card';
+import { LoadError } from './load-error';
 
 export async function SavedJobsCard() {
   const savedJobs = await getSavedJobs();
@@ -16,7 +17,9 @@ export async function SavedJobsCard() {
       title="Saved jobs"
       action={{ label: 'View all', href: SAVED_HREF }}
     >
-      {savedJobs.length > 0 ? (
+      {savedJobs === null ? (
+        <LoadError subject="Your saved jobs" />
+      ) : savedJobs.length > 0 ? (
         <ul>
           {savedJobs.map((job) => (
             <li

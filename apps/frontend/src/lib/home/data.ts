@@ -7,13 +7,28 @@ import {
 import { cache } from 'react';
 
 import { getParsedFromBackend } from '@/lib/backend';
-import { getHomeJobsLimit } from '@/lib/env';
+import { getHomeJobsLimit, getHomeSavedJobsLimit } from '@/lib/env';
 import { fetchJobsPage } from '@/lib/jobs/api';
 
 const DEFAULT_HOME_JOBS_LIMIT = 6;
+const DEFAULT_HOME_SAVED_JOBS_LIMIT = 4;
 
-export function getSavedJobs(): Promise<JobListItem[]> {
-  return Promise.resolve([]);
+export async function getSavedJobs(): Promise<JobListItem[] | null> {
+  try {
+    const page = await fetchJobsPage({
+      saved: true,
+      sort: 'newest',
+      page: 1,
+      limit: Math.min(
+        getHomeSavedJobsLimit() ?? DEFAULT_HOME_SAVED_JOBS_LIMIT,
+        MAX_JOBS_LIMIT,
+      ),
+    });
+    return page.items;
+  } catch (error) {
+    console.error('Loading the saved jobs failed', error);
+    return null;
+  }
 }
 
 /** Jobs that fit the profile best; without matches, the newest jobs. */
