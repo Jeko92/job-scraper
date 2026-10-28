@@ -1,6 +1,7 @@
 import type { JobListItem } from '@job-scraper/shared';
 import Link from 'next/link';
 
+import { MatchRing } from '@/components/common/match-ring';
 import { buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -48,14 +49,24 @@ export function JobCard({
           <p className="text-sm text-ink-muted">{formatJobMeta(job)}</p>
           {salary && <p className="text-sm text-ink">{salary}</p>}
         </div>
-        {/* Relative time differs between server and browser by a few seconds. */}
-        <time
-          dateTime={job.postedAt}
-          suppressHydrationWarning
-          className="shrink-0 text-sm text-ink-muted"
-        >
-          {formatPostedAt(job.postedAt)}
-        </time>
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          {/* Relative time differs between server and browser by a few seconds. */}
+          <time
+            dateTime={job.postedAt}
+            suppressHydrationWarning
+            className="text-sm text-ink-muted"
+          >
+            {formatPostedAt(job.postedAt)}
+          </time>
+          {/* No ring without a calculated match (ADR-010). */}
+          {job.match !== null && (
+            <MatchRing
+              value={job.match}
+              label={`${String(job.match)}% match`}
+              className="size-12"
+            />
+          )}
+        </div>
       </div>
 
       <div className="mt-auto flex flex-wrap items-end justify-between gap-3">

@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import { getLatestJobs } from '@/lib/home/data';
+import { getBestMatchJobs } from '@/lib/home/data';
 import { SEARCH_HREF } from '@/lib/routes';
 import { sectionHeading, textLink } from '@/lib/styles';
 import { cn } from '@/lib/utils';
@@ -11,7 +11,7 @@ import { JobsSliderSkeleton } from './home-skeletons';
 import { JobsSlider } from './jobs-slider';
 
 async function LatestJobs() {
-  const jobs = await getLatestJobs();
+  const jobs = await getBestMatchJobs();
 
   if (jobs === null) {
     return (
@@ -35,15 +35,14 @@ export function LatestJobsSection() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-1">
           <h2 id="latest-jobs" className={sectionHeading}>
-            Latest jobs
+            Best matches for you
           </h2>
           <p className="text-sm text-ink-muted">
-            The newest roles from company career pages. The full list lives in
-            Search.
+            Roles that fit your profile best. The full list lives in Search.
           </p>
         </div>
         <Link
-          href={SEARCH_HREF}
+          href={`${SEARCH_HREF}?sort=bestMatch`}
           className={cn(
             textLink,
             'inline-flex items-center gap-1.5 text-sm font-semibold text-ink',
