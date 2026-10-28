@@ -1,4 +1,6 @@
+import type { UserRole } from '@job-scraper/shared';
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -11,6 +13,7 @@ import {
 import { UserProfile } from './user-profile.entity.js';
 
 @Entity('users')
+@Check('CHK_users_role', `"role" IN ('user', 'admin')`)
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -23,6 +26,9 @@ export class User {
 
   @Column({ name: 'password_hash' })
   passwordHash!: string;
+
+  @Column({ type: 'varchar', length: 20, default: 'user' })
+  role!: UserRole;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
