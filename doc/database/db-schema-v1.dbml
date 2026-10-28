@@ -30,7 +30,7 @@
 //   users (not user_profiles, since the login identifies the user) to jobs,
 //   with a composite primary key and the time the job was saved.
 // - user_job_match stores how well each active job fits each user's profile
-//   (0-100, ADR-010). POST /job-matches/recalculate replaces all rows; a
+//   (0-100, ADR-010). POST /job-matches/calculate replaces all rows; a
 //   user-job pair without a row has no match (e.g. no preferences set).
 //
 // Crawling flow:
@@ -265,7 +265,7 @@ Table user_saved_jobs {
   }
 }
 
-// How well a job fits a user's profile, filled by POST /job-matches/recalculate.
+// How well a job fits a user's profile, filled by POST /job-matches/calculate.
 Table user_job_match {
   user_id uuid [not null, ref: > users.id]
   job_id uuid [not null, ref: > jobs.id]

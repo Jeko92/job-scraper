@@ -27,9 +27,9 @@ See the [appendix](#appendix-worked-examples) for worked examples.
 * **Stored, not computed per request.** The table `user_job_match` holds one
   row per user and job: `match` and `calculated_at`. If no rule counts (e.g.
   the user has no preferences), no row is stored.
-* **Filled by one API call.** `POST /job-matches/recalculate` scores every
-  user against all active jobs and replaces the whole table. Nothing calls it
-  automatically yet.
+* **Filled by one API call.** `POST /job-matches/calculate` scores every user
+  against all active jobs and replaces the whole table. The same call is used
+  for the first and every later run. Nothing calls it automatically yet.
 * **No cut-off.** All jobs are listed on every page, whatever their match.
 * **Match ring.** `GET /jobs` and `GET /jobs/:id` return `match` per job
   (`null` without a row). The job card shows the ring when it is not `null`.
@@ -66,13 +66,13 @@ See the [appendix](#appendix-worked-examples) for worked examples.
 ## Consequences
 
 * Matches go stale: after a profile change or a crawl they only update on the
-  next `POST /job-matches/recalculate`. New jobs have no ring until then.
-  Recalculating automatically (after a profile save, after a crawl, or on a
+  next `POST /job-matches/calculate`. New jobs have no ring until then.
+  Calculating automatically (after a profile save, after a crawl, or on a
   schedule) is a follow-up.
 * The table holds up to users × active jobs rows. A full refresh is fine for
-  the MVP; with many users, recalculate per user or per new job instead.
+  the MVP; with many users, calculate per user or per new job instead.
 * There is no admin role yet, so any logged-in user can trigger the
-  recalculation.
+  calculation.
 * Locations match by id only. The same city stored as two location rows does
   not match, and there is no distance check.
 
