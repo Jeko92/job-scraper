@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const USER_ROLES = ['user', 'admin'] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 export const userRoleSchema: z.ZodType<UserRole> = z.enum(USER_ROLES);
+export const DEFAULT_USER_ROLE: UserRole = 'user';
 
 export interface RegisterRequest {
   firstName: string;

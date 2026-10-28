@@ -2,6 +2,7 @@ export {
   type AuthUser,
   authUserSchema,
   createRegisterRequestSchema,
+  DEFAULT_USER_ROLE,
   type LoginRequest,
   loginRequestSchema,
   type LoginResponse,
