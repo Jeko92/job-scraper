@@ -1,7 +1,13 @@
 import type { JobMatchSummary } from '@job-scraper/shared';
 import { Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
+import { Roles } from '../common/decorators/roles.decorator.js';
 import { JobMatchesService } from './job-matches.service.js';
 
 /** Fills `user_job_match`; read the matches via `GET /jobs` (ADR-011). */
@@ -13,6 +19,8 @@ export class JobMatchesController {
 
   @Post('calculate')
   @HttpCode(HttpStatus.OK)
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary: 'Calculate the job matches of all users (replaces all rows)',
   })
