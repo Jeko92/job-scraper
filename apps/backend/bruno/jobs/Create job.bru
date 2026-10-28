@@ -7,7 +7,11 @@ meta {
 post {
   url: {{baseUrl}}/jobs
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 body:json {
@@ -46,4 +50,5 @@ docs {
   - 400: invalid body, unknown company, location or skill slug
   - 409: the company already has a job with this `sourceUrl` or `externalId`
   - 401: run Login
+  - 403: not an admin, run Login as admin
 }

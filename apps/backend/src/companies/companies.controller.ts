@@ -10,8 +10,14 @@ import {
   Query,
   StandardSchemaValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
+import { Roles } from '../common/decorators/roles.decorator.js';
 import { CompaniesService } from './companies.service.js';
 import type { CompanyDto } from './dto/company.dto.js';
 import {
@@ -33,6 +39,8 @@ import type {
 
 @ApiTags('companies')
 @ApiBearerAuth()
+@Roles('admin')
+@ApiForbiddenResponse({ description: 'Admin only' })
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}

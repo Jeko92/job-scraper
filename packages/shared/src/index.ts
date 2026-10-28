@@ -2,6 +2,7 @@ export {
   type AuthUser,
   authUserSchema,
   createRegisterRequestSchema,
+  DEFAULT_USER_ROLE,
   type LoginRequest,
   loginRequestSchema,
   type LoginResponse,
@@ -9,6 +10,9 @@ export {
   type PublicUser,
   publicUserSchema,
   type RegisterRequest,
+  USER_ROLES,
+  type UserRole,
+  userRoleSchema,
 } from './auth';
 export { type HelloResponse, isHelloResponse } from './hello';
 export {

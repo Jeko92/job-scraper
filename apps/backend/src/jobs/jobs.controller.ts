@@ -24,12 +24,14 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 
 import type { RequestWithUser } from '../auth/request-with-user.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 import {
   type CreateJobRequest,
   createJobSchema,
@@ -47,6 +49,8 @@ export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Post()
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({ summary: 'Create a job with its skills (by slug)' })
   create(
     @Body({ schema: createJobSchema, pipes: [StandardSchemaValidationPipe] })
@@ -111,6 +115,8 @@ export class JobsController {
   }
 
   @Patch(':id')
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary:
       'Update a job (omitted fields stay unchanged, null clears; skills replace the whole list)',
@@ -124,6 +130,8 @@ export class JobsController {
   }
 
   @Delete(':id')
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a job and its skills' })
   remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {

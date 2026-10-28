@@ -7,7 +7,11 @@ meta {
 post {
   url: {{baseUrl}}/jobs/crawl/{{companyId}}
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 docs {
@@ -23,4 +27,5 @@ docs {
   - 422: AI response hit the output token limit
   - 502: the website or the AI request failed
   - 401: run Login
+  - 403: not an admin, run Login as admin
 }
