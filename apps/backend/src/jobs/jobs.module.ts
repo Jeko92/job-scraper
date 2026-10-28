@@ -10,6 +10,8 @@ import { UserJobMatch } from './entities/user-job-match.entity.js';
 import { UserSavedJob } from './entities/user-saved-job.entity.js';
 import { JobMatchesController } from './job-matches.controller.js';
 import { JobMatchesService } from './job-matches.service.js';
+import { JobPreviewsController } from './job-previews.controller.js';
+import { JobPreviewsService } from './job-previews.service.js';
 import { JobsController } from './jobs.controller.js';
 import { JobsService } from './jobs.service.js';
 import { SaveJobsController } from './save-jobs.controller.js';
@@ -24,7 +26,13 @@ import { SaveJobsController } from './save-jobs.controller.js';
     JobCrawlerController,
     SaveJobsController,
     JobMatchesController,
+    JobPreviewsController,
   ],
-  providers: [JobsService, JobCrawlerService, JobMatchesService],
+  providers: [
+    JobsService,
+    JobCrawlerService,
+    JobMatchesService,
+    JobPreviewsService,
+  ],
 })
 export class JobsModule {}
