@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JobMatchesService } from './job-matches.service.js';
 
-/** Fills `user_job_match`; read the matches via `GET /jobs` (ADR-010). */
+/** Fills `user_job_match`; read the matches via `GET /jobs` (ADR-011). */
 @ApiTags('jobs')
 @ApiBearerAuth()
 @Controller('job-matches')

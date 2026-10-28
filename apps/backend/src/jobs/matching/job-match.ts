@@ -1,6 +1,6 @@
 import type { RemotePreference, UserProfile } from '@job-scraper/shared';
 
-/** How much each rule counts towards the match (ADR-010). Sums to 100. */
+/** How much each rule counts towards the match (ADR-011). Sums to 100. */
 export const MATCH_WEIGHTS = {
   skills: 40,
   workplace: 20,

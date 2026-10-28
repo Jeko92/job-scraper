@@ -28,7 +28,7 @@ const emptyProfile: UserProfile = {
   updatedAt: '2026-10-28T00:00:00.000Z',
 };
 
-/** The example user from the ADR-010 appendix. */
+/** The example user from the ADR-011 appendix. */
 const profile: UserProfile = {
   ...emptyProfile,
   location: berlin,
@@ -79,12 +79,12 @@ describe('scoreJob', () => {
     expect(scoreJob(buildMatchCriteria(profile), job())).toBe(100);
   });
 
-  it('weights the rules (ADR-010 example 1: 64 %)', () => {
+  it('weights the rules (ADR-011 example 1: 64 %)', () => {
     const munichJob = job({ skills: threeOfFiveSkills, locationId: 'munich' });
     expect(scoreJob(buildMatchCriteria(profile), munichJob)).toBe(64);
   });
 
-  it('skips rules the job has no value for (ADR-010 example 3: 73 %)', () => {
+  it('skips rules the job has no value for (ADR-011 example 3: 73 %)', () => {
     const sparseJob = job({
       skills: threeOfFiveSkills,
       workplaceType: null,

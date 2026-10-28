@@ -1,6 +1,6 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
-/** How well each job fits each user's profile (ADR-010). */
+/** How well each job fits each user's profile (ADR-011). */
 export class CreateUserJobMatch1793181533359 implements MigrationInterface {
   name = 'CreateUserJobMatch1793181533359';
 

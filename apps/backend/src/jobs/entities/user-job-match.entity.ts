@@ -13,7 +13,7 @@ import { User } from '../../users/entities/user.entity.js';
 import { Job } from './job.entity.js';
 
 /**
- * How well a job fits a user's profile (ADR-010). Rows are replaced as a
+ * How well a job fits a user's profile (ADR-011). Rows are replaced as a
  * whole by `POST /job-matches/calculate`; no row means no match.
  */
 @Entity('user_job_match')

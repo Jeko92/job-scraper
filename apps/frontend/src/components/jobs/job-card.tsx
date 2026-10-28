@@ -58,7 +58,7 @@ export function JobCard({
           >
             {formatPostedAt(job.postedAt)}
           </time>
-          {/* No ring without a calculated match (ADR-010). */}
+          {/* No ring without a calculated match (ADR-011). */}
           {job.match !== null && (
             <MatchRing
               value={job.match}

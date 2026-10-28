@@ -1,4 +1,4 @@
-# ADR-010: Jobs get a stored match percentage per user
+# ADR-011: Jobs get a stored match percentage per user
 
 * Status: proposed
 
