@@ -1,4 +1,4 @@
-import type { AuthUser } from '@job-scraper/shared';
+import type { AuthUser, UserRole } from '@job-scraper/shared';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -9,6 +9,7 @@ import type { Env } from '../config/env.js';
 interface JwtPayload {
   sub: string;
   username: string;
+  role: UserRole;
 }
 
 @Injectable()
@@ -22,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: JwtPayload): AuthUser {
-    return { id: payload.sub, username: payload.username };
+    return { id: payload.sub, username: payload.username, role: payload.role };
   }
 }

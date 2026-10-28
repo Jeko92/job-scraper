@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+export const USER_ROLES = ['user', 'admin'] as const;
+export type UserRole = (typeof USER_ROLES)[number];
+export const userRoleSchema: z.ZodType<UserRole> = z.enum(USER_ROLES);
+
 export interface RegisterRequest {
   firstName: string;
   lastName: string;
@@ -19,6 +23,7 @@ export interface LoginResponse {
 export interface AuthUser {
   id: string;
   username: string;
+  role: UserRole;
 }
 
 export interface PublicUser {
@@ -51,6 +56,7 @@ export const loginResponseSchema: z.ZodType<LoginResponse> = z.object({
 export const authUserSchema: z.ZodType<AuthUser> = z.object({
   id: z.uuid(),
   username: z.string(),
+  role: userRoleSchema,
 });
 
 export const publicUserSchema: z.ZodType<PublicUser> = z.object({

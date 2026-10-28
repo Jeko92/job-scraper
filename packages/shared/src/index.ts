@@ -9,6 +9,9 @@ export {
   type PublicUser,
   publicUserSchema,
   type RegisterRequest,
+  USER_ROLES,
+  type UserRole,
+  userRoleSchema,
 } from './auth';
 export { type HelloResponse, isHelloResponse } from './hello';
 export {
