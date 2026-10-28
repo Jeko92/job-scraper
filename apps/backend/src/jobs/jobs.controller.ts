@@ -19,15 +19,19 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   StandardSchemaValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 
+import type { RequestWithUser } from '../auth/request-with-user.js';
+import { Roles } from '../common/decorators/roles.decorator.js';
 import {
   type CreateJobRequest,
   createJobSchema,
@@ -45,6 +49,8 @@ export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Post()
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({ summary: 'Create a job with its skills (by slug)' })
   create(
     @Body({ schema: createJobSchema, pipes: [StandardSchemaValidationPipe] })
@@ -77,6 +83,12 @@ export class JobsController {
     description: 'Skill slugs',
   })
   @ApiQuery({ name: 'postedWithinDays', required: false, type: Number })
+  @ApiQuery({
+    name: 'saved',
+    required: false,
+    type: Boolean,
+    description: 'Only jobs the current user has saved',
+  })
   @ApiQuery({ name: 'sort', required: false, enum: JOB_SORTS })
   @ApiQuery({
     name: 'page',
@@ -86,19 +98,25 @@ export class JobsController {
   })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   findAll(
+    @Req() request: RequestWithUser,
     @Query({ schema: jobsQuerySchema, pipes: [StandardSchemaValidationPipe] })
     query: JobsQuery,
   ): Promise<JobsListResponse> {
-    return this.jobsService.findAll(query);
+    return this.jobsService.findAll(query, request.user.id);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a job by its id' })
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<JobListItem> {
-    return this.jobsService.findOne(id);
+  findOne(
+    @Req() request: RequestWithUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<JobListItem> {
+    return this.jobsService.findOne(id, request.user.id);
   }
 
   @Patch(':id')
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @ApiOperation({
     summary:
       'Update a job (omitted fields stay unchanged, null clears; skills replace the whole list)',
@@ -112,6 +130,8 @@ export class JobsController {
   }
 
   @Delete(':id')
+  @Roles('admin')
+  @ApiForbiddenResponse({ description: 'Admin only' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a job and its skills' })
   remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {

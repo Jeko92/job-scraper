@@ -17,7 +17,10 @@ export function JobCardSkeleton() {
       </div>
       <div className="flex items-end justify-between gap-3">
         <div className={`${bar} h-4 w-1/3`} />
-        <div className={`${bar} h-9 w-24`} />
+        <div className="flex gap-2">
+          <div className={`${bar} h-9 w-24`} />
+          <div className={`${bar} h-9 w-24`} />
+        </div>
       </div>
     </Card>
   );

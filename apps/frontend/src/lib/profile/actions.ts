@@ -3,6 +3,7 @@
 import {
   type UpdateUserProfileRequest,
   updateUserProfileSchema,
+  type UserProfile,
   userProfileSchema,
 } from '@job-scraper/shared';
 import { cookies } from 'next/headers';
@@ -18,12 +19,16 @@ export interface SubmitOnboardingState {
   errors: string[];
 }
 
-export async function submitOnboarding(
+export type PatchProfileResult =
+  { ok: true; profile: UserProfile } | { ok: false; errors: string[] };
+
+export async function patchProfile(
   input: UpdateUserProfileRequest,
-): Promise<SubmitOnboardingState> {
+): Promise<PatchProfileResult> {
   const parsed = updateUserProfileSchema.safeParse(input);
   if (!parsed.success) {
     return {
+      ok: false,
       errors: parsed.error.issues.map(
         (issue) => `${issue.path.join('.')}: ${issue.message}`,
       ),
@@ -42,14 +47,27 @@ export async function submitOnboarding(
       parsed.data,
     );
     if (!response.ok) {
-      return { errors: await readErrorMessages(response) };
+      return { ok: false, errors: await readErrorMessages(response) };
     }
     const profile = userProfileSchema.safeParse(await response.json());
-    if (!profile.success || !profile.data.onboardingCompleted) {
-      return { errors: ['Please add your role and where you are based.'] };
+    if (!profile.success) {
+      return { ok: false, errors: [SAVE_FAILED] };
     }
+    return { ok: true, profile: profile.data };
   } catch {
-    return { errors: [SAVE_FAILED] };
+    return { ok: false, errors: [SAVE_FAILED] };
+  }
+}
+
+export async function submitOnboarding(
+  input: UpdateUserProfileRequest,
+): Promise<SubmitOnboardingState> {
+  const result = await patchProfile(input);
+  if (!result.ok) {
+    return { errors: result.errors };
+  }
+  if (!result.profile.onboardingCompleted) {
+    return { errors: ['Please add your role and where you are based.'] };
   }
 
   redirect(HOME_HREF);

@@ -2,6 +2,7 @@ export {
   type AuthUser,
   authUserSchema,
   createRegisterRequestSchema,
+  DEFAULT_USER_ROLE,
   type LoginRequest,
   loginRequestSchema,
   type LoginResponse,
@@ -9,6 +10,9 @@ export {
   type PublicUser,
   publicUserSchema,
   type RegisterRequest,
+  USER_ROLES,
+  type UserRole,
+  userRoleSchema,
 } from './auth';
 export { type HelloResponse, isHelloResponse } from './hello';
 export {
@@ -27,6 +31,8 @@ export {
   jobIdSchema,
   type JobListItem,
   jobListItemSchema,
+  type JobMatchSummary,
+  jobMatchSummarySchema,
   type JobSkill,
   type JobsListResponse,
   jobsListResponseSchema,
@@ -65,6 +71,7 @@ export {
   MAX_PREFERENCES_LOCATIONS,
   MAX_PROFILE_INDUSTRIES,
   MAX_PROFILE_SKILLS,
+  MAX_YEARS_EXPERIENCE,
   REMOTE_PREFERENCES,
   type RemotePreference,
   remotePreferenceSchema,

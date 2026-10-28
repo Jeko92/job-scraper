@@ -1,0 +1,18 @@
+meta {
+  name: Calculate job matches
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/job-matches/calculate
+  body: none
+  auth: inherit
+}
+
+docs {
+  Scores every user's profile against all active jobs and replaces all rows in `user_job_match` (ADR-011). Run it after changing a profile or adding jobs; nothing calls it automatically yet. See the matches with **List jobs** (`match` per item, `sort=bestMatch`).
+  
+  - 200: OK - `{ users, jobs, matches, calculatedAt }`; `users` counts users with at least one match (no preferences = no matches)
+  - 401: run Login
+}

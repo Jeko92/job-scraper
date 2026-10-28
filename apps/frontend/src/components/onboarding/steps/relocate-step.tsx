@@ -3,11 +3,11 @@
 import { MAX_PREFERENCES_LOCATIONS } from '@job-scraper/shared';
 import type { Dispatch } from 'react';
 
+import { LookupField } from '@/components/lookups/lookup-field';
 import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import type { OnboardingAction } from '../onboarding-state';
-import { LookupField } from './common/lookup-field';
 import { type Option, OptionList } from './common/option-list';
 import { StepShell } from './common/step-shell';
 

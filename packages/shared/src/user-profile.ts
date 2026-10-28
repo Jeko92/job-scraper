@@ -41,9 +41,14 @@ export const seniorityLevelSchema: z.ZodType<SeniorityLevel> =
 export const MAX_PROFILE_SKILLS = 50;
 export const MAX_PROFILE_INDUSTRIES = 10;
 export const MAX_PREFERENCES_LOCATIONS = 4;
+export const MAX_YEARS_EXPERIENCE = 99.9;
 
 // numeric(4,1) and numeric(12,2) in the database.
-const yearsExperienceSchema = z.number().min(0).max(99.9).multipleOf(0.1);
+const yearsExperienceSchema = z
+  .number()
+  .min(0)
+  .max(MAX_YEARS_EXPERIENCE)
+  .multipleOf(0.1);
 const salarySchema = z.number().min(0).max(9_999_999_999.99).multipleOf(0.01);
 
 // --- Response -------------------------------------------------------------

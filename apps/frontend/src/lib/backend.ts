@@ -84,6 +84,27 @@ export async function getParsedFromBackend<T>(
   }
 }
 
+export function putToBackend(path: string, token: string): Promise<Response> {
+  return fetch(new URL(path, getBackendUrl()), {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
+    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
+  });
+}
+
+export function deleteFromBackend(
+  path: string,
+  token: string,
+): Promise<Response> {
+  return fetch(new URL(path, getBackendUrl()), {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
+    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
+  });
+}
+
 export function postToBackend(path: string, body: unknown): Promise<Response> {
   return fetch(new URL(path, getBackendUrl()), {
     method: 'POST',

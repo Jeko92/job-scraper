@@ -1,6 +1,7 @@
 import type { JobListItem } from '@job-scraper/shared';
 import Link from 'next/link';
 
+import { MatchRing } from '@/components/common/match-ring';
 import { buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -11,6 +12,8 @@ import {
 } from '@/lib/jobs/format';
 import { jobHref } from '@/lib/routes';
 import { cn } from '@/lib/utils';
+
+import { SaveJobButton } from './save-job-button';
 
 interface JobCardProps {
   job: JobListItem;
@@ -46,28 +49,45 @@ export function JobCard({
           <p className="text-sm text-ink-muted">{formatJobMeta(job)}</p>
           {salary && <p className="text-sm text-ink">{salary}</p>}
         </div>
-        {/* Relative time differs between server and browser by a few seconds. */}
-        <time
-          dateTime={job.postedAt}
-          suppressHydrationWarning
-          className="shrink-0 text-sm text-ink-muted"
-        >
-          {formatPostedAt(job.postedAt)}
-        </time>
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          {/* Relative time differs between server and browser by a few seconds. */}
+          <time
+            dateTime={job.postedAt}
+            suppressHydrationWarning
+            className="text-sm text-ink-muted"
+          >
+            {formatPostedAt(job.postedAt)}
+          </time>
+          {/* No ring without a calculated match (ADR-011). */}
+          {job.match !== null && (
+            <MatchRing
+              value={job.match}
+              label={`${String(job.match)}% match`}
+              className="size-12"
+            />
+          )}
+        </div>
       </div>
 
       <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
         <p className="text-sm text-ink-muted">{skills}</p>
-        <Link
-          href={jobHref(job.id)}
-          aria-label={`View details for ${job.title}`}
-          className={cn(
-            buttonVariants({ size: 'lg' }),
-            'ml-auto rounded-pill px-4 font-semibold',
-          )}
-        >
-          View details
-        </Link>
+        <div className="ml-auto flex items-start gap-2">
+          <SaveJobButton
+            jobId={job.id}
+            jobTitle={job.title}
+            isSaved={job.isSaved}
+          />
+          <Link
+            href={jobHref(job.id)}
+            aria-label={`View details for ${job.title}`}
+            className={cn(
+              buttonVariants({ size: 'lg' }),
+              'rounded-pill px-4 font-semibold',
+            )}
+          >
+            View details
+          </Link>
+        </div>
       </div>
     </Card>
   );

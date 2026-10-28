@@ -14,10 +14,9 @@ import { LookupFilter } from '@/components/lookups/lookup-filter';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   EMPLOYMENT_TYPE_LABELS,
-  formatPostedWithin,
-  POSTED_WITHIN_OPTIONS,
   REMOTE_PREFERENCE_LABELS,
-} from '@/lib/jobs/format';
+} from '@/lib/common/enum-labels';
+import { formatPostedWithin, POSTED_WITHIN_OPTIONS } from '@/lib/jobs/format';
 import {
   addFilterValue,
   removeFilterValue,

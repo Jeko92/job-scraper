@@ -12,6 +12,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   type EntityManager,
+  In,
   Repository,
   type SelectQueryBuilder,
 } from 'typeorm';
@@ -22,6 +23,8 @@ import {
 } from './dto/create-job.dto.js';
 import type { UpdateJobRequest } from './dto/update-job.dto.js';
 import { Job } from './entities/job.entity.js';
+import { UserJobMatch } from './entities/user-job-match.entity.js';
+import { UserSavedJob } from './entities/user-saved-job.entity.js';
 import { hasPgCode, jobNotFound } from './utils/db-errors.js';
 import { definedOnly, toDate, toJobListItem } from './utils/job-list-item.js';
 import { replaceSkills } from './utils/job-skills.js';
@@ -30,7 +33,7 @@ import { POSTED_AT, withinDays } from './utils/posted-at.js';
 const UNIQUE_VIOLATION = '23505';
 const FOREIGN_KEY_VIOLATION = '23503';
 
-const SORT_DIRECTIONS: Record<JobSort, 'ASC' | 'DESC'> = {
+const SORT_DIRECTIONS: Record<Exclude<JobSort, 'bestMatch'>, 'ASC' | 'DESC'> = {
   newest: 'DESC',
   oldest: 'ASC',
 };
@@ -40,6 +43,10 @@ export class JobsService {
   constructor(
     @InjectRepository(Job)
     private readonly jobsRepository: Repository<Job>,
+    @InjectRepository(UserSavedJob)
+    private readonly savedJobsRepository: Repository<UserSavedJob>,
+    @InjectRepository(UserJobMatch)
+    private readonly matchesRepository: Repository<UserJobMatch>,
   ) {}
 
   async create(input: CreateJobRequest): Promise<JobListItem> {
@@ -59,26 +66,31 @@ export class JobsService {
     return this.findOne(id);
   }
 
-  async findAll(query: JobsQuery): Promise<JobsListResponse> {
+  async findAll(query: JobsQuery, userId: string): Promise<JobsListResponse> {
     const { page, limit } = query;
-    const direction = SORT_DIRECTIONS[query.sort];
 
-    const total = await this.filteredQuery(query).getCount();
+    const total = await this.filteredQuery(query, userId).getCount();
 
-    const rows = await this.filteredQuery(query)
+    const rows = await this.sorted(
+      this.filteredQuery(query, userId),
+      query.sort,
+      userId,
+    )
       .select('job.id', 'id')
-      .orderBy(POSTED_AT, direction)
-      .addOrderBy('job.id', direction)
       .offset((page - 1) * limit)
       .limit(limit)
       .getRawMany<{ id: string }>();
 
-    const items = await this.loadItems(rows.map((row) => row.id));
+    const items = await this.loadItems(
+      rows.map((row) => row.id),
+      userId,
+    );
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async findOne(id: string): Promise<JobListItem> {
-    const [item] = await this.loadItems([id]);
+  /** Without `userId` (e.g. after create/update), `isSaved` is false. */
+  async findOne(id: string, userId?: string): Promise<JobListItem> {
+    const [item] = await this.loadItems([id], userId);
     if (!item) {
       throw jobNotFound(id);
     }
@@ -116,6 +128,28 @@ export class JobsService {
     }
   }
 
+  /** Saving an already saved job does nothing. */
+  async save(jobId: string, userId: string): Promise<void> {
+    try {
+      await this.savedJobsRepository
+        .createQueryBuilder()
+        .insert()
+        .values({ jobId, userId })
+        .orIgnore()
+        .execute();
+    } catch (error) {
+      if (hasPgCode(error, FOREIGN_KEY_VIOLATION)) {
+        throw jobNotFound(jobId);
+      }
+      throw error;
+    }
+  }
+
+  /** Unsaving a job that is not saved does nothing. */
+  async unsave(jobId: string, userId: string): Promise<void> {
+    await this.savedJobsRepository.delete({ jobId, userId });
+  }
+
   private async write<T>(
     work: (manager: EntityManager) => Promise<T>,
   ): Promise<T> {
@@ -134,7 +168,10 @@ export class JobsService {
     }
   }
 
-  private filteredQuery(query: JobsQuery): SelectQueryBuilder<Job> {
+  private filteredQuery(
+    query: JobsQuery,
+    userId: string,
+  ): SelectQueryBuilder<Job> {
     const builder = this.jobsRepository
       .createQueryBuilder('job')
       .where('job.isActive = true');
@@ -167,26 +204,96 @@ export class JobsService {
         postedWithinDays: query.postedWithinDays,
       });
     }
+    if (query.saved) {
+      builder.andWhere(
+        `EXISTS (SELECT 1 FROM user_saved_jobs usj
+          WHERE usj.job_id = job.id AND usj.user_id = :userId)`,
+        { userId },
+      );
+    }
     return builder;
   }
 
-  private async loadItems(ids: string[]): Promise<JobListItem[]> {
+  /** `bestMatch`: highest match first; jobs without a match last, newest first. */
+  private sorted(
+    builder: SelectQueryBuilder<Job>,
+    sort: JobSort,
+    userId: string,
+  ): SelectQueryBuilder<Job> {
+    if (sort === 'bestMatch') {
+      return builder
+        .leftJoin(
+          UserJobMatch,
+          'userMatch',
+          'userMatch.jobId = job.id AND userMatch.userId = :userId',
+          { userId },
+        )
+        .orderBy('userMatch.match', 'DESC', 'NULLS LAST')
+        .addOrderBy(POSTED_AT, 'DESC')
+        .addOrderBy('job.id', 'DESC');
+    }
+    const direction = SORT_DIRECTIONS[sort];
+    return builder
+      .orderBy(POSTED_AT, direction)
+      .addOrderBy('job.id', direction);
+  }
+
+  private async loadItems(
+    ids: string[],
+    userId?: string,
+  ): Promise<JobListItem[]> {
     if (ids.length === 0) {
       return [];
     }
-    const jobs = await this.jobsRepository
-      .createQueryBuilder('job')
-      .innerJoinAndSelect('job.company', 'company')
-      .leftJoinAndSelect('job.location', 'location')
-      .leftJoinAndSelect('job.skills', 'jobSkill')
-      .leftJoinAndSelect('jobSkill.skill', 'skill')
-      .where('job.id IN (:...ids)', { ids })
-      .orderBy('skill.name', 'ASC')
-      .getMany();
+    const [jobs, savedIds, matches] = await Promise.all([
+      this.jobsRepository
+        .createQueryBuilder('job')
+        .innerJoinAndSelect('job.company', 'company')
+        .leftJoinAndSelect('job.location', 'location')
+        .leftJoinAndSelect('job.skills', 'jobSkill')
+        .leftJoinAndSelect('jobSkill.skill', 'skill')
+        .where('job.id IN (:...ids)', { ids })
+        .orderBy('skill.name', 'ASC')
+        .getMany(),
+      this.findSavedIds(ids, userId),
+      this.findMatches(ids, userId),
+    ]);
     const byId = new Map(jobs.map((job) => [job.id, job]));
     return ids.flatMap((id) => {
       const job = byId.get(id);
-      return job ? [toJobListItem(job)] : [];
+      return job
+        ? [toJobListItem(job, savedIds.has(id), matches.get(id) ?? null)]
+        : [];
     });
+  }
+
+  /** The user's stored match per job; jobs without one are left out. */
+  private async findMatches(
+    jobIds: string[],
+    userId: string | undefined,
+  ): Promise<Map<string, number>> {
+    if (!userId) {
+      return new Map();
+    }
+    const matches = await this.matchesRepository.find({
+      select: { jobId: true, match: true },
+      where: { userId, jobId: In(jobIds) },
+    });
+    return new Map(matches.map(({ jobId, match }) => [jobId, match]));
+  }
+
+  /** Which of `jobIds` the user has saved. */
+  private async findSavedIds(
+    jobIds: string[],
+    userId: string | undefined,
+  ): Promise<Set<string>> {
+    if (!userId) {
+      return new Set();
+    }
+    const saved = await this.savedJobsRepository.find({
+      select: { jobId: true },
+      where: { userId, jobId: In(jobIds) },
+    });
+    return new Set(saved.map(({ jobId }) => jobId));
   }
 }

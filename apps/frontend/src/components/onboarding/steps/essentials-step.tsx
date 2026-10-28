@@ -2,6 +2,7 @@
 
 import type { Dispatch } from 'react';
 
+import { LookupField } from '@/components/lookups/lookup-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +10,6 @@ import { searchLocationOptions } from '@/lib/lookups/search';
 import type { LookupOption } from '@/lib/lookups/types';
 
 import type { OnboardingAction } from '../onboarding-state';
-import { LookupField } from './common/lookup-field';
 import { StepShell } from './common/step-shell';
 
 const FIELD_CLASS = 'h-12 rounded-card px-4 text-base';

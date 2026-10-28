@@ -40,6 +40,9 @@ export function toJobsSearchParams(query: JobsQuery): URLSearchParams {
   if (query.postedWithinDays !== undefined) {
     params.set('postedWithinDays', String(query.postedWithinDays));
   }
+  if (query.saved) {
+    params.set('saved', 'true');
+  }
   if (query.sort !== 'newest') {
     params.set('sort', query.sort);
   }
@@ -53,7 +56,11 @@ export function toJobsSearchParams(query: JobsQuery): URLSearchParams {
 }
 
 /** Link to one page of the current search, e.g. `/search?skill=react&page=3`. */
-export function jobsPageHref(query: JobsQuery, page: number): string {
+export function jobsPageHref(
+  query: JobsQuery,
+  page: number,
+  basePath: string = SEARCH_HREF,
+): string {
   const qs = toJobsSearchParams({ ...query, page }).toString();
-  return qs === '' ? SEARCH_HREF : `${SEARCH_HREF}?${qs}`;
+  return qs === '' ? basePath : `${basePath}?${qs}`;
 }

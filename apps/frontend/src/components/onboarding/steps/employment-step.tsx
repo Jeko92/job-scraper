@@ -3,21 +3,15 @@
 import { EMPLOYMENT_TYPES, type EmploymentType } from '@job-scraper/shared';
 import type { Dispatch } from 'react';
 
+import { EMPLOYMENT_TYPE_LABELS } from '@/lib/common/enum-labels';
+
 import type { OnboardingAction } from '../onboarding-state';
 import { type Option, OptionList } from './common/option-list';
 import { StepShell } from './common/step-shell';
 
-export const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
-  FULL_TIME: 'Full-time',
-  PART_TIME: 'Part-time',
-  CONTRACT: 'Contract',
-  INTERNSHIP: 'Internship',
-  FREELANCE: 'Freelance',
-};
-
 const OPTIONS: Option<EmploymentType>[] = EMPLOYMENT_TYPES.map((type) => ({
   value: type,
-  label: EMPLOYMENT_LABELS[type],
+  label: EMPLOYMENT_TYPE_LABELS[type],
 }));
 
 interface EmploymentStepProps {
