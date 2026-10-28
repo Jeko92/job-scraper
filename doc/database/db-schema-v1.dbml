@@ -29,6 +29,9 @@
 // - user_saved_jobs is the user's personal list of saved jobs. It links
 //   users (not user_profiles, since the login identifies the user) to jobs,
 //   with a composite primary key and the time the job was saved.
+// - user_job_match stores how well each active job fits each user's profile
+//   (0-100, ADR-010). POST /job-matches/recalculate replaces all rows; a
+//   user-job pair without a row has no match (e.g. no preferences set).
 //
 // Crawling flow:
 // - companies -> crawl_targets: each company has one or more career-page
@@ -48,7 +51,8 @@
 // - Rows owned by a company (company_locations, company_skills,
 //   company_industries, jobs) cascade from it. job_skills cascade from
 //   their job.
-// - user_saved_jobs rows cascade from both their user and their job.
+// - user_saved_jobs and user_job_match rows cascade from both their user
+//   and their job.
 // - Deleting a skill, industry or location also deletes the user_skills,
 //   user_industries, user_preferences_locations, company_locations,
 //   company_skills, company_industries or job_skills rows that point to it.
@@ -258,6 +262,20 @@ Table user_saved_jobs {
   indexes {
     (user_id, job_id) [pk]
     (user_id, created_at) // list a user's saved jobs, newest first
+  }
+}
+
+// How well a job fits a user's profile, filled by POST /job-matches/recalculate.
+Table user_job_match {
+  user_id uuid [not null, ref: > users.id]
+  job_id uuid [not null, ref: > jobs.id]
+
+  match smallint [not null] // 0-100
+  calculated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (user_id, job_id) [pk]
+    (user_id, match) // sort a user's jobs by best match
   }
 }
 
