@@ -170,7 +170,7 @@ export const jobsQuerySchema: z.ZodType<JobsQuery> = z.object({
 
 // --- Job matches ----------------------------------------------------------
 
-/** Summary of one full recalculation of every user's job matches. */
+/** Summary of one run that calculates every user's job matches. */
 export interface JobMatchSummary {
   /** Users with at least one stored match. */
   users: number;
