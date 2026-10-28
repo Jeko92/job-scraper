@@ -1,5 +1,5 @@
 import type { AuthUser } from '@job-scraper/shared';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 
 import { Logo } from '@/components/brand/logo';
@@ -129,9 +129,6 @@ function SignedInActions({ user, themeToggle }: SignedInActionsProps) {
 
       <div className="flex items-center gap-2">
         {themeToggle}
-        <button type="button" aria-label="Notifications" className={roundIcon}>
-          <Bell className="size-5" aria-hidden="true" />
-        </button>
         <details className="relative">
           <summary
             aria-label="Account menu"
