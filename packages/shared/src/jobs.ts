@@ -13,7 +13,8 @@ export const MAX_JOBS_LIMIT = 100;
 /** Most values per list filter, e.g. skills or locations. */
 export const MAX_FILTER_VALUES = 10;
 
-export const JOB_SORTS = ['newest', 'oldest'] as const;
+/** `bestMatch`: highest match first; jobs without a match last, newest first. */
+export const JOB_SORTS = ['newest', 'oldest', 'bestMatch'] as const;
 export type JobSort = (typeof JOB_SORTS)[number];
 export const jobSortSchema: z.ZodType<JobSort> = z.enum(JOB_SORTS);
 
@@ -48,6 +49,11 @@ export interface JobListItem {
   skills: JobSkill[];
   /** Whether the current user has saved this job. */
   isSaved: boolean;
+  /**
+   * How well the job fits the current user's profile, 0–100. Null when no
+   * match has been calculated (e.g. the profile has no preferences).
+   */
+  match: number | null;
 }
 
 export const jobCompanySchema: z.ZodType<JobCompany> = z.object({
@@ -76,6 +82,7 @@ const jobListItemObject = z.object({
     }),
   ),
   isSaved: z.boolean(),
+  match: z.number().int().min(0).max(100).nullable(),
 });
 
 export const jobListItemSchema: z.ZodType<JobListItem> = jobListItemObject;
@@ -159,4 +166,24 @@ export const jobsQuerySchema: z.ZodType<JobsQuery> = z.object({
     .min(1)
     .max(MAX_JOBS_LIMIT)
     .default(DEFAULT_JOBS_LIMIT),
+});
+
+// --- Job matches ----------------------------------------------------------
+
+/** Summary of one run that calculates every user's job matches. */
+export interface JobMatchSummary {
+  /** Users with at least one stored match. */
+  users: number;
+  /** Active jobs that were scored. */
+  jobs: number;
+  /** Stored user–job matches. */
+  matches: number;
+  calculatedAt: string;
+}
+
+export const jobMatchSummarySchema: z.ZodType<JobMatchSummary> = z.object({
+  users: z.number().int().min(0),
+  jobs: z.number().int().min(0),
+  matches: z.number().int().min(0),
+  calculatedAt: z.iso.datetime(),
 });

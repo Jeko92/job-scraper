@@ -152,6 +152,13 @@ erDiagram
         timestamptz created_at "when the job was saved"
     }
 
+    user_job_match {
+        uuid user_id PK, FK
+        uuid job_id PK, FK
+        smallint match "0-100"
+        timestamptz calculated_at "default now()"
+    }
+
     crawl_targets {
         uuid id PK
         uuid company_id FK
@@ -201,6 +208,9 @@ erDiagram
 
     users ||--o{ user_saved_jobs : "saves"
     jobs ||--o{ user_saved_jobs : ""
+
+    users ||--o{ user_job_match : "matches"
+    jobs ||--o{ user_job_match : ""
 
     companies ||--o{ crawl_targets : "career pages"
     crawl_targets ||--o{ crawl_runs : "crawled in"

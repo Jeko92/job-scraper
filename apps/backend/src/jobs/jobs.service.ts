@@ -23,6 +23,7 @@ import {
 } from './dto/create-job.dto.js';
 import type { UpdateJobRequest } from './dto/update-job.dto.js';
 import { Job } from './entities/job.entity.js';
+import { UserJobMatch } from './entities/user-job-match.entity.js';
 import { UserSavedJob } from './entities/user-saved-job.entity.js';
 import { hasPgCode, jobNotFound } from './utils/db-errors.js';
 import { definedOnly, toDate, toJobListItem } from './utils/job-list-item.js';
@@ -32,7 +33,7 @@ import { POSTED_AT, withinDays } from './utils/posted-at.js';
 const UNIQUE_VIOLATION = '23505';
 const FOREIGN_KEY_VIOLATION = '23503';
 
-const SORT_DIRECTIONS: Record<JobSort, 'ASC' | 'DESC'> = {
+const SORT_DIRECTIONS: Record<Exclude<JobSort, 'bestMatch'>, 'ASC' | 'DESC'> = {
   newest: 'DESC',
   oldest: 'ASC',
 };
@@ -44,6 +45,8 @@ export class JobsService {
     private readonly jobsRepository: Repository<Job>,
     @InjectRepository(UserSavedJob)
     private readonly savedJobsRepository: Repository<UserSavedJob>,
+    @InjectRepository(UserJobMatch)
+    private readonly matchesRepository: Repository<UserJobMatch>,
   ) {}
 
   async create(input: CreateJobRequest): Promise<JobListItem> {
@@ -65,14 +68,15 @@ export class JobsService {
 
   async findAll(query: JobsQuery, userId: string): Promise<JobsListResponse> {
     const { page, limit } = query;
-    const direction = SORT_DIRECTIONS[query.sort];
 
     const total = await this.filteredQuery(query, userId).getCount();
 
-    const rows = await this.filteredQuery(query, userId)
+    const rows = await this.sorted(
+      this.filteredQuery(query, userId),
+      query.sort,
+      userId,
+    )
       .select('job.id', 'id')
-      .orderBy(POSTED_AT, direction)
-      .addOrderBy('job.id', direction)
       .offset((page - 1) * limit)
       .limit(limit)
       .getRawMany<{ id: string }>();
@@ -210,6 +214,30 @@ export class JobsService {
     return builder;
   }
 
+  /** `bestMatch`: highest match first; jobs without a match last, newest first. */
+  private sorted(
+    builder: SelectQueryBuilder<Job>,
+    sort: JobSort,
+    userId: string,
+  ): SelectQueryBuilder<Job> {
+    if (sort === 'bestMatch') {
+      return builder
+        .leftJoin(
+          UserJobMatch,
+          'userMatch',
+          'userMatch.jobId = job.id AND userMatch.userId = :userId',
+          { userId },
+        )
+        .orderBy('userMatch.match', 'DESC', 'NULLS LAST')
+        .addOrderBy(POSTED_AT, 'DESC')
+        .addOrderBy('job.id', 'DESC');
+    }
+    const direction = SORT_DIRECTIONS[sort];
+    return builder
+      .orderBy(POSTED_AT, direction)
+      .addOrderBy('job.id', direction);
+  }
+
   private async loadItems(
     ids: string[],
     userId?: string,
@@ -217,7 +245,7 @@ export class JobsService {
     if (ids.length === 0) {
       return [];
     }
-    const [jobs, savedIds] = await Promise.all([
+    const [jobs, savedIds, matches] = await Promise.all([
       this.jobsRepository
         .createQueryBuilder('job')
         .innerJoinAndSelect('job.company', 'company')
@@ -228,12 +256,30 @@ export class JobsService {
         .orderBy('skill.name', 'ASC')
         .getMany(),
       this.findSavedIds(ids, userId),
+      this.findMatches(ids, userId),
     ]);
     const byId = new Map(jobs.map((job) => [job.id, job]));
     return ids.flatMap((id) => {
       const job = byId.get(id);
-      return job ? [toJobListItem(job, savedIds.has(id))] : [];
+      return job
+        ? [toJobListItem(job, savedIds.has(id), matches.get(id) ?? null)]
+        : [];
     });
+  }
+
+  /** The user's stored match per job; jobs without one are left out. */
+  private async findMatches(
+    jobIds: string[],
+    userId: string | undefined,
+  ): Promise<Map<string, number>> {
+    if (!userId) {
+      return new Map();
+    }
+    const matches = await this.matchesRepository.find({
+      select: { jobId: true, match: true },
+      where: { userId, jobId: In(jobIds) },
+    });
+    return new Map(matches.map(({ jobId, match }) => [jobId, match]));
   }
 
   /** Which of `jobIds` the user has saved. */

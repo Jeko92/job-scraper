@@ -16,10 +16,11 @@ export function getSavedJobs(): Promise<JobListItem[]> {
   return Promise.resolve([]);
 }
 
-export async function getLatestJobs(): Promise<JobListItem[] | null> {
+/** Jobs that fit the profile best; without matches, the newest jobs. */
+export async function getBestMatchJobs(): Promise<JobListItem[] | null> {
   try {
     const page = await fetchJobsPage({
-      sort: 'newest',
+      sort: 'bestMatch',
       page: 1,
       limit: Math.min(
         getHomeJobsLimit() ?? DEFAULT_HOME_JOBS_LIMIT,
