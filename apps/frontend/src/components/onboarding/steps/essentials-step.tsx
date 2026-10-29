@@ -78,13 +78,13 @@ export function EssentialsStep({
           />
         </div>
 
-        <div className="space-y-2">
-          <p className="flex items-center gap-2 text-sm leading-none font-medium text-ink">
+        <fieldset className="space-y-2">
+          <legend className="flex items-center gap-2 text-sm leading-none font-medium text-ink">
             <span aria-hidden="true" className="text-highlight">
               2 →
             </span>
             Where are you based?
-          </p>
+          </legend>
           <LookupField
             label="Search your city or region"
             placeholder="e.g. Berlin"
@@ -96,7 +96,7 @@ export function EssentialsStep({
               onLocationChange(next[0] ?? null);
             }}
           />
-        </div>
+        </fieldset>
       </div>
     </StepShell>
   );
