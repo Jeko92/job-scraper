@@ -1,7 +1,6 @@
 import {
   EMPLOYMENT_TYPES,
   type JobDetail,
-  type JobListItem,
   REMOTE_PREFERENCES,
 } from '@job-scraper/shared';
 
@@ -12,7 +11,7 @@ export function toJobListItem(
   job: Job,
   isSaved: boolean,
   match: number | null,
-): JobListItem & Pick<JobDetail, 'sourceUrl'> {
+): JobDetail {
   const company = job.company;
   if (!company) {
     throw new Error(`Job "${job.id}" was loaded without its company`);
@@ -28,6 +27,7 @@ export function toJobListItem(
     salaryMin: job.salaryMin,
     salaryMax: job.salaryMax,
     salaryCurrency: job.salaryCurrency,
+    description: job.description,
     postedAt: (job.publishedAt ?? job.firstSeenAt).toISOString(),
     skills: (job.skills ?? []).flatMap(({ skill, required }) =>
       skill

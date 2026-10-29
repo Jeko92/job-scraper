@@ -1,7 +1,7 @@
 'use client';
 
 import { Plus } from 'lucide-react';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import { FilterChip } from '@/components/lookups/filter-chip';
 import { Button } from '@/components/ui/button';
@@ -46,6 +46,7 @@ export function LookupField({
   const [error, setError] = useState<string | null>(null);
   const [searchedFor, setSearchedFor] = useState<string | null>(null);
   const inputId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const term = text.trim();
   // One-value fields (e.g. "Based in"): a new pick replaces the old one.
@@ -94,22 +95,17 @@ export function LookupField({
     }
     onChange(replaces ? [option] : [...selected, option]);
     setText('');
+    keepFocus();
+  }
+
+  // The clicked chip disappears, which would drop focus to the page and
+  // outside the form, so Enter would no longer submit it.
+  function keepFocus() {
+    inputRef.current?.focus();
   }
 
   return (
-    // Enter here adds a value, so it must not also reach the parent's own
-    // Enter handling (e.g. "OK" in onboarding, save on the profile page).
-    // Only Enter in the empty input is passed on.
-    <div
-      className="flex flex-col gap-4"
-      onKeyDown={(event) => {
-        const emptyInput =
-          event.target instanceof HTMLInputElement && term === '';
-        if (event.key === 'Enter' && !emptyInput) {
-          event.stopPropagation();
-        }
-      }}
-    >
+    <div className="flex flex-col gap-4">
       {selected.length > 0 && (
         <div className="space-y-2">
           <p className={cn(overline, 'text-ink-muted')}>
@@ -130,6 +126,7 @@ export function LookupField({
                   onChange(
                     selected.filter((item) => item.value !== option.value),
                   );
+                  keepFocus();
                 }}
               />
             ))}
@@ -143,9 +140,12 @@ export function LookupField({
         </label>
         <div className="flex gap-2">
           <Input
+            ref={inputRef}
             id={inputId}
             autoFocus={autoFocus}
-            disabled={isFull}
+            // Read-only, not disabled: a disabled input loses focus, and
+            // Enter in it could no longer submit the form.
+            readOnly={isFull}
             value={text}
             placeholder={isFull ? 'Limit reached' : placeholder}
             onChange={(event) => {
