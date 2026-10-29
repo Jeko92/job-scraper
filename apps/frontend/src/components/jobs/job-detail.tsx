@@ -12,13 +12,6 @@ import { cn } from '@/lib/utils';
 import { BackToSearchLink } from './back-to-search-link';
 import { SaveJobButton } from './save-job-button';
 
-// Shown until the backend sends descriptions (#39).
-const DESCRIPTION_PLACEHOLDER = [
-  'Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition.',
-  'Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution.',
-  'Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps.',
-].join('\n\n');
-
 const newTabHint = <span className="sr-only"> (opens in a new tab)</span>;
 
 interface JobDetailProps {
@@ -88,13 +81,13 @@ export function JobDetail({ job }: JobDetailProps) {
 
         <DetailSection id="job-about" title="About the role">
           {/* Plain text for now; HTML descriptions need a sanitising parser. */}
-          {job.description === null && (
+          {(job.description === null || job.description === '') && (
             <p className="text-sm text-ink-muted">
-              Placeholder text. The full description will follow.
+              The full description will follow.
             </p>
           )}
           <p className="text-sm leading-6 whitespace-pre-line text-ink">
-            {job.description ?? DESCRIPTION_PLACEHOLDER}
+            {job.description}
           </p>
         </DetailSection>
 
