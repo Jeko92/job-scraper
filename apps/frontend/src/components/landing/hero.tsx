@@ -1,9 +1,15 @@
-import { ChevronDown, Circle } from 'lucide-react';
+import {
+  PREVIEW_CITIES,
+  PREVIEW_SKILL_LABELS,
+  PREVIEW_SKILLS,
+} from '@job-scraper/shared';
+import { Circle } from 'lucide-react';
 
 import { AnimatedLogoMark } from '@/components/brand/animated-logo-mark';
 import { Logo } from '@/components/brand/logo';
-import { field, fieldLabel, overline } from '@/lib/styles';
-import { cn } from '@/lib/utils';
+import { HeroSelect } from '@/components/explore/hero-select';
+import { EXPLORE_HREF } from '@/lib/routes';
+import { overline } from '@/lib/styles';
 
 import { GlowPanel } from './glow-panel';
 
@@ -31,26 +37,39 @@ export function Hero() {
             it fits. Look around first, no account needed.
           </p>
 
-          <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
-            <div className="flex flex-col gap-2">
-              <span className={fieldLabel}>What</span>
-              <div className={field}>Frontend Developer</div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className={fieldLabel}>Where</span>
-              <div className={cn(field, 'justify-between')}>
-                Berlin
-                <ChevronDown className="size-5" aria-hidden="true" />
-              </div>
-            </div>
+          {/* A plain GET form: works without JavaScript. */}
+          <form
+            action={EXPLORE_HREF}
+            className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+          >
+            <HeroSelect
+              label="What"
+              name="skill"
+              anyLabel="Any skill"
+              options={PREVIEW_SKILLS.map((value) => ({
+                value,
+                label: PREVIEW_SKILL_LABELS[value],
+              }))}
+            />
+            <HeroSelect
+              label="Where"
+              name="city"
+              anyLabel="Anywhere"
+              options={PREVIEW_CITIES.map((value) => ({ value, label: value }))}
+            />
             <button
-              type="button"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-pill bg-primary px-5 font-semibold text-primary-foreground"
+              type="submit"
+              className="group inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-pill bg-primary px-6 font-semibold text-primary-foreground transition-[background-color,box-shadow,translate] duration-200 outline-none hover:translate-x-0.5 hover:bg-primary/85 hover:shadow-lg focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-0 active:shadow-md motion-reduce:transition-colors motion-reduce:hover:translate-y-0"
             >
               Explore jobs
-              <Circle className="size-3.5" strokeWidth={3} aria-hidden="true" />
+              {/* The dot grows and fills in on hover: "go". */}
+              <Circle
+                className="size-3.5 transition-[scale,fill] duration-300 ease-out group-hover:scale-125 group-hover:fill-current motion-reduce:group-hover:scale-100"
+                strokeWidth={3}
+                aria-hidden="true"
+              />
             </button>
-          </div>
+          </form>
         </GlowPanel>
       </div>
     </section>

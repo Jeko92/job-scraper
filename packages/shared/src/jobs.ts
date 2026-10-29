@@ -168,6 +168,92 @@ export const jobsQuerySchema: z.ZodType<JobsQuery> = z.object({
     .default(DEFAULT_JOBS_LIMIT),
 });
 
+// --- Preview --------------------------------------------------------------
+
+/** Jobs a prospect (not logged in) sees before signing up. */
+export const JOBS_PREVIEW_LIMIT = 7;
+
+/**
+ * The skills a prospect can filter by: a fixed list, so the lookup endpoints
+ * stay behind the login. Slugs from the seeded skills.
+ */
+export const PREVIEW_SKILLS = [
+  'typescript',
+  'javascript',
+  'python',
+  'java',
+  'csharp',
+  'go',
+  'sql',
+  'react',
+  'next-js',
+  'angular',
+  'vue-js',
+  'node-js',
+  'docker',
+  'kubernetes',
+  'aws',
+] as const;
+export type PreviewSkill = (typeof PREVIEW_SKILLS)[number];
+
+export const PREVIEW_SKILL_LABELS: Record<PreviewSkill, string> = {
+  typescript: 'TypeScript',
+  javascript: 'JavaScript',
+  python: 'Python',
+  java: 'Java',
+  csharp: 'C#',
+  go: 'Go',
+  sql: 'SQL',
+  react: 'React',
+  'next-js': 'Next.js',
+  angular: 'Angular',
+  'vue-js': 'Vue.js',
+  'node-js': 'Node.js',
+  docker: 'Docker',
+  kubernetes: 'Kubernetes',
+  aws: 'AWS',
+};
+
+/**
+ * The locations a prospect can filter by, as seeded city names: location ids
+ * are generated per database, so they can't be hardcoded.
+ */
+export const PREVIEW_CITIES = [
+  'Berlin',
+  'Munich',
+  'Hamburg',
+  'Frankfurt am Main',
+  'Cologne',
+] as const;
+export type PreviewCity = (typeof PREVIEW_CITIES)[number];
+
+/** Both filters are optional; values within one filter are OR-ed. */
+export interface JobsPreviewQuery {
+  skill?: PreviewSkill[] | undefined;
+  city?: PreviewCity[] | undefined;
+}
+
+export const jobsPreviewQuerySchema: z.ZodType<JobsPreviewQuery> = z.object({
+  skill: queryArray(z.enum(PREVIEW_SKILLS)),
+  city: queryArray(z.enum(PREVIEW_CITIES)),
+});
+
+/**
+ * The newest matching jobs, at most `JOBS_PREVIEW_LIMIT`. Items have
+ * `isSaved: false` and `match: null`.
+ */
+export interface JobsPreviewResponse {
+  items: JobListItem[];
+  /** All matching jobs, to show how many more there are. */
+  total: number;
+}
+
+export const jobsPreviewResponseSchema: z.ZodType<JobsPreviewResponse> =
+  z.object({
+    items: z.array(jobListItemSchema).max(JOBS_PREVIEW_LIMIT),
+    total: z.number().int().min(0),
+  });
+
 // --- Job matches ----------------------------------------------------------
 
 /** Summary of one run that calculates every user's job matches. */
