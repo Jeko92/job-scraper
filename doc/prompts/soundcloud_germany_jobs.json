@@ -1,0 +1,532 @@
+{
+  "_meta": {
+    "company": "SoundCloud",
+    "careers_page": "https://soundcloud.com/company/careers/",
+    "job_detail_source": "https://job-boards.greenhouse.io/soundcloud71",
+    "crawled_at": "2026-10-20T00:00:00Z",
+    "notes": [
+      "company_id, location_id and crawl_run_id are placeholders: resolve them in your backend.",
+      "jobs.id and skills.id are left to the database; job_skills references jobs by external_id and skills by slug so you can resolve ids on upsert.",
+      "No salary, employment type or publish date is shown on any of these postings, so those fields are null.",
+      "first_seen_at / last_seen_at / created_at / updated_at use the crawl date; replace with your crawl run timestamp."
+    ]
+  },
+
+  "jobs": [
+    {
+      "company_id": "<soundcloud_company_id>",
+      "location_id": "<berlin_de_location_id>",
+      "crawl_run_id": null,
+      "title": "Backend Engineer - Media Streaming",
+      "description": "Join SoundCloud's Media Streaming team, which runs a global-scale audio streaming platform handling petabytes of data and gigabytes per second of traffic. Build, scale and maintain backend APIs and services, collaborate with Android, iOS, web and full-stack engineers, take part in architecture discussions and code reviews, and join the on-call rotation. Locations: Berlin, London.",
+      "employment_type": null,
+      "workplace_type": "hybrid",
+      "source_url": "https://job-boards.greenhouse.io/soundcloud71/jobs/8870374002",
+      "external_id": "8870374002",
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "published_at": null,
+      "first_seen_at": "2026-10-20T00:00:00Z",
+      "last_seen_at": "2026-10-20T00:00:00Z",
+      "is_active": true,
+      "created_at": "2026-10-20T00:00:00Z",
+      "updated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "company_id": "<soundcloud_company_id>",
+      "location_id": "<berlin_de_location_id>",
+      "crawl_run_id": null,
+      "title": "Senior iOS Engineer",
+      "description": "Senior/principal iOS engineer for the Mobile Core User Experience team, building SoundCloud's apps for iOS, Apple Watch and CarPlay. Build and optimize SwiftUI components, integrate A/B testing and tracking, use AI tools in coding and review workflows, and contribute to architecture decisions in a large existing codebase. Location: Berlin.",
+      "employment_type": null,
+      "workplace_type": null,
+      "source_url": "https://job-boards.greenhouse.io/soundcloud71/jobs/8611608002",
+      "external_id": "8611608002",
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "published_at": null,
+      "first_seen_at": "2026-10-20T00:00:00Z",
+      "last_seen_at": "2026-10-20T00:00:00Z",
+      "is_active": true,
+      "created_at": "2026-10-20T00:00:00Z",
+      "updated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "company_id": "<soundcloud_company_id>",
+      "location_id": "<berlin_de_location_id>",
+      "crawl_run_id": null,
+      "title": "Senior Machine Learning Engineer - Recommendations (Experience)",
+      "description": "Senior MLE on the Recommendations Experience team, building ML- and LLM-powered personalization features for 200M+ users. Own features end-to-end across data pipelines, training, real-time serving and APIs on BigQuery, Airflow and BigTable, and set up monitoring and A/B testing to measure user impact. Locations: Berlin, London.",
+      "employment_type": null,
+      "workplace_type": null,
+      "source_url": "https://job-boards.greenhouse.io/soundcloud71/jobs/8829912002",
+      "external_id": "8829912002",
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "published_at": null,
+      "first_seen_at": "2026-10-20T00:00:00Z",
+      "last_seen_at": "2026-10-20T00:00:00Z",
+      "is_active": true,
+      "created_at": "2026-10-20T00:00:00Z",
+      "updated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "company_id": "<soundcloud_company_id>",
+      "location_id": "<berlin_de_location_id>",
+      "crawl_run_id": null,
+      "title": "Senior Software Engineer - Anti-Abuse",
+      "description": "Senior backend engineer on the Anti-Abuse team, building and operating an event-based abuse prevention platform at global scale. Shape platform architecture, build reusable detection capabilities for other teams, partner with Trust & Safety, Product and Analytics, debug data pipelines and distributed systems, and join the on-call rotation. Locations: Berlin or London.",
+      "employment_type": null,
+      "workplace_type": null,
+      "source_url": "https://job-boards.greenhouse.io/soundcloud71/jobs/8857420002",
+      "external_id": "8857420002",
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "published_at": null,
+      "first_seen_at": "2026-10-20T00:00:00Z",
+      "last_seen_at": "2026-10-20T00:00:00Z",
+      "is_active": true,
+      "created_at": "2026-10-20T00:00:00Z",
+      "updated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "company_id": "<soundcloud_company_id>",
+      "location_id": "<berlin_de_location_id>",
+      "crawl_run_id": null,
+      "title": "Director - Accounting",
+      "description": "Senior local accounting leader in Berlin reporting to the VP Group Controller. Own group consolidation, IFRS reporting, German HGB statutory filings, intercompany accounts and technical accounting; lead the annual audit and the local accounting team; and drive selection and roll-out of a new consolidation platform. Fully remote is not available; hybrid from the Berlin office.",
+      "employment_type": null,
+      "workplace_type": "hybrid",
+      "source_url": "https://job-boards.greenhouse.io/soundcloud71/jobs/8843990002",
+      "external_id": "8843990002",
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": null,
+      "published_at": null,
+      "first_seen_at": "2026-10-20T00:00:00Z",
+      "last_seen_at": "2026-10-20T00:00:00Z",
+      "is_active": true,
+      "created_at": "2026-10-20T00:00:00Z",
+      "updated_at": "2026-10-20T00:00:00Z"
+    }
+  ],
+
+  "skills": [
+    { "name": "Go", "slug": "go" },
+    { "name": "Terraform", "slug": "terraform" },
+    { "name": "AWS", "slug": "aws" },
+    { "name": "GCP", "slug": "gcp" },
+    { "name": "Microservices", "slug": "microservices" },
+    { "name": "SQL", "slug": "sql" },
+    { "name": "NoSQL", "slug": "nosql" },
+    { "name": "Containers", "slug": "containers" },
+    { "name": "Continuous Delivery", "slug": "continuous-delivery" },
+    { "name": "Automated Testing", "slug": "automated-testing" },
+    { "name": "Distributed Systems", "slug": "distributed-systems" },
+    { "name": "API Design", "slug": "api-design" },
+    { "name": "Scala", "slug": "scala" },
+    { "name": "gRPC", "slug": "grpc" },
+    { "name": "GraphQL", "slug": "graphql" },
+    { "name": "Audio/Video Codecs", "slug": "audio-video-codecs" },
+    { "name": "HLS", "slug": "hls" },
+    { "name": "DASH", "slug": "dash" },
+    { "name": "AI-Assisted Development", "slug": "ai-assisted-development" },
+    { "name": "Swift", "slug": "swift" },
+    { "name": "SwiftUI", "slug": "swiftui" },
+    { "name": "Swift Concurrency", "slug": "swift-concurrency" },
+    {
+      "name": "Object-Oriented Programming",
+      "slug": "object-oriented-programming"
+    },
+    { "name": "Objective-C", "slug": "objective-c" },
+    { "name": "A/B Testing", "slug": "ab-testing" },
+    { "name": "AVFoundation", "slug": "avfoundation" },
+    { "name": "Python", "slug": "python" },
+    { "name": "Java", "slug": "java" },
+    { "name": "Machine Learning", "slug": "machine-learning" },
+    { "name": "LLM", "slug": "llm" },
+    { "name": "Retrieval-Augmented Generation", "slug": "rag" },
+    { "name": "BigQuery", "slug": "bigquery" },
+    { "name": "Spark", "slug": "spark" },
+    { "name": "Docker", "slug": "docker" },
+    { "name": "Kubernetes", "slug": "kubernetes" },
+    { "name": "Airflow", "slug": "airflow" },
+    { "name": "ETL", "slug": "etl" },
+    { "name": "BigTable", "slug": "bigtable" },
+    { "name": "DynamoDB", "slug": "dynamodb" },
+    { "name": "TensorFlow", "slug": "tensorflow" },
+    { "name": "PyTorch", "slug": "pytorch" },
+    {
+      "name": "Event-Driven Architecture",
+      "slug": "event-driven-architecture"
+    },
+    { "name": "Fraud Detection", "slug": "fraud-detection" },
+    { "name": "Trust & Safety", "slug": "trust-and-safety" },
+    { "name": "IFRS", "slug": "ifrs" },
+    { "name": "HGB", "slug": "hgb" },
+    { "name": "Group Consolidation", "slug": "group-consolidation" },
+    { "name": "Intercompany Accounting", "slug": "intercompany-accounting" },
+    { "name": "Technical Accounting", "slug": "technical-accounting" },
+    { "name": "Audit Management", "slug": "audit-management" },
+    { "name": "Team Leadership", "slug": "team-leadership" },
+    {
+      "name": "Accounting Certification (CPA/Steuerberater/WP/ACCA)",
+      "slug": "accounting-certification"
+    },
+    { "name": "Excel", "slug": "excel" },
+    { "name": "ERP Systems", "slug": "erp-systems" },
+    { "name": "German", "slug": "german" },
+    { "name": "English", "slug": "english" },
+    { "name": "Oracle Fusion", "slug": "oracle-fusion" },
+    { "name": "Royalty Accounting", "slug": "royalty-accounting" }
+  ],
+
+  "job_skills": [
+    { "job_external_id": "8870374002", "skill_slug": "go", "required": true },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "distributed-systems",
+      "required": true
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "terraform",
+      "required": true
+    },
+    { "job_external_id": "8870374002", "skill_slug": "aws", "required": true },
+    { "job_external_id": "8870374002", "skill_slug": "gcp", "required": true },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "microservices",
+      "required": true
+    },
+    { "job_external_id": "8870374002", "skill_slug": "sql", "required": true },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "nosql",
+      "required": true
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "containers",
+      "required": true
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "continuous-delivery",
+      "required": true
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "automated-testing",
+      "required": true
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "api-design",
+      "required": false
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "scala",
+      "required": false
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "grpc",
+      "required": false
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "graphql",
+      "required": false
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "audio-video-codecs",
+      "required": false
+    },
+    { "job_external_id": "8870374002", "skill_slug": "hls", "required": false },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "dash",
+      "required": false
+    },
+    {
+      "job_external_id": "8870374002",
+      "skill_slug": "ai-assisted-development",
+      "required": false
+    },
+
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "swift",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "swiftui",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "swift-concurrency",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "object-oriented-programming",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "objective-c",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "ab-testing",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "ai-assisted-development",
+      "required": true
+    },
+    {
+      "job_external_id": "8611608002",
+      "skill_slug": "avfoundation",
+      "required": false
+    },
+
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "python",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "scala",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "java",
+      "required": false
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "machine-learning",
+      "required": true
+    },
+    { "job_external_id": "8829912002", "skill_slug": "llm", "required": true },
+    { "job_external_id": "8829912002", "skill_slug": "rag", "required": true },
+    { "job_external_id": "8829912002", "skill_slug": "sql", "required": true },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "bigquery",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "spark",
+      "required": true
+    },
+    { "job_external_id": "8829912002", "skill_slug": "aws", "required": true },
+    { "job_external_id": "8829912002", "skill_slug": "gcp", "required": true },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "docker",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "kubernetes",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "airflow",
+      "required": true
+    },
+    { "job_external_id": "8829912002", "skill_slug": "etl", "required": true },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "bigtable",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "dynamodb",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "ab-testing",
+      "required": true
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "tensorflow",
+      "required": false
+    },
+    {
+      "job_external_id": "8829912002",
+      "skill_slug": "pytorch",
+      "required": false
+    },
+
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "distributed-systems",
+      "required": true
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "event-driven-architecture",
+      "required": true
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "terraform",
+      "required": true
+    },
+    { "job_external_id": "8857420002", "skill_slug": "aws", "required": true },
+    { "job_external_id": "8857420002", "skill_slug": "gcp", "required": true },
+    { "job_external_id": "8857420002", "skill_slug": "etl", "required": true },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "microservices",
+      "required": true
+    },
+    { "job_external_id": "8857420002", "skill_slug": "sql", "required": true },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "nosql",
+      "required": true
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "containers",
+      "required": true
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "continuous-delivery",
+      "required": true
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "automated-testing",
+      "required": true
+    },
+    { "job_external_id": "8857420002", "skill_slug": "go", "required": false },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "scala",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "api-design",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "bigquery",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "grpc",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "graphql",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "fraud-detection",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "trust-and-safety",
+      "required": false
+    },
+    {
+      "job_external_id": "8857420002",
+      "skill_slug": "ai-assisted-development",
+      "required": false
+    },
+
+    { "job_external_id": "8843990002", "skill_slug": "ifrs", "required": true },
+    { "job_external_id": "8843990002", "skill_slug": "hgb", "required": true },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "group-consolidation",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "intercompany-accounting",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "technical-accounting",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "audit-management",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "team-leadership",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "accounting-certification",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "excel",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "erp-systems",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "german",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "english",
+      "required": true
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "oracle-fusion",
+      "required": false
+    },
+    {
+      "job_external_id": "8843990002",
+      "skill_slug": "royalty-accounting",
+      "required": false
+    }
+  ]
+}

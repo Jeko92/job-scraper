@@ -1,0 +1,38 @@
+meta {
+  name: Login as admin
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{adminUsername}}",
+    "password": "{{adminPassword}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("adminAccessToken", res.body.access_token);
+  }
+}
+
+docs {
+  Same as **Login**, but for the admin user. Stores `adminAccessToken`, which
+  the admin-only requests use: all companies requests, changing and crawling
+  jobs, calculating job matches and AI supplement.
+
+  `adminUsername` must be an existing user with the admin role. Sign-up only
+  creates normal users, so promote one in the database once, then log in
+  again:
+
+  `UPDATE users SET role = 'admin' WHERE username = '<adminUsername>';`
+
+  - 401: wrong username or password
+}

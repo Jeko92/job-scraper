@@ -1,0 +1,23 @@
+meta {
+  name: Delete job
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/jobs/{{jobId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
+}
+
+docs {
+  Delete a job for good, together with its skills. Run **Create job** first to fill `jobId`. To only hide a job from the list, use **Update job** with `isActive: false`.
+
+  - 204: No Content - deleted
+  - 400: id is not a UUID, 404: unknown id, 401: run Login
+  - 403: not an admin, run Login as admin
+}

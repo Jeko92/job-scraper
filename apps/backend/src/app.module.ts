@@ -8,12 +8,15 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
+import { RolesGuard } from './auth/roles.guard.js';
 import { CompaniesModule } from './companies/companies.module.js';
 import { type Env, envSchema } from './config/env.js';
 import { createDataSourceOptions } from './db/data-source.options.js';
 import { IndustriesModule } from './industries/industries.module.js';
+import { JobsModule } from './jobs/jobs.module.js';
 import { LocationsModule } from './locations/locations.module.js';
 import { SkillsModule } from './skills/skills.module.js';
+import { StatsModule } from './stats/stats.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -31,8 +34,14 @@ import { UsersModule } from './users/users.module.js';
     SkillsModule,
     IndustriesModule,
     LocationsModule,
+    JobsModule,
+    StatsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
 })
 export class AppModule {}

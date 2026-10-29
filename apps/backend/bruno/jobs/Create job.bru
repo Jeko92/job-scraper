@@ -1,0 +1,54 @@
+meta {
+  name: Create job
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/jobs
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
+}
+
+body:json {
+  {
+    "companyId": "{{companyId}}",
+    "title": "Frontend Developer (React)",
+    "sourceUrl": "https://example.com/careers/frontend-developer",
+    "description": "Build our web app with React and TypeScript.",
+    "externalId": "FE-2026-01",
+    "locationId": "{{locationId}}",
+    "employmentType": "FULL_TIME",
+    "workplaceType": "HYBRID",
+    "salaryMin": 55000,
+    "salaryMax": 70000,
+    "salaryCurrency": "EUR",
+    "publishedAt": "2026-10-20T09:00:00Z",
+    "skills": [
+      { "slug": "typescript", "required": true },
+      { "slug": "react", "required": false }
+    ]
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("jobId", res.body.id);
+  }
+}
+
+docs {
+  Create a job for a company. Set `companyId` to an id from **List companies** and run **List locations** to fill `locationId`. Saves the new id as `jobId`.
+
+  Required: `companyId`, `title`, `sourceUrl`. Everything else is optional; `skills` are skill slugs from **List skills**.
+
+  - 201: Created - the job, shaped like a job list item
+  - 400: invalid body, unknown company, location or skill slug
+  - 409: the company already has a job with this `sourceUrl` or `externalId`
+  - 401: run Login
+  - 403: not an admin, run Login as admin
+}

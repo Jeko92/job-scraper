@@ -29,6 +29,8 @@ describe('envSchema', () => {
       COMPANYENRICH_API_KEY: required.COMPANYENRICH_API_KEY,
       COMPANYENRICH_API_URL: required.COMPANYENRICH_API_URL,
       WIKIDATA_API_URL: required.WIKIDATA_API_URL,
+      STATS_PERIOD_DAYS: 7,
+      STATS_TOP_LIMIT: 5,
     });
   });
 

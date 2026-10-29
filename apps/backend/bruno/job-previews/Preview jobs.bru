@@ -1,0 +1,26 @@
+meta {
+  name: Preview jobs
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/job-previews
+  body: none
+  auth: none
+}
+
+params:query {
+  ~skill: typescript
+  ~city: Berlin
+}
+
+docs {
+  Public teaser for prospects (no login): the 7 newest active jobs. Both filters are optional; repeat a param for several values (OR-ed).
+
+  - `skill`: one of typescript, javascript, python, java, csharp, go, sql, react, next-js, angular, vue-js, node-js, docker, kubernetes, aws
+  - `city`: one of Berlin, Munich, Hamburg, Frankfurt am Main, Cologne
+
+  - 200: OK - `{ items, total }`; at most 7 `items`, `total` counts all matching jobs; items have `isSaved: false`, `match: null` and no `sourceUrl`
+  - 400: invalid filter
+}

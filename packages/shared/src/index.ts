@@ -2,6 +2,7 @@ export {
   type AuthUser,
   authUserSchema,
   createRegisterRequestSchema,
+  DEFAULT_USER_ROLE,
   type LoginRequest,
   loginRequestSchema,
   type LoginResponse,
@@ -9,6 +10,9 @@ export {
   type PublicUser,
   publicUserSchema,
   type RegisterRequest,
+  USER_ROLES,
+  type UserRole,
+  userRoleSchema,
 } from './auth';
 export { type HelloResponse, isHelloResponse } from './hello';
 export {
@@ -18,6 +22,37 @@ export {
   industryListSchema,
   industrySchema,
 } from './industries';
+export {
+  DEFAULT_JOBS_LIMIT,
+  JOB_SORTS,
+  type JobCompany,
+  type JobDetail,
+  jobDetailSchema,
+  jobIdSchema,
+  type JobListItem,
+  jobListItemSchema,
+  type JobMatchSummary,
+  jobMatchSummarySchema,
+  JOBS_PREVIEW_LIMIT,
+  type JobSkill,
+  type JobsListResponse,
+  jobsListResponseSchema,
+  type JobSort,
+  jobSortSchema,
+  type JobsPreviewQuery,
+  jobsPreviewQuerySchema,
+  type JobsPreviewResponse,
+  jobsPreviewResponseSchema,
+  type JobsQuery,
+  jobsQuerySchema,
+  MAX_FILTER_VALUES,
+  MAX_JOBS_LIMIT,
+  PREVIEW_CITIES,
+  PREVIEW_SKILL_LABELS,
+  PREVIEW_SKILLS,
+  type PreviewCity,
+  type PreviewSkill,
+} from './jobs';
 export {
   type Location,
   locationListSchema,
@@ -34,12 +69,19 @@ export {
   skillsQuerySchema,
 } from './skills';
 export {
+  type StatsCompany,
+  type StatsSkill,
+  type UserStats,
+  userStatsSchema,
+} from './stats';
+export {
   EMPLOYMENT_TYPES,
   type EmploymentType,
   employmentTypeSchema,
   MAX_PREFERENCES_LOCATIONS,
   MAX_PROFILE_INDUSTRIES,
   MAX_PROFILE_SKILLS,
+  MAX_YEARS_EXPERIENCE,
   REMOTE_PREFERENCES,
   type RemotePreference,
   remotePreferenceSchema,

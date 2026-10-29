@@ -1,0 +1,28 @@
+meta {
+  name: Get stats
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/me/stats
+  body: none
+  auth: inherit
+}
+
+docs {
+  Job market statistics for the home page, limited to the logged-in user's
+  fields (the companies in the profile's industries; all jobs when the profile
+  has no industries).
+
+  - periodDays: STATS_PERIOD_DAYS from the backend .env.
+  - fields: names of the industries the numbers are limited to (by priority);
+    empty when the profile has no industries.
+  - newJobs: active jobs posted (or first seen) within periodDays.
+  - activeJobs / hiringCompanies: all active jobs and their companies.
+  - newCompanies: companies added within periodDays.
+  - topSkills: most requested skills with their share (%) of activeJobs.
+  - topCompanies: companies with the most open jobs.
+  - topSkills / topCompanies length: STATS_TOP_LIMIT from the backend .env.
+  - 401: run Login
+}

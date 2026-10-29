@@ -1,45 +1,56 @@
 meta {
   name: Fetch companies from CompanyEnrich
   type: http
-  seq: 10
+  seq: 8
 }
 
 post {
-  url: {{baseUrl}}/companies/fetch/company-enrich
+  url: {{baseUrl}}/companies/company-enrich/fetch
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 body:json {
   {
-    "query": "allgeier",
-  //   "location": "DE",
-  //   "industry": "Technology",
-  //   "minEmployees": 100,
-  //   "maxEmployees": 10000,
-  //   "foundedAfter": 1900,
-  //   "foundedBefore": 2020,
-    "limit": 10,
-    "offset": 0
+    "query": "software",
+    "location": {
+      "country": "DE",
+  //     "state": "Bavaria",
+      "city": "Berlin"
+    },
+  //   "industries": ["Software & Internet"],
+  //   "employees": ["51-200", "201-500"],
+  //   "foundedYear": { "min": 2000, "max": 2020 },
+    "page": 1,
+    "pageSize": 10
   }
 }
 
 docs {
-  Fetch companies from CompanyEnrich only.
-
-  Request Body (CompanySearchParams):
+  Fetch companies from CompanyEnrich without saving them.
+  The body follows CompanyEnrich `POST /companies/search`.
+  
+  Request Body:
   - `query`: search query (optional)
-  - `location`: country code (optional)
-  - `industry`: industry filter (optional)
-  - `minEmployees`: minimum employees (optional)
-  - `maxEmployees`: maximum employees (optional)
-  - `foundedAfter`: minimum founded year (optional)
-  - `foundedBefore`: maximum founded year (optional)
-  - `limit`: maximum results, 1-100, default 20
-  - `offset`: pagination offset, default 0
-
+  - `location`: (optional)
+    - `country`: 2-letter country code, e.g. DE
+    - `state`: state name, looked up via CompanyEnrich `POST /geo/states`
+    - `city`: city name, looked up via CompanyEnrich `POST /geo/cities`
+  - `industries`: CompanyEnrich industry names (optional)
+  - `employees`: 1-10, 11-50, 51-200, 201-500, 501-1K, 1K-5K, 5K-10K, over-10K (optional)
+  - `foundedYear`: `{ min, max }` (optional)
+  - `page`: 1-based page, default 1
+  - `pageSize`: 1-100, default 20
+  
+  State and city names must match CompanyEnrich's spelling exactly (case-insensitive).
+  
   - 200: OK - array of normalized companies
-  - 400: Bad Request - invalid parameters
+  - 400: Bad Request - invalid parameters or unknown state/city
   - 401: Unauthorized - run Login
+  - 403: Forbidden - not an admin, run Login as admin
   - 500: Internal Server Error - CompanyEnrich request failed
 }

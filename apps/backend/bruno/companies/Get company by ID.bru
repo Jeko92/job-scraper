@@ -7,7 +7,11 @@ meta {
 get {
   url: {{baseUrl}}/companies/{{companyId}}
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 params:path {
@@ -20,6 +24,8 @@ docs {
   - `companyId`: The UUID of the company
   
   - 200: OK - company object
+  - 400: Bad Request - ID is not a UUID
   - 404: Not Found - unknown ID
   - 401: Unauthorized - run Login
+  - 403: Forbidden - not an admin, run Login as admin
 }

@@ -19,6 +19,7 @@ erDiagram
         varchar email UK "optional"
         varchar username UK
         varchar password_hash
+        varchar role "user | admin"
         timestamptz created_at
         timestamptz updated_at
     }
@@ -122,7 +123,7 @@ erDiagram
         uuid id PK
         uuid company_id FK
         uuid location_id FK "nullable, primary location only"
-        uuid crawl_run_id FK "nullable, latest run that saw the job"
+        uuid crawl_run_id FK "nullable, latest run that saw the job, not created yet"
         varchar title
         text description
         varchar employment_type
@@ -133,8 +134,8 @@ erDiagram
         decimal salary_max "decimal(12,2)"
         char salary_currency
         timestamptz published_at
-        timestamptz first_seen_at
-        timestamptz last_seen_at
+        timestamptz first_seen_at "default now()"
+        timestamptz last_seen_at "default now()"
         boolean is_active "default true"
         timestamptz created_at
         timestamptz updated_at
@@ -144,6 +145,19 @@ erDiagram
         uuid job_id PK, FK
         uuid skill_id PK, FK
         boolean required "default true, false = nice-to-have"
+    }
+
+    user_saved_jobs {
+        uuid user_id PK, FK
+        uuid job_id PK, FK
+        timestamptz created_at "when the job was saved"
+    }
+
+    user_job_match {
+        uuid user_id PK, FK
+        uuid job_id PK, FK
+        smallint match "0-100"
+        timestamptz calculated_at "default now()"
     }
 
     crawl_targets {
@@ -192,6 +206,12 @@ erDiagram
     crawl_runs |o--o{ jobs : "last seen by"
     jobs ||--o{ job_skills : ""
     skills ||--o{ job_skills : ""
+
+    users ||--o{ user_saved_jobs : "saves"
+    jobs ||--o{ user_saved_jobs : ""
+
+    users ||--o{ user_job_match : "matches"
+    jobs ||--o{ user_job_match : ""
 
     companies ||--o{ crawl_targets : "career pages"
     crawl_targets ||--o{ crawl_runs : "crawled in"

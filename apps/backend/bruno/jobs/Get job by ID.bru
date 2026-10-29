@@ -1,0 +1,18 @@
+meta {
+  name: Get job by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/jobs/{{jobId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  A single job by id, shaped like a job list item. Run **Create job** first to fill `jobId`.
+  
+  - 200: OK - job with company, location, skills (ordered by name) `isSaved` and `match` (0-100, null without a calculated match) for the logged-in user
+  - 400: id is not a UUID, 404: unknown id, 401: run Login
+}

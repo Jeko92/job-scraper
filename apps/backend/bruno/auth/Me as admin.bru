@@ -1,0 +1,22 @@
+meta {
+  name: Me as admin
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/auth/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
+}
+
+docs {
+  Same as **Me**, but with the token from **Login as admin**. Returns
+  `{ id, username, role }`; `role` should be `admin`.
+
+  - 401: missing or expired token — run Login as admin
+}

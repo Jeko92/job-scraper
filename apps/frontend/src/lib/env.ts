@@ -17,6 +17,14 @@ export function getPasswordMinLength(): number | undefined {
   return getPositiveInteger('PASSWORD_MIN_LENGTH');
 }
 
+export function getHomeJobsLimit(): number | undefined {
+  return getPositiveInteger('HOME_JOBS_LIMIT');
+}
+
+export function getHomeSavedJobsLimit(): number | undefined {
+  return getPositiveInteger('HOME_SAVED_JOBS_LIMIT');
+}
+
 function getPositiveInteger(name: string): number | undefined {
   const value = Number(process.env[name]);
   return Number.isInteger(value) && value > 0 ? value : undefined;

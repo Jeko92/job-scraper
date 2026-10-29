@@ -1,0 +1,40 @@
+meta {
+  name: Update job
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/jobs/{{jobId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
+}
+
+body:json {
+  {
+    "title": "Senior Frontend Developer (React)",
+    "salaryMax": 80000,
+    "isActive": true,
+    "skills": [
+      { "slug": "typescript", "required": true },
+      { "slug": "react", "required": true }
+    ]
+  }
+}
+
+docs {
+  Update a job. Run **Create job** first to fill `jobId`.
+
+  Every field is optional: omitted fields stay unchanged, `null` clears a nullable field. `skills` (slugs) replace the whole list. `isActive: false` hides the job from the list. The company of a job cannot change.
+
+  - 200: OK - the updated job, shaped like a job list item
+  - 400: invalid body or id, salaryMin above salaryMax, unknown location or skill slug
+  - 404: unknown id
+  - 409: the company already has a job with this `sourceUrl` or `externalId`
+  - 401: run Login
+  - 403: not an admin, run Login as admin
+}

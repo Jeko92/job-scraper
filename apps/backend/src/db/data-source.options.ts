@@ -1,6 +1,14 @@
 import type { DataSourceOptions } from 'typeorm';
 
+import { Company } from '../companies/entities/company.entity.js';
+import { CompanyIndustry } from '../companies/entities/company-industry.entity.js';
+import { CompanyLocation } from '../companies/entities/company-location.entity.js';
+import { CompanySkill } from '../companies/entities/company-skill.entity.js';
 import { Industry } from '../industries/entities/industry.entity.js';
+import { Job } from '../jobs/entities/job.entity.js';
+import { JobSkill } from '../jobs/entities/job-skill.entity.js';
+import { UserJobMatch } from '../jobs/entities/user-job-match.entity.js';
+import { UserSavedJob } from '../jobs/entities/user-saved-job.entity.js';
 import { Location } from '../locations/entities/location.entity.js';
 import { Skill } from '../skills/entities/skill.entity.js';
 import { User } from '../users/entities/user.entity.js';
@@ -26,6 +34,14 @@ export function createDataSourceOptions(
       Skill,
       Industry,
       Location,
+      Company,
+      CompanyLocation,
+      CompanySkill,
+      CompanyIndustry,
+      Job,
+      JobSkill,
+      UserSavedJob,
+      UserJobMatch,
     ],
     synchronize: false,
   };

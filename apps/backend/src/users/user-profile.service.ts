@@ -219,7 +219,7 @@ function oneOf<T extends string>(
   return values.find((allowed) => allowed === value) ?? null;
 }
 
-function toUserProfileDto(profile: UserProfile): UserProfileDto {
+export function toUserProfileDto(profile: UserProfile): UserProfileDto {
   const { preferences } = profile;
   return {
     id: profile.id,

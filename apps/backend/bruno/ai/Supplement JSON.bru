@@ -1,0 +1,42 @@
+meta {
+  name: Supplement JSON
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/ai/supplement
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
+}
+
+body:json {
+  {
+    "data": {
+      "name": "Siemens",
+      "headquarters": null,
+      "foundingYear": null
+    },
+    "instructions": "The data describes a company.",
+    "maxOutputTokens": 2000
+  }
+}
+
+docs {
+  Fill in the missing values (`null`, `""` or absent keys) of a JSON object
+  with AI. Calls OpenAI with the team's API key, so it is admin only.
+
+  Body: `data` (required), `outputFormat` (JSON Schema, optional),
+  `instructions` (optional), `maxOutputTokens` (optional, at least 16).
+
+  - 200: OK - `{ data, model, usage }`
+  - 400: Bad Request - invalid body
+  - 401: Unauthorized - run Login as admin
+  - 403: Forbidden - not an admin, run Login as admin
+  - 422: the answer was cut off; raise `maxOutputTokens`
+  - 502: the AI request failed or returned invalid JSON
+}
