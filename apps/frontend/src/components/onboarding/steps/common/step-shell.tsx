@@ -57,6 +57,12 @@ export function StepShell({
           onNext();
         }}
         onKeyDown={(event) => {
+          // Escape is the keyboard "Back".
+          if (event.key === 'Escape' && onBack) {
+            event.preventDefault();
+            onBack();
+            return;
+          }
           const target = event.target;
           const pickedOption =
             target instanceof HTMLElement &&
