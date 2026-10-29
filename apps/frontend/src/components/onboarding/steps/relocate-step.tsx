@@ -56,8 +56,7 @@ export function RelocateStep({
         dispatch({ type: 'next' });
       }}
       onSkip={() => {
-        // Skipping counts as "No" (wireframe).
-        answer(false);
+        // Skipping keeps whatever was answered before.
         dispatch({ type: 'next' });
       }}
       onBack={() => {
