@@ -6,10 +6,9 @@ import {
   type UserProfile,
   userProfileSchema,
 } from '@job-scraper/shared';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { AUTH_COOKIE } from '@/lib/auth/cookie';
+import { readAuthToken } from '@/lib/auth/auth-token';
 import { patchToBackend, readErrorMessages } from '@/lib/backend';
 import { HOME_HREF, LOGIN_HREF } from '@/lib/routes';
 
@@ -35,7 +34,7 @@ export async function patchProfile(
     };
   }
 
-  const token = (await cookies()).get(AUTH_COOKIE)?.value;
+  const token = await readAuthToken();
   if (token === undefined) {
     redirect(LOGIN_HREF);
   }
