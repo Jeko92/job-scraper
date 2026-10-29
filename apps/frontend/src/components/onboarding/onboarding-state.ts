@@ -60,6 +60,14 @@ export function createInitialState(profile: UserProfile): OnboardingState {
       locationId: profile.location?.id ?? null,
       seniority: profile.seniority,
       yearsExperience: profile.yearsExperience,
+      // null until preferences are first saved: leave them unset then.
+      ...(profile.preferences && {
+        preferences: {
+          employmentType: profile.preferences.employmentType,
+          remotePreference: profile.preferences.remotePreference,
+          willingToRelocate: profile.preferences.willingToRelocate,
+        },
+      }),
     },
   };
 }
