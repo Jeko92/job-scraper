@@ -48,7 +48,16 @@ export function ReviewStep({
   const years = answers.yearsExperience;
 
   return (
-    <OnboardingCard className="space-y-8">
+    <OnboardingCard
+      className="space-y-8"
+      // Escape is the keyboard "Back".
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          onBack();
+        }
+      }}
+    >
       <Badge variant="outline" className="h-7 gap-2 rounded-pill px-3 text-ink">
         <LogoMark className="size-4" />
         Review

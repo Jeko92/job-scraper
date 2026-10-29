@@ -47,74 +47,99 @@ export function StepShell({
     }
   }, []);
 
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Enter' && !event.shiftKey && !nextDisabled) {
-        event.preventDefault();
-        onNext();
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [nextDisabled, onNext]);
-
   return (
-    <OnboardingCard ref={cardRef} className="space-y-8">
-      <Badge variant="outline" className="h-7 gap-2 rounded-pill px-3 text-ink">
-        <LogoMark className="size-4" />
-        {tag}
-      </Badge>
-
-      <div className="space-y-3">
-        <h1
-          ref={headingRef}
-          tabIndex={-1}
-          className="font-heading text-3xl text-ink outline-none sm:text-4xl"
+    <OnboardingCard ref={cardRef}>
+      <form
+        noValidate
+        className="space-y-8"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onNext();
+        }}
+        onKeyDown={(event) => {
+          // Escape is the keyboard "Back".
+          if (event.key === 'Escape' && onBack) {
+            event.preventDefault();
+            onBack();
+            return;
+          }
+          const target = event.target;
+          const pickedOption =
+            target instanceof HTMLElement &&
+            target.getAttribute('role') === 'radio' &&
+            target.getAttribute('aria-checked') === 'true';
+          if (
+            event.key === 'Enter' &&
+            (target === headingRef.current || pickedOption) &&
+            !nextDisabled
+          ) {
+            event.preventDefault();
+            event.currentTarget.requestSubmit();
+          }
+        }}
+      >
+        <Badge
+          variant="outline"
+          className="h-7 gap-2 rounded-pill px-3 text-ink"
         >
-          {number !== undefined && (
-            <span className="mr-3 align-middle text-lg text-highlight">
-              {number} →
-            </span>
-          )}
-          {title}
-        </h1>
-        {subtitle !== undefined && <p className="text-ink-muted">{subtitle}</p>}
-      </div>
+          <LogoMark className="size-4" />
+          {tag}
+        </Badge>
 
-      {children}
-
-      <div className="flex flex-wrap items-center gap-4">
-        {onBack && (
-          <Button variant="ghost" className="rounded-pill" onClick={onBack}>
-            Back
-          </Button>
-        )}
-        <Button
-          className="rounded-pill px-6"
-          disabled={nextDisabled}
-          onClick={onNext}
-        >
-          {nextLabel}
-          <CornerDownLeft data-icon="inline-end" />
-        </Button>
-        <span className="text-sm text-ink-muted">
-          press <strong className="text-ink">Enter ↵</strong>
-        </span>
-        {onSkip && (
-          <Button
-            variant="ghost"
-            className="ml-auto rounded-pill text-ink-muted"
-            onClick={onSkip}
+        <div className="space-y-3">
+          <h1
+            ref={headingRef}
+            tabIndex={-1}
+            className="font-heading text-3xl text-ink outline-none sm:text-4xl"
           >
-            Skip for now
+            {number !== undefined && (
+              <span
+                aria-hidden="true"
+                className="mr-3 align-middle text-lg text-highlight"
+              >
+                {number} →
+              </span>
+            )}
+            {title}
+          </h1>
+          {subtitle !== undefined && (
+            <p className="text-ink-muted">{subtitle}</p>
+          )}
+        </div>
+
+        {children}
+
+        <div className="flex flex-wrap items-center gap-4">
+          {onBack && (
+            <Button variant="ghost" className="rounded-pill" onClick={onBack}>
+              Back
+            </Button>
+          )}
+          <Button
+            type="submit"
+            className="rounded-pill px-6"
+            disabled={nextDisabled}
+          >
+            {nextLabel}
+            <CornerDownLeft data-icon="inline-end" />
           </Button>
-        )}
-        {secondaryAction !== undefined && (
-          <div className="ml-auto">{secondaryAction}</div>
-        )}
-      </div>
+          <span className="text-sm text-ink-muted">
+            press <strong className="text-ink">Enter ↵</strong>
+          </span>
+          {onSkip && (
+            <Button
+              variant="ghost"
+              className="ml-auto rounded-pill text-ink-muted"
+              onClick={onSkip}
+            >
+              Skip for now
+            </Button>
+          )}
+          {secondaryAction !== undefined && (
+            <div className="ml-auto">{secondaryAction}</div>
+          )}
+        </div>
+      </form>
     </OnboardingCard>
   );
 }

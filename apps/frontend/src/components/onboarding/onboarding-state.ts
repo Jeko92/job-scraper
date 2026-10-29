@@ -28,7 +28,8 @@ export const STEPS: Step[] = [
   'review',
 ];
 
-// The answers have exactly the shape we send to PATCH /users/me/profile
+// The answers have the shape of the PATCH /users/me/profile body, so Submit
+// sends them as they are.
 export type Answers = UpdateUserProfileRequest;
 
 export interface OnboardingState {
@@ -60,11 +61,19 @@ export function createInitialState(profile: UserProfile): OnboardingState {
       locationId: profile.location?.id ?? null,
       seniority: profile.seniority,
       yearsExperience: profile.yearsExperience,
+      // null until preferences are first saved: leave them unset then.
+      ...(profile.preferences && {
+        preferences: {
+          employmentType: profile.preferences.employmentType,
+          remotePreference: profile.preferences.remotePreference,
+          willingToRelocate: profile.preferences.willingToRelocate,
+        },
+      }),
     },
   };
 }
 
-// The reducer: (current state, what happened) → new state as it is multi states not  a simple state
+// One reducer for the whole flow
 export function onboardingReducer(
   state: OnboardingState,
   action: OnboardingAction,
@@ -102,13 +111,14 @@ export function onboardingReducer(
   }
 }
 
-// merge the state
+// `preferences` is merged one level deeper, so answering one preference keeps
+// the others.
 function mergeAnswers(answers: Answers, patch: Answers): Answers {
   const merged: Answers = { ...answers, ...patch };
   if (patch.preferences) {
     merged.preferences = { ...answers.preferences, ...patch.preferences };
   }
-  // "No" to relocating → drop the preferences Locations chosen before
+  // "No" to relocating drops the places picked before.
   if (patch.preferences?.willingToRelocate === false) {
     merged.preferencesLocationIds = [];
   }
