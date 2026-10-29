@@ -7,7 +7,11 @@ meta {
 get {
   url: {{baseUrl}}/companies
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
 }
 
 docs {
@@ -17,4 +21,5 @@ docs {
   
   - 200: OK - array of companies
   - 401: Unauthorized - run Login
+  - 403: Forbidden - not an admin, run Login as admin
 }

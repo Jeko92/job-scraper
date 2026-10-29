@@ -1,5 +1,5 @@
 import type { AuthUser } from '@job-scraper/shared';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 
 import { Logo } from '@/components/brand/logo';
@@ -12,6 +12,7 @@ import { HOME_HREF, LOGIN_HREF, REGISTER_HREF } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 import { AppNav } from './app-nav';
+import { MenuDetails } from './menu-details';
 import { PUBLIC_NAV_ITEMS } from './nav-items';
 
 const INITIALS_LENGTH = 2;
@@ -77,7 +78,7 @@ function PublicActions({ themeToggle }: ActionsProps) {
         </Link>
       </div>
 
-      <details className="relative md:hidden">
+      <MenuDetails className="relative md:hidden">
         <summary
           aria-label="Open menu"
           className={cn(
@@ -113,7 +114,7 @@ function PublicActions({ themeToggle }: ActionsProps) {
             <div className="flex justify-center">{themeToggle}</div>
           </div>
         </div>
-      </details>
+      </MenuDetails>
     </>
   );
 }
@@ -129,9 +130,6 @@ function SignedInActions({ user, themeToggle }: SignedInActionsProps) {
 
       <div className="flex items-center gap-2">
         {themeToggle}
-        <button type="button" aria-label="Notifications" className={roundIcon}>
-          <Bell className="size-5" aria-hidden="true" />
-        </button>
         <details className="relative">
           <summary
             aria-label="Account menu"
