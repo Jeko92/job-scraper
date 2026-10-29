@@ -53,15 +53,19 @@ export class Company {
   @OneToMany(
     () => CompanyLocation,
     (companyLocation) => companyLocation.company,
+    { cascade: ['insert', 'update'] },
   )
   locations?: Relation<CompanyLocation>[];
 
-  @OneToMany(() => CompanySkill, (companySkill) => companySkill.company)
+  @OneToMany(() => CompanySkill, (companySkill) => companySkill.company, {
+    cascade: ['insert', 'update'],
+  })
   skills?: Relation<CompanySkill>[];
 
   @OneToMany(
     () => CompanyIndustry,
     (companyIndustry) => companyIndustry.company,
+    { cascade: ['insert', 'update'] },
   )
   industries?: Relation<CompanyIndustry>[];
 }

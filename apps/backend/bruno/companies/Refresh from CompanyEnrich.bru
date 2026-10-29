@@ -1,0 +1,64 @@
+meta {
+  name: Refresh companies from CompanyEnrich
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/companies/company-enrich/refresh
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminAccessToken}}
+}
+
+body:json {
+  {
+    "query": "software",
+    "location": {
+      "country": "DE",
+  //     "state": "Bavaria",
+      "city": "Munich"
+    },
+  //   "industries": ["Software & Internet"],
+  //   "employees": ["51-200", "201-500"],
+  //   "foundedYear": { "min": 2000, "max": 2020 },
+    "page": 1,
+    "pageSize": 10
+  }
+}
+
+docs {
+  Fetch companies from CompanyEnrich and save them to the database.
+  Existing companies (same domain or website) are updated.
+  Each company's CompanyEnrich location is stored in `locations` (reused when
+  all fields match) and linked via `company_locations`.
+  Each of its CompanyEnrich `industries` is stored in `industries` (reused when
+  the slug or name matches) and linked via `company_industries`.
+  Each of its CompanyEnrich `technologies` is stored in `skills` (reused when
+  the slug or name matches) and linked via `company_skills`.
+  Each company is saved with its links in one transaction.
+  The body follows CompanyEnrich `POST /companies/search`.
+
+  Request Body:
+  - `query`: search query (optional)
+  - `location`: (optional)
+    - `country`: 2-letter country code, e.g. DE
+    - `state`: state name, looked up via CompanyEnrich `POST /geo/states`
+    - `city`: city name, looked up via CompanyEnrich `POST /geo/cities`
+  - `industries`: CompanyEnrich industry names (optional)
+  - `employees`: 1-10, 11-50, 51-200, 201-500, 501-1K, 1K-5K, 5K-10K, over-10K (optional)
+  - `foundedYear`: `{ min, max }` (optional)
+  - `page`: 1-based page, default 1
+  - `pageSize`: 1-100, default 20
+
+  State and city names must match CompanyEnrich's spelling exactly (case-insensitive).
+
+  - 200: OK - array of saved companies
+  - 400: Bad Request - invalid parameters or unknown state/city
+  - 401: Unauthorized - run Login
+  - 403: Forbidden - not an admin, run Login as admin
+  - 500: Internal Server Error - CompanyEnrich request failed
+}

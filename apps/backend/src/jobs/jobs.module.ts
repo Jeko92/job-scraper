@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AiProviderModule } from '../common/ai/ai-provider.module.js';
 import { Company } from '../companies/entities/company.entity.js';
+import { LocationsModule } from '../locations/locations.module.js';
+import { SkillsModule } from '../skills/skills.module.js';
 import { JobCrawlerController } from './crawler/job-crawler.controller.js';
 import { JobCrawlerService } from './crawler/job-crawler.service.js';
 import { Job } from './entities/job.entity.js';
@@ -18,6 +20,8 @@ import { SaveJobsController } from './save-jobs.controller.js';
   imports: [
     TypeOrmModule.forFeature([Job, Company, UserSavedJob, UserJobMatch]),
     AiProviderModule,
+    LocationsModule,
+    SkillsModule,
   ],
   controllers: [
     JobsController,

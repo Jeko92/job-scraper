@@ -19,6 +19,7 @@ export class CompanyLocation {
 
   @ManyToOne(() => Company, (company) => company.locations, {
     onDelete: 'CASCADE',
+    orphanedRowAction: 'disable',
   })
   @JoinColumn({ name: 'company_id' })
   company?: Relation<Company>;

@@ -9,5 +9,6 @@ import { IndustriesService } from './industries.service.js';
   imports: [TypeOrmModule.forFeature([Industry])],
   controllers: [IndustriesController],
   providers: [IndustriesService],
+  exports: [IndustriesService],
 })
 export class IndustriesModule {}

@@ -1,31 +1,22 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { type EntityManager, Repository } from 'typeorm';
 
+import { IndustriesService } from '../industries/industries.service.js';
+import { LocationsService } from '../locations/locations.service.js';
+import { SkillsService } from '../skills/skills.service.js';
 import type { CompanyDto } from './dto/company.dto.js';
-import type { CompanyProvider } from './dto/fetch-companies.dto.js';
+import type { CompanyEnrichSearchRequest } from './dto/company-enrich-search.dto.js';
 import { Company } from './entities/company.entity.js';
+import { CompanyIndustry } from './entities/company-industry.entity.js';
+import { CompanyLocation } from './entities/company-location.entity.js';
+import { CompanySkill } from './entities/company-skill.entity.js';
 import type {
   CompanySearchParams,
   NormalizedCompany,
 } from './providers/company-data-provider.js';
 import { CompanyEnrichProvider } from './providers/company-enrich.provider.js';
 import { WikidataProvider } from './providers/wikidata.provider.js';
-import { mergeAndDeduplicate } from './utils/merge-companies.js';
-
-/**
- * Options for fetching companies from external APIs.
- */
-export interface FetchCompaniesOptions {
-  /** Which providers to use. Defaults to all available. */
-  providers?: CompanyProvider[];
-  /** Search parameters passed to each provider. */
-  params: CompanySearchParams;
-  /** Whether to merge results and deduplicate. Default: true. */
-  mergeResults?: boolean;
-  /** Whether to save to database. Default: false. */
-  saveToDatabase?: boolean;
-}
 
 @Injectable()
 export class CompaniesService {
@@ -34,57 +25,16 @@ export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private readonly companiesRepository: Repository<Company>,
+    private readonly locationsService: LocationsService,
+    private readonly industriesService: IndustriesService,
+    private readonly skillsService: SkillsService,
     private readonly wikidataProvider: WikidataProvider,
     private readonly companyEnrichProvider: CompanyEnrichProvider,
   ) {}
 
-  /**
-   * Fetch companies from external APIs and optionally save to database.
-   */
-  async fetchFromApis(
-    options: FetchCompaniesOptions,
-  ): Promise<NormalizedCompany[]> {
-    const {
-      providers = ['wikidata', 'company-enrich'],
-      params,
-      mergeResults = true,
-    } = options;
-
-    const results: NormalizedCompany[] = [];
-
-    // Fetch from each provider
-    for (const providerName of providers) {
-      try {
-        const providerResults =
-          providerName === 'wikidata'
-            ? await this.fetchFromWikidata(params)
-            : await this.fetchFromCompanyEnrich(params);
-
-        results.push(...providerResults);
-      } catch (error) {
-        this.logger.warn(
-          `Failed to fetch from ${providerName} provider: ${String(error)}`,
-        );
-        // Continue with other providers
-      }
-    }
-
-    // Merge and deduplicate if requested
-    if (mergeResults && results.length > 0) {
-      return mergeAndDeduplicate(results);
-    }
-
-    return results;
-  }
-
-  /**
-   * Fetch companies from Wikidata only.
-   * Errors are propagated to the caller.
-   */
   async fetchFromWikidata(
     params: CompanySearchParams,
   ): Promise<NormalizedCompany[]> {
-    this.logger.debug('Fetching from wikidata provider');
     const rawCompanies = await this.wikidataProvider.fetchCompanies(params);
     const companies = rawCompanies.map((c) =>
       this.wikidataProvider.normalizeCompany(c),
@@ -95,16 +45,11 @@ export class CompaniesService {
     return companies;
   }
 
-  /**
-   * Fetch companies from CompanyEnrich only.
-   * Errors are propagated to the caller.
-   */
   async fetchFromCompanyEnrich(
-    params: CompanySearchParams,
+    request: CompanyEnrichSearchRequest,
   ): Promise<NormalizedCompany[]> {
-    this.logger.debug('Fetching from company-enrich provider');
     const rawCompanies =
-      await this.companyEnrichProvider.fetchCompanies(params);
+      await this.companyEnrichProvider.fetchCompanies(request);
     const companies = rawCompanies.map((c) =>
       this.companyEnrichProvider.normalizeCompany(c),
     );
@@ -114,28 +59,75 @@ export class CompaniesService {
     return companies;
   }
 
-  /**
-   * Create a company from normalized data.
-   */
   async createFromNormalized(company: NormalizedCompany): Promise<CompanyDto> {
-    // Check if company already exists by domain
+    return this.companiesRepository.manager.transaction(async (manager) => {
+      const entity = await this.buildCompany(company, manager);
+
+      if (company.location) {
+        const location = await this.locationsService.findOrCreate(
+          company.location,
+          manager,
+        );
+        entity.locations = [
+          manager.create(CompanyLocation, { locationId: location.id }),
+        ];
+      }
+
+      if (company.industries) {
+        const industryIds = new Set<string>();
+        for (const name of company.industries) {
+          const industry = await this.industriesService.findOrCreate(
+            name,
+            manager,
+          );
+          industryIds.add(industry.id);
+        }
+        entity.industries = [...industryIds].map((industryId) =>
+          manager.create(CompanyIndustry, { industryId }),
+        );
+      }
+
+      if (company.skills) {
+        const skillIds = new Set<string>();
+        for (const name of company.skills) {
+          const skill = await this.skillsService.findOrCreate(name, manager);
+          skillIds.add(skill.id);
+        }
+        entity.skills = [...skillIds].map((skillId) =>
+          manager.create(CompanySkill, { skillId }),
+        );
+      }
+
+      const {
+        locations: _locations,
+        industries: _industries,
+        skills: _skills,
+        ...saved
+      } = await manager.save(entity);
+      return saved;
+    });
+  }
+
+  private async buildCompany(
+    company: NormalizedCompany,
+    manager: EntityManager,
+  ): Promise<Company> {
+    const companiesRepository = manager.getRepository(Company);
     let existingCompany: Company | null = null;
     if (company.domain) {
-      existingCompany = await this.companiesRepository.findOneBy({
+      existingCompany = await companiesRepository.findOneBy({
         domain: company.domain,
       });
     }
 
-    // If no company found by domain, check by website URL
     if (!existingCompany && company.websiteUrl) {
-      existingCompany = await this.companiesRepository.findOneBy({
+      existingCompany = await companiesRepository.findOneBy({
         websiteUrl: company.websiteUrl,
       });
     }
 
     if (existingCompany) {
-      // Update existing company
-      existingCompany = this.companiesRepository.merge(existingCompany, {
+      return companiesRepository.merge(existingCompany, {
         name: company.name ?? existingCompany.name,
         legalName: company.legalName ?? existingCompany.legalName,
         websiteUrl: company.websiteUrl ?? existingCompany.websiteUrl,
@@ -147,11 +139,9 @@ export class CompaniesService {
         foundingYear: company.foundingYear ?? existingCompany.foundingYear,
         updatedAt: new Date(),
       });
-      return this.companiesRepository.save(existingCompany);
     }
 
-    // Create new company
-    const newCompany = this.companiesRepository.create({
+    return companiesRepository.create({
       name: company.name,
       legalName: company.legalName,
       domain: company.domain,
@@ -164,13 +154,8 @@ export class CompaniesService {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
-    return this.companiesRepository.save(newCompany);
   }
 
-  /**
-   * Save multiple normalized companies to database.
-   */
   async saveAllFromNormalized(
     companies: NormalizedCompany[],
   ): Promise<CompanyDto[]> {
@@ -184,23 +169,16 @@ export class CompaniesService {
         this.logger.error(
           `Failed to save company ${company.name ?? 'unknown'}: ${String(error)}`,
         );
-        // Continue with next company
       }
     }
 
     return results;
   }
 
-  /**
-   * Get all companies from database.
-   */
   async findAll(): Promise<CompanyDto[]> {
     return this.companiesRepository.find();
   }
 
-  /**
-   * Get a company by ID.
-   */
   async findById(id: string): Promise<CompanyDto> {
     const company = await this.companiesRepository.findOneBy({ id });
     if (!company) {
@@ -209,9 +187,6 @@ export class CompaniesService {
     return company;
   }
 
-  /**
-   * Get a company by domain.
-   */
   async findByDomain(domain: string): Promise<CompanyDto> {
     const company = await this.companiesRepository.findOneBy({ domain });
     if (!company) {
@@ -220,9 +195,6 @@ export class CompaniesService {
     return company;
   }
 
-  /**
-   * Search companies by name or other criteria.
-   */
   async search(params: CompanySearchParams): Promise<CompanyDto[]> {
     const query = this.companiesRepository.createQueryBuilder('company');
 
@@ -234,8 +206,6 @@ export class CompaniesService {
     }
 
     if (params.location) {
-      // In a real implementation, this would join with company_locations
-      // For now, we'll just add a simple where clause
       query.andWhere('company.name ILIKE :location', {
         location: `%${params.location}%`,
       });

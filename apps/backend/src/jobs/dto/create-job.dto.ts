@@ -10,7 +10,7 @@ const TITLE_MAX_LENGTH = 255;
 const SOURCE_URL_MAX_LENGTH = 2048;
 const EXTERNAL_ID_MAX_LENGTH = 255;
 const CURRENCY_LENGTH = 3;
-const MAX_JOB_SKILLS = 100;
+export const MAX_JOB_SKILLS = 100;
 
 export interface JobSkillInput {
   slug: string;
