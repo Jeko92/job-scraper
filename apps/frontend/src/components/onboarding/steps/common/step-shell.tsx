@@ -93,7 +93,10 @@ export function StepShell({
             className="font-heading text-3xl text-ink outline-none sm:text-4xl"
           >
             {number !== undefined && (
-              <span className="mr-3 align-middle text-lg text-highlight">
+              <span
+                aria-hidden="true"
+                className="mr-3 align-middle text-lg text-highlight"
+              >
                 {number} →
               </span>
             )}

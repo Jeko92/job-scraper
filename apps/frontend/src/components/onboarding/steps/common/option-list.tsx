@@ -1,7 +1,11 @@
 'use client';
 
 import { Check } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import {
+  type KeyboardEvent as ReactKeyboardEvent,
+  useEffect,
+  useRef,
+} from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -15,6 +19,7 @@ interface OptionButtonProps {
   /** Shortcut letter shown in front of the label ("A", "B", …). */
   letter: string;
   selected: boolean;
+  tabbable: boolean;
   onSelect: () => void;
 }
 
@@ -22,6 +27,7 @@ export function OptionButton({
   label,
   letter,
   selected,
+  tabbable,
   onSelect,
 }: OptionButtonProps) {
   return (
@@ -30,6 +36,7 @@ export function OptionButton({
       role="radio"
       aria-checked={selected}
       aria-keyshortcuts={letter}
+      tabIndex={tabbable ? 0 : -1}
       onClick={onSelect}
       className={cn(
         'inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-sm font-medium transition-colors',
@@ -64,8 +71,36 @@ export function OptionList<T extends string>({
   onSelect,
 }: OptionListProps<T>) {
   const groupRef = useRef<HTMLDivElement>(null);
+  const selectedIndex = options.findIndex((option) => option.value === value);
 
-  // Typing a letter picks that option. Focus moves to it, so Enter goes on.
+  // Picks an option and moves focus to it, so Enter goes on from there.
+  function pick(index: number) {
+    const option = options[index];
+    if (!option) {
+      return;
+    }
+    onSelect(option.value);
+    groupRef.current
+      ?.querySelectorAll<HTMLButtonElement>('[role="radio"]')
+      [index]?.focus();
+  }
+
+  function handleArrows(event: ReactKeyboardEvent<HTMLDivElement>) {
+    const step =
+      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+        ? 1
+        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+          ? -1
+          : 0;
+    if (step === 0) {
+      return;
+    }
+    event.preventDefault();
+    const from = selectedIndex === -1 ? (step === 1 ? -1 : 0) : selectedIndex;
+    pick((from + step + options.length) % options.length);
+  }
+
+  // Typing a letter picks that option.
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const target = event.target;
@@ -83,21 +118,17 @@ export function OptionList<T extends string>({
         return;
       }
       const index = event.key.toUpperCase().charCodeAt(0) - 65;
-      const option = event.key.length === 1 ? options[index] : undefined;
-      if (!option) {
+      if (event.key.length !== 1 || !options[index]) {
         return;
       }
       event.preventDefault();
-      onSelect(option.value);
-      groupRef.current
-        ?.querySelectorAll<HTMLButtonElement>('[role="radio"]')
-        [index]?.focus();
+      pick(index);
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [options, onSelect]);
+  });
 
   const lastLetter = String.fromCharCode(64 + options.length);
 
@@ -108,13 +139,15 @@ export function OptionList<T extends string>({
         role="radiogroup"
         aria-label={label}
         className="flex flex-wrap gap-3"
+        onKeyDown={handleArrows}
       >
         {options.map((option, index) => (
           <OptionButton
             key={option.value}
             label={option.label}
             letter={String.fromCharCode(65 + index)}
-            selected={option.value === value}
+            selected={index === selectedIndex}
+            tabbable={index === Math.max(selectedIndex, 0)}
             onSelect={() => {
               onSelect(option.value);
             }}
